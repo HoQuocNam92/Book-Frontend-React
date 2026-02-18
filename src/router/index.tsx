@@ -6,6 +6,12 @@ import FormReset from '@/components/ResetPassoword/FormReset';
 import BookByCategory from '@/pages/BookByCategory';
 import Oops from '@/pages/Oops';
 import NotFound from '@/pages/NotFound';
+import DashboardLayout from '@/layouts/DashboardLayout';
+import ProductsDashboard from '@/components/Dashboard/Products/ProductsDashboard';
+import OverviewsDashboard from '@/components/Dashboard/Overviews/OverviewsDashboard';
+import ProductDetailPage from '@/components/Detail/ProductDetailPage';
+import HomeBookshelfSection from '@/components/Home/HomeBookshelfSection';
+import ProductForm from '@/components/Dashboard/Products/ProductForm';
 export const router = createBrowserRouter(
     [
         {
@@ -13,9 +19,18 @@ export const router = createBrowserRouter(
             element: <MainLayout />,
             children: [
                 {
+                    index: true,
+                    element: <HomeBookshelfSection />
+                }
+                ,
+                {
                     path: '/danh-muc/:slug?',
                     element: <BookByCategory />
                 },
+                {
+                    path: '/:slug',
+                    element: <ProductDetailPage />
+                }
 
             ]
         },
@@ -36,9 +51,30 @@ export const router = createBrowserRouter(
                     path: 'getpassword',
                     element: <FormReset />
                 },
+            ]
+        },
+        {
+            path: '/dashboard',
+            element: <DashboardLayout />,
+            children: [
+                {
+                    path: 'overviews?',
+                    element: <OverviewsDashboard />
+                },
+                {
+                    path: 'orders',
+                    element: <ProductsDashboard />
+                },
+                {
+                    path: 'products',
+                    element: <ProductsDashboard />,
 
+                },
+                {
+                    path: 'products/create',
+                    element: <ProductForm />,
 
-
+                }
             ]
         },
         {

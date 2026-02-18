@@ -1,42 +1,35 @@
-const URL_BASE = 'http://localhost:8080/api/'
-import axios from 'axios'
-import { useAuthStore } from '@/stores/auth.stores'
-import useAuth from '@/hooks/useAuth'
+const URL_BASE = "http://localhost:8080/api/";
+import axios from "axios";
+import { useAuthStore } from "@/stores/auth.stores";
+import { refreshToken, signOut } from "@/services/auth.services";
+
 export const instance = axios.create({
     baseURL: URL_BASE,
     timeout: 10000,
+    withCredentials: true,
     headers: {
-        "Content-Type": "application/json"
-    }
-})
+        "Content-Type": "application/json",
+    },
+});
 
-
-instance.interceptors.request.use((config) => {
-    const token = useAuthStore.getState()?.token
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`
-    }
-    return config;
-})
 instance.interceptors.response.use(
     (res) => res,
     async (error) => {
-        const originalRequest = error.config
+        const originalRequest = error.config;
 
         if (error.response?.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true
+            originalRequest._retry = true;
 
             try {
-                const { refreshTokenMutation } = useAuth();
-                const data = await refreshTokenMutation.mutateAsync()
-                originalRequest.headers.Authorization = `Bearer ${data?.data.acessToken}`
-                return instance(originalRequest)
+                await refreshToken(); // refresh xong => backend set cookie mới
+                return instance(originalRequest); // retry request cũ
             } catch (err) {
-                useAuthStore.getState().logout?.()
-                return Promise.reject(err)
+                useAuthStore.getState().logout?.();
+                await signOut();
+                return Promise.reject(err);
             }
         }
 
-        return Promise.reject(error)
+        return Promise.reject(error);
     }
-)
+);

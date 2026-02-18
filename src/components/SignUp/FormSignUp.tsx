@@ -5,22 +5,26 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import useAuth from '@/hooks/useAuth';
 import { signUpSchema } from '@/schema/signUp,schema';
 import type { signUpForm } from '@/schema/signUp,schema';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 const FormSignUp = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<signUpForm>({ resolver: zodResolver(signUpSchema) })
     const {
         signUpMutation } = useAuth();
-
+    const navigate = useNavigate();
     const onSubmit = async (data: signUpForm) => {
         try {
             const res = await signUpMutation.mutateAsync(data)
             alert(res?.message || "Thành công")
+            navigate("/auth/sign-in")
 
         } catch (error: any) {
             alert(error.response.data.message)
         }
+    }
+    const handleSignInWithGoogle = () => {
+        window.open(`${import.meta.env.VITE_BASE_URL}/auth/google`, "_self");
     }
     return (
         <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
@@ -48,6 +52,8 @@ const FormSignUp = () => {
             <Button
                 variant="outline"
                 className="w-full   border-blue-600 cursor-pointer text-blue-600 hover:bg-blue-50"
+                onClick={handleSignInWithGoogle}
+                type='button'
             >
                 ĐĂNG NHẬP GOOGLE
             </Button>

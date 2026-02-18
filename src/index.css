@@ -1,6 +1,19 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+.container {
+  max-width: 100%;
+  width: 1200px;
+  margin: 0 auto;
+}
+
+
+.container-dashboard {
+  max-width: 100%;
+  width: 1600px;
+  margin: 0 auto;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -117,6 +130,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }

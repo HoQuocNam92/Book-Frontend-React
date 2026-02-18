@@ -26,3 +26,11 @@ export const resetPassword = async (email: string) => {
     console.log("Check res", res);
     return res.data
 }
+
+
+export const signOut = async () => {
+    const res = await instance.post('auth/sign-out', {}, {
+        withCredentials: true
+    });
+    return res.data
+}   

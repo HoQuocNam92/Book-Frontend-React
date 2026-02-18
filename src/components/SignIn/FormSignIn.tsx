@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { signInSchema } from '@/schema/signIn.schema'
 import type { signInForm } from '@/schema/signIn.schema'
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '@/hooks/useAuth';
 
 
@@ -13,14 +13,19 @@ const FormSignIn = () => {
         formState: { errors } } = useForm<signInForm>({ resolver: zodResolver(signInSchema) })
 
     const { signInMutation } = useAuth();
+    const navigate = useNavigate();
     const onSubmit = async (data: signInForm) => {
         try {
             const res = await signInMutation.mutateAsync(data)
             alert(res?.message || "Thành công")
+            navigate("/")
         } catch (error: any) {
             alert(error.response.data.message)
         }
     };
+    const handleSignInWithGoogle = () => {
+        window.open(`${import.meta.env.VITE_BASE_URL}/auth/google`, "_self");
+    }
     return (
         <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
             <Input placeholder="Email" type="email" {...register("email")} />
@@ -38,6 +43,8 @@ const FormSignIn = () => {
             <Button
                 variant="outline"
                 className="w-full border-blue-600 cursor-pointer text-blue-600 hover:bg-blue-50"
+                onClick={handleSignInWithGoogle}
+                type='button'
             >
                 ĐĂNG NHẬP GOOGLE
             </Button>
