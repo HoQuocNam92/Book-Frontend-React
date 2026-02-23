@@ -1,4 +1,3 @@
-"use client"
 
 import * as React from "react"
 import { DndContext, closestCenter } from "@dnd-kit/core"
@@ -14,6 +13,7 @@ import { GripVertical, ImagePlus, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
+import { useEffect } from 'react';
 
 export type ProductImageItem = {
     id: string
@@ -37,68 +37,59 @@ function SortableImageItem({
         transform: CSS.Transform.toString(transform),
         transition,
     }
-
     return (
         <div
             ref={setNodeRef}
             style={style}
             className={cn(
-                "group flex items-center gap-3 rounded-2xl border bg-background p-3 shadow-sm",
-                isDragging && "opacity-80 ring-2 ring-primary"
+                "group relative overflow-hidden rounded-2xl border bg-background shadow-sm transition",
+                isDragging && "ring-2 ring-primary scale-95"
             )}
         >
-            {/* Drag handle */}
-            <button
-                type="button"
-                className="cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground"
-                {...attributes}
-                {...listeners}
-            >
-                <GripVertical className="h-5 w-5" />
-            </button>
+            {/* Image */}
+            <img
+                src={item.preview}
+                alt="product"
+                className="aspect-square w-full object-cover"
+            />
 
-            {/* Preview */}
-            <div className="relative h-16 w-16 overflow-hidden rounded-2xl border bg-muted">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                    src={item.preview}
-                    alt="product"
-                    className="h-full w-full object-cover"
-                />
+            {/* Cover badge */}
+            {index === 0 && (
+                <Badge className="absolute left-2 top-2 rounded-full px-2 py-0.5 text-xs">
+                    Cover
+                </Badge>
+            )}
 
-                {index === 0 && (
-                    <Badge className="absolute left-1 top-1 rounded-full px-2 py-0.5 text-[10px]">
-                        Cover
-                    </Badge>
-                )}
+            {/* Overlay hover */}
+            <div className="absolute inset-0 flex items-center justify-center gap-3 bg-black/50 opacity-0 transition group-hover:opacity-100">
+
+                {/* Drag */}
+                <button
+                    type="button"
+                    {...attributes}
+                    {...listeners}
+                    className="rounded-full bg-white/90 p-2 hover:bg-white"
+                >
+                    <GripVertical className="h-4 w-4" />
+                </button>
+
+                {/* Delete */}
+                <button
+                    type="button"
+                    onClick={() => onRemove(item.id)}
+                    className="rounded-full bg-white/90 p-2 hover:bg-destructive hover:text-white"
+                >
+                    <Trash2 className="h-4 w-4" />
+                </button>
             </div>
-
-            {/* Info */}
-            <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold truncate">{item.file.name}</p>
-                <p className="text-xs text-muted-foreground">
-                    {(item.file.size / 1024).toFixed(0)} KB • Drag to reorder
-                </p>
-            </div>
-
-            {/* Remove */}
-            <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={() => onRemove(item.id)}
-                className="text-muted-foreground hover:text-destructive"
-            >
-                <Trash2 className="h-4 w-4" />
-            </Button>
         </div>
     )
 }
-
 export default function ImageDndUpload({
     value,
     onChange,
     maxImages = 10,
+
 }: {
     value: ProductImageItem[]
     onChange: (next: ProductImageItem[]) => void
@@ -136,13 +127,12 @@ export default function ImageDndUpload({
     }
 
     // Cleanup object URLs when unmount
-    React.useEffect(() => {
+    useEffect(() => {
         return () => {
             value.forEach((x) => URL.revokeObjectURL(x.preview))
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-
     return (
         <div className="space-y-4">
             {/* Top header */}
@@ -150,7 +140,7 @@ export default function ImageDndUpload({
                 <div>
                     <p className="text-base font-semibold">Images</p>
                     <p className="text-sm text-muted-foreground">
-                        Upload images and drag to reorder. First image is the cover.
+                        Tải lên nhiều hình ảnh để giới thiệu sản phẩm của bạn từ mọi góc độ và thu hút khách hàng tiềm năng! ✨
                     </p>
                 </div>
 
@@ -205,9 +195,9 @@ export default function ImageDndUpload({
             </div>
 
             {/* List */}
-            <div className="space-y-3">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
                 {value.length === 0 ? (
-                    <div className="rounded-2xl border bg-background py-10 text-center text-sm text-muted-foreground">
+                    <div className="rounded-2xl border bg-background py-10 text-center text-sm text-muted-foreground col-span-full">
                         No images yet. Upload to continue ✨
                     </div>
                 ) : (

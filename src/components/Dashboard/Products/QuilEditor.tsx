@@ -1,6 +1,6 @@
-import { useState } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
+import { Controller } from "react-hook-form";
 
 const modules = {
     toolbar: [
@@ -39,23 +39,29 @@ const formats = [
     "image",
 ];
 
-function MyEditor() {
-    const [value, setValue] = useState("");
 
+function MyEditor({ control }: any) {
     return (
         <div className="w-full">
-            <ReactQuill
-                theme="snow"
-                value={value}
-                onChange={setValue}
-                modules={modules}
-                formats={formats}
-                placeholder="Nhập mô tả..."
-                style={{ height: 250, marginBottom: 50 }}
-
+            <Controller
+                name="description"
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                    <ReactQuill
+                        theme="snow"
+                        value={field.value || ""}
+                        onChange={(content) => field.onChange(content)}
+                        modules={modules}
+                        formats={formats}
+                        placeholder="Nhập mô tả..."
+                        style={{ height: 250, marginBottom: 50 }}
+                    />
+                )}
             />
         </div>
     );
 }
 
 export default MyEditor;
+
