@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
@@ -28,9 +28,8 @@ const brands = [
 
 
 export default function BookByCategory() {
-    const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
-    const { products, loading, errors } = useProducts(page);
+
+    const { getProductByCategory, pageNumber, setPageNumber } = useProducts();
     const navigate = useNavigate();
     const [selectedBrand, setSelectedBrand] = useState<string | null>(null)
     const min = 0
@@ -41,17 +40,11 @@ export default function BookByCategory() {
     ])
 
 
-    useEffect(() => {
 
-        if (products?.data !== null) {
-            setTotalPages(products?.pagination?.totalPages)
-        }
-    }, [page, products?.data])
 
-    if (loading) { return <SpinnerCustom /> }
-    if (errors) { navigate('/oops') }
-
-    const filtered: Book[] = products?.data?.filter((b: Book) => {
+    if (getProductByCategory.isLoading) { return <SpinnerCustom /> }
+    if (getProductByCategory.error) { navigate('/oops') }
+    const filtered: Book[] = getProductByCategory?.data?.data?.filter((b: Book) => {
         const okBrand = selectedBrand ? true : true
         const okPrice = b.price! >= priceRange[0] && b.price! <= priceRange[1]
         return okBrand && okPrice
@@ -75,11 +68,11 @@ export default function BookByCategory() {
                 </Card>
 
                 <div className="mt-6 rounded-xl bg-white px-4 py-3">
-                    <h2 className="text-lg font-semibold">{products?.category?.name}</h2>
+                    <h2 className="text-lg font-semibold">{getProductByCategory?.data?.category?.name}</h2>
                 </div>
 
                 <BookList books={filtered} />
-                <Pagination page={page} totalPages={totalPages} onChange={setPage} />
+                <Pagination page={pageNumber} totalPages={getProductByCategory?.data?.pagination?.totalPages || 1} onChange={setPageNumber} />
             </main>
         </div>
     )
