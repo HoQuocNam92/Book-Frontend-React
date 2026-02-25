@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { CardContent, CardHeader, CardDescription, CardTitle, Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from "@/components/ui/input";
@@ -29,88 +29,6 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 
-const revenueSeries = [
-    { day: "T2", revenue: 12 },
-    { day: "T3", revenue: 18 },
-    { day: "T4", revenue: 14 },
-    { day: "T5", revenue: 22 },
-    { day: "T6", revenue: 28 },
-    { day: "T7", revenue: 20 },
-    { day: "CN", revenue: 30 },
-];
-const kpis = [
-    {
-        title: "Doanh thu",
-        value: "128.4M",
-        delta: "+12.8%",
-        hint: "So với 7 ngày trước",
-        icon: CreditCard,
-    },
-    {
-        title: "Đơn hàng",
-        value: "1,482",
-        delta: "+6.2%",
-        hint: "Tỷ lệ hoàn tất 93%",
-        icon: ShoppingCart,
-    },
-    {
-        title: "Khách hàng",
-        value: "9,203",
-        delta: "+2.1%",
-        hint: "Khách quay lại 41%",
-        icon: Users,
-    },
-    {
-        title: "Sản phẩm",
-        value: "512",
-        delta: "+18",
-        hint: "Đang bán 478",
-        icon: Package
-    },
-];
-const ordersSeed = [
-    {
-        id: "OD-10421",
-        customer: "Nguyễn Văn A",
-        total: 890000,
-        status: "PAID",
-        items: 3,
-        createdAt: "2026-02-07 09:12",
-    },
-    {
-        id: "OD-10420",
-        customer: "Trần Thị B",
-        total: 1290000,
-        status: "SHIPPING",
-        items: 5,
-        createdAt: "2026-02-07 08:45",
-    },
-    {
-        id: "OD-10419",
-        customer: "Lê Minh C",
-        total: 450000,
-        status: "PENDING",
-        items: 2,
-        createdAt: "2026-02-07 08:02",
-    },
-    {
-        id: "OD-10418",
-        customer: "Phạm Duy D",
-        total: 2190000,
-        status: "CANCELLED",
-        items: 7,
-        createdAt: "2026-02-06 22:18",
-    },
-    {
-        id: "OD-10417",
-        customer: "Hoàng E",
-        total: 990000,
-        status: "PAID",
-        items: 4,
-        createdAt: "2026-02-06 21:04",
-    },
-];
-
 import {
     AreaChart,
     Area,
@@ -126,32 +44,89 @@ import { Separator } from '@/components/ui/separator';
 import { formatVND } from '@/utils/formatVND';
 import StatusBadge from '@/components/Dashboard/Components/StatusBadge';
 import { CreditCard, Package, Search, ShoppingCart, Users } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { getOverviewStats } from '@/services/overview.services';
+import { SpinnerCustom } from '@/components/ui/spinner';
+
+const revenueSeries = [
+    { day: "T2", revenue: 12 },
+    { day: "T3", revenue: 18 },
+    { day: "T4", revenue: 14 },
+    { day: "T5", revenue: 22 },
+    { day: "T6", revenue: 28 },
+    { day: "T7", revenue: 20 },
+    { day: "CN", revenue: 30 },
+];
+
 const OverviewsDashboard = () => {
     const [q, setQ] = useState("");
     const [tab, setTab] = useState<"all" | "paid" | "pending" | "shipping">(
         "all"
     );
-    const [orders, setOrders] = useState(ordersSeed);
+
+    const { data: statsData, isLoading } = useQuery({
+        queryKey: ["overview-stats"],
+        queryFn: getOverviewStats,
+    });
+
+    const stats = statsData?.data;
+    const recentOrders = stats?.recentOrders || [];
+
+    const kpis = [
+        {
+            title: "Doanh thu",
+            value: stats ? formatVND(stats.totalRevenue) : "—",
+            delta: stats ? `${stats.totalOrders} đơn` : "—",
+            hint: "Tổng doanh thu",
+            icon: CreditCard,
+        },
+        {
+            title: "Đơn hàng",
+            value: stats ? String(stats.totalOrders) : "—",
+            delta: stats ? `${stats.totalProducts} SP` : "—",
+            hint: "Tổng đơn hàng",
+            icon: ShoppingCart,
+        },
+        {
+            title: "Khách hàng",
+            value: stats ? String(stats.totalUsers) : "—",
+            delta: stats ? `${stats.totalBrands} thương hiệu` : "—",
+            hint: "Tổng người dùng",
+            icon: Users,
+        },
+        {
+            title: "Sản phẩm",
+            value: stats ? String(stats.totalProducts) : "—",
+            delta: stats ? `${stats.totalCategories} danh mục` : "—",
+            hint: "Tổng sản phẩm",
+            icon: Package,
+        },
+    ];
 
     const filteredOrders = useMemo(() => {
-        const byTab = (o: (typeof ordersSeed)[number]) => {
+        const byTab = (o: any) => {
             if (tab === "all") return true;
-            if (tab === "paid") return o.status === "PAID";
-            if (tab === "pending") return o.status === "PENDING";
-            if (tab === "shipping") return o.status === "SHIPPING";
+            if (tab === "paid") return o.status?.toLowerCase() === "paid";
+            if (tab === "pending") return o.status?.toLowerCase() === "pending";
+            if (tab === "shipping") return o.status?.toLowerCase() === "shipping";
             return true;
         };
-        const bySearch = (o: (typeof ordersSeed)[number]) => {
+        const bySearch = (o: any) => {
             const s = (q ?? "").trim().toLowerCase();
             if (!s) return true;
             return (
-                o.id.toLowerCase().includes(s) ||
-                o.customer.toLowerCase().includes(s)
+                String(o.id).includes(s) ||
+                (o.customer || "").toLowerCase().includes(s)
             );
         };
 
-        return orders.filter((o) => byTab(o) && bySearch(o));
-    }, [orders, q, tab]);
+        return recentOrders.filter((o: any) => byTab(o) && bySearch(o));
+    }, [recentOrders, q, tab]);
+
+    if (isLoading) {
+        return <SpinnerCustom />;
+    }
+
     return (
         <>
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 my-2">
@@ -195,19 +170,19 @@ const OverviewsDashboard = () => {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <MiniMetric
-                            title="Tỷ lệ hoàn tất"
-                            value="93%"
-                            progress={93}
+                            title="Tổng sản phẩm"
+                            value={stats ? String(stats.totalProducts) : "—"}
+                            progress={stats ? Math.min(stats.totalProducts, 100) : 0}
                         />
                         <MiniMetric
-                            title="Đơn đang giao"
-                            value="18"
-                            progress={62}
+                            title="Tổng thương hiệu"
+                            value={stats ? String(stats.totalBrands) : "—"}
+                            progress={stats ? Math.min(stats.totalBrands * 5, 100) : 0}
                         />
                         <MiniMetric
-                            title="Tồn kho an toàn"
-                            value="78%"
-                            progress={78}
+                            title="Tổng danh mục"
+                            value={stats ? String(stats.totalCategories) : "—"}
+                            progress={stats ? Math.min(stats.totalCategories * 5, 100) : 0}
                         />
 
                         <Separator />
@@ -311,19 +286,19 @@ const OverviewsDashboard = () => {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {filteredOrders.map((o): any => (
+                            {filteredOrders.map((o: any) => (
                                 <TableRow key={o.id}>
-                                    <TableCell className="font-medium">{o.id}</TableCell>
+                                    <TableCell className="font-medium">#{o.id}</TableCell>
                                     <TableCell>{o.customer}</TableCell>
                                     <TableCell className="hidden md:table-cell">
                                         {o.items}
                                     </TableCell>
                                     <TableCell className="hidden md:table-cell text-muted-foreground">
-                                        {o.createdAt}
+                                        {o.createdAt ? new Date(o.createdAt).toLocaleString("vi-VN") : ""}
                                     </TableCell>
                                     <TableCell>{formatVND(o.total)}</TableCell>
                                     <TableCell>
-                                        <StatusBadge status={o.status} />
+                                        <StatusBadge status={o.status?.toUpperCase() || "PENDING"} />
                                     </TableCell>
                                     <TableCell className="text-right">
                                         <DropdownMenu>
@@ -344,18 +319,7 @@ const OverviewsDashboard = () => {
                                                     In hóa đơn
                                                 </DropdownMenuItem>
                                                 <DropdownMenuSeparator />
-                                                <DropdownMenuItem
-                                                    className="text-destructive"
-                                                    onClick={() =>
-                                                        setOrders((prev) =>
-                                                            prev.map((x) =>
-                                                                x.id === o.id
-                                                                    ? { ...x, status: "CANCELLED" }
-                                                                    : x
-                                                            )
-                                                        )
-                                                    }
-                                                >
+                                                <DropdownMenuItem className="text-destructive">
                                                     Hủy đơn
                                                 </DropdownMenuItem>
                                             </DropdownMenuContent>
