@@ -28,7 +28,7 @@ const useAddress = () => {
         }
     })
     const updateMutation = useMutation({
-        mutationFn: async (data: any) => await updateAddress(user?.id, data),
+        mutationFn: async (data: any) => await updateAddress(data.id, data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['my-addresses', user?.id] })
         }
@@ -42,7 +42,7 @@ const useAddress = () => {
 
     const getProvincesQuery = useQuery({
         queryKey: ['provinces'],
-        queryFn: async () => await getProvinces()
+        queryFn: async () => await getProvinces(),
     })
     const getDistrictsQuery = useQuery({
         queryKey: ['districts', provinceId],
@@ -62,11 +62,11 @@ const useAddress = () => {
         createMutation,
         updateMutation,
         deleteMutation,
-        getProvincesQuery,
         getDistrictsQuery,
         getWardsQuery,
         setProvinceId,
-        setDistrictId
+        setDistrictId,
+        getProvincesQuery
     }
 }
 
