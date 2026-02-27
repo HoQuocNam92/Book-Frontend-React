@@ -1,5 +1,4 @@
-import { Badge } from 'lucide-react';
-
+import { Badge } from "@/components/ui/badge";
 const StatusBadge = ({ status }: { status: string }) => {
     const map: Record<string, { label: string; variant: any }> = {
         PAID: { label: "Đã thanh toán", variant: "default" },
