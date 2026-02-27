@@ -1,5 +1,6 @@
+import { LazyImage } from "@/components/common/LazyImage"
 import { cn } from "@/lib/utils"
-import type { Book } from "@/types/Book"
+import type { BookType } from "@/types/Book"
 import { formatVND } from "@/utils/formatVND"
 
 const HomeShelfBookCard = ({
@@ -7,7 +8,7 @@ const HomeShelfBookCard = ({
     className,
     onClick,
 }: {
-    book: Book
+    book: BookType
     className?: string
     onClick?: () => void
 }) => {
@@ -22,11 +23,7 @@ const HomeShelfBookCard = ({
         >
             <div className="mx-auto w-full max-w-[150px]">
                 <div className="aspect-[3/4] overflow-hidden rounded-xl bg-white">
-                    <img
-                        src={book.BookImages}
-                        alt={book.title}
-                        className="h-full w-full object-cover transition group-hover:scale-[1.03]"
-                    />
+                    <LazyImage src={book.BookImages} alt={book.title} />
                     )
                 </div>
             </div>
