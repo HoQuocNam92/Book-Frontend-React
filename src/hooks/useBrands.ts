@@ -1,12 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import * as brandServices from "@/services/brand.services";
+import { useState } from "react";
 
 export const useBrands = () => {
     const queryClient = useQueryClient();
-
+    const [page, setPage] = useState(1);
     const getBrands = useQuery({
-        queryKey: ["getBrands"],
-        queryFn: brandServices.getBrands,
+        queryKey: ["getBrands", page],
+        queryFn: () => brandServices.getAllBrands(page),
         refetchOnWindowFocus: false,
     });
 
@@ -37,5 +38,6 @@ export const useBrands = () => {
         createBrand,
         updateBrand,
         deleteBrand,
+        page, setPage
     };
 };

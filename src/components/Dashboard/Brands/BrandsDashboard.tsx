@@ -6,9 +6,10 @@ import BrandListDashboard from "./BrandListDashboard";
 import BrandForm from "./BrandForm";
 import type { BrandFormData } from "./BrandForm";
 import BrandDeleteDialog from "./BrandDeleteDialog";
+import Pagination from "@/components/common/Pagination";
 
 export default function BrandsDashboard() {
-    const { getBrands, createBrand, updateBrand, deleteBrand } = useBrands();
+    const { getBrands, createBrand, updateBrand, deleteBrand, page, setPage } = useBrands();
 
     const [formOpen, setFormOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
@@ -57,7 +58,8 @@ export default function BrandsDashboard() {
             });
         }
     };
-
+    const brands = getBrands.data?.brands || [];
+    const totalPages = getBrands.data?.totalPages || 1;
     return (
         <div className="w-full space-y-4">
             {/* Header */}
@@ -94,7 +96,7 @@ export default function BrandsDashboard() {
 
             {/* List */}
             <BrandListDashboard
-                brands={getBrands.data || []}
+                brands={brands}
                 loading={getBrands.isLoading}
                 error={getBrands.error}
                 onEdit={handleEdit}
@@ -119,6 +121,11 @@ export default function BrandsDashboard() {
                 setOpen={setDeleteOpen}
                 onConfirm={handleConfirmDelete}
                 loading={deleteBrand.isPending}
+            />
+            <Pagination
+                page={page}
+                totalPages={totalPages}
+                onChange={setPage}
             />
         </div>
     );

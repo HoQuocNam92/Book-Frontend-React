@@ -5,9 +5,10 @@ import { useOrders } from "@/hooks/useOrders";
 import OrderListDashboard from "./OrderListDashboard";
 import OrderDeleteDialog from "./OrderDeleteDialog";
 import OrderStatusDialog from "./OrderStatusDialog";
+import Pagination from "@/components/common/Pagination";
 
 export default function OrdersDashboard() {
-    const { getOrders, updateOrderStatus, deleteOrder } = useOrders();
+    const { getOrders, updateOrderStatus, deleteOrder, page, setPage } = useOrders();
 
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [statusOpen, setStatusOpen] = useState(false);
@@ -15,6 +16,7 @@ export default function OrdersDashboard() {
     const [editingOrder, setEditingOrder] = useState<any>(null);
 
     const orders = getOrders.data?.data || getOrders.data || [];
+    const totalPages = getOrders.data?.totalPages || 1;
 
     const handleUpdateStatus = (order: any) => {
         setEditingOrder(order);
@@ -51,9 +53,12 @@ export default function OrdersDashboard() {
         }
     };
 
+    const handlePageChange = (newPage: number) => {
+        setPage(newPage);
+    }
+
     return (
         <div className="w-full space-y-4">
-            {/* Header */}
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="space-y-1">
                     <div className="flex items-center gap-2">
@@ -81,7 +86,6 @@ export default function OrdersDashboard() {
                 </div>
             </div>
 
-            {/* List */}
             <OrderListDashboard
                 orders={orders}
                 loading={getOrders.isLoading}
@@ -90,7 +94,6 @@ export default function OrdersDashboard() {
                 onDelete={handleDelete}
             />
 
-            {/* Status Dialog */}
             <OrderStatusDialog
                 open={statusOpen}
                 setOpen={setStatusOpen}
@@ -99,13 +102,13 @@ export default function OrdersDashboard() {
                 loading={updateOrderStatus.isPending}
             />
 
-            {/* Delete Dialog */}
             <OrderDeleteDialog
                 open={deleteOpen}
                 setOpen={setDeleteOpen}
                 onConfirm={handleConfirmDelete}
                 loading={deleteOrder.isPending}
             />
+            <Pagination page={page} totalPages={totalPages} onChange={handlePageChange} />
         </div>
     );
 }

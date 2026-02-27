@@ -27,6 +27,7 @@ interface OrderStatusDialogProps {
 
 const statusOptions = [
     { value: "pending", label: "Chờ xử lý" },
+    { value: "confirmed", label: "Đã xác nhận" },
     { value: "paid", label: "Đã thanh toán" },
     { value: "shipping", label: "Đang giao" },
     { value: "completed", label: "Hoàn tất" },

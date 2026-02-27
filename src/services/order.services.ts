@@ -1,7 +1,7 @@
 import { instance } from "@/utils/instance";
 
-export const getOrders = async () => {
-    const res = await instance.get("/orders");
+export const getOrders = async (page: number = 1) => {
+    const res = await instance.get(`/orders?page=${page}`);
     return res.data;
 };
 

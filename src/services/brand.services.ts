@@ -1,7 +1,7 @@
 import { instance } from "@/utils/instance";
 
-export const getBrands = async () => {
-    const res = await instance.get("/brands");
+export const getAllBrands = async (page: number = 1) => {
+    const res = await instance.get(`/brands?page=${page}`);
     return res.data;
 };
 
