@@ -5,8 +5,8 @@ export interface CategoryInput {
     parent_id?: number | null;
 }
 
-export const getCategories = async () => {
-    const res = await instance.get("/categories");
+export const getCategories = async (page: number = 1) => {
+    const res = await instance.get(`/categories?page=${page}`);
     return res.data;
 };
 

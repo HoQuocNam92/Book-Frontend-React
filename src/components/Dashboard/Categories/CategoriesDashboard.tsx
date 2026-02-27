@@ -6,9 +6,10 @@ import CategoryListDashboard from "./CategoryListDashboard";
 import CategoryForm from "./CategoryForm";
 import type { CategoryFormData } from "./CategoryForm";
 import CategoryDeleteDialog from "./CategoryDeleteDialog";
+import Pagination from "@/components/common/Pagination";
 
 export default function CategoriesDashboard() {
-    const { getCategories, createCategory, updateCategory, deleteCategory } =
+    const { getCategories, createCategory, updateCategory, deleteCategory, page, setPage } =
         useCategories();
 
     const [formOpen, setFormOpen] = useState(false);
@@ -64,7 +65,11 @@ export default function CategoriesDashboard() {
             });
         }
     };
+    const totalPages = getCategories.data?.totalPages || 1;
 
+    const handleChangePage = (newPage: number) => {
+        setPage(newPage);
+    }
     return (
         <div className="w-full space-y-4">
             {/* Header */}
@@ -128,6 +133,7 @@ export default function CategoriesDashboard() {
                 onConfirm={handleConfirmDelete}
                 loading={deleteCategory.isPending}
             />
+            <Pagination totalPages={totalPages} page={page} onChange={handleChangePage} />
         </div>
     );
 }
