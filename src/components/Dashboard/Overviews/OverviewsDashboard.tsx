@@ -1,33 +1,16 @@
 import { useMemo, useState } from 'react'
 import { CardContent, CardHeader, CardDescription, CardTitle, Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Input } from "@/components/ui/input";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
     Table,
     TableBody,
-    TableCell,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+
 
 import {
     AreaChart,
@@ -41,24 +24,18 @@ import {
 import KpiCard from '@/components/Dashboard/Components/KpiCard';
 import MiniMetric from '@/components/Dashboard/Components/MiniMetric';
 import { Separator } from '@/components/ui/separator';
-import { formatVND } from '@/utils/formatVND';
-import StatusBadge from '@/components/Dashboard/Components/StatusBadge';
-import { CreditCard, Package, Search, ShoppingCart, Users } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { getOverviewStats } from '@/services/overview.services';
 import { SpinnerCustom } from '@/components/ui/spinner';
+import OverviewList from '@/components/Dashboard/Overviews/OverviewList';
+import OverviesEmpty from '@/components/Dashboard/Overviews/OverviesEmpty';
+import { kpis } from '@/components/Dashboard/Overviews/logic/kpis';
+import useOverViews from '@/hooks/useOverviews';
 
-const revenueSeries = [
-    { day: "T2", revenue: 12 },
-    { day: "T3", revenue: 18 },
-    { day: "T4", revenue: 14 },
-    { day: "T5", revenue: 22 },
-    { day: "T6", revenue: 28 },
-    { day: "T7", revenue: 20 },
-    { day: "CN", revenue: 30 },
-];
 
 const OverviewsDashboard = () => {
+    const { getChartData } = useOverViews();
     const [q, setQ] = useState("");
     const [tab, setTab] = useState<"all" | "paid" | "pending" | "shipping">(
         "all"
@@ -68,40 +45,11 @@ const OverviewsDashboard = () => {
         queryKey: ["overview-stats"],
         queryFn: getOverviewStats,
     });
-
+    const chartData = getChartData?.data || [];
     const stats = statsData?.data;
+    console.log(stats);
     const recentOrders = stats?.recentOrders || [];
 
-    const kpis = [
-        {
-            title: "Doanh thu",
-            value: stats ? formatVND(stats.totalRevenue) : "—",
-            delta: stats ? `${stats.totalOrders} đơn` : "—",
-            hint: "Tổng doanh thu",
-            icon: CreditCard,
-        },
-        {
-            title: "Đơn hàng",
-            value: stats ? String(stats.totalOrders) : "—",
-            delta: stats ? `${stats.totalProducts} SP` : "—",
-            hint: "Tổng đơn hàng",
-            icon: ShoppingCart,
-        },
-        {
-            title: "Khách hàng",
-            value: stats ? String(stats.totalUsers) : "—",
-            delta: stats ? `${stats.totalBrands} thương hiệu` : "—",
-            hint: "Tổng người dùng",
-            icon: Users,
-        },
-        {
-            title: "Sản phẩm",
-            value: stats ? String(stats.totalProducts) : "—",
-            delta: stats ? `${stats.totalCategories} danh mục` : "—",
-            hint: "Tổng sản phẩm",
-            icon: Package,
-        },
-    ];
 
     const filteredOrders = useMemo(() => {
         const byTab = (o: any) => {
@@ -130,7 +78,7 @@ const OverviewsDashboard = () => {
     return (
         <>
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 my-2">
-                {kpis.map((k) => (
+                {kpis(stats).map((k: any) => (
                     <KpiCard key={k.title} {...k} />
                 ))}
             </div>
@@ -139,15 +87,13 @@ const OverviewsDashboard = () => {
                 <Card className="rounded-2xl lg:col-span-2">
                     <CardHeader>
                         <CardTitle>Doanh thu 7 ngày</CardTitle>
-                        <CardDescription>
-                            Chart demo (Recharts) • gắn API sau
-                        </CardDescription>
+
                     </CardHeader>
                     <CardContent className="h-70">
                         <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={revenueSeries}>
+                            <AreaChart responsive data={chartData} margin={{ top: 0, right: 30, left: 30, bottom: 0 }}>
                                 <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="day" />
+                                <XAxis dataKey="month" />
                                 <YAxis />
                                 <Tooltip />
                                 <Area
@@ -184,63 +130,30 @@ const OverviewsDashboard = () => {
                             value={stats ? String(stats.totalCategories) : "—"}
                             progress={stats ? Math.min(stats.totalCategories * 5, 100) : 0}
                         />
+                        <MiniMetric
+                            title="Tổng đơn hàng"
+                            value={stats ? String(stats.totalOrders) : "—"}
+                            progress={stats ? Math.min(stats.totalOrders * 5, 100) : 0}
+                        />
+                        <MiniMetric
+                            title="Tổng khách hàng"
+                            value={stats ? String(stats.totalUsers) : "—"}
+                            progress={stats ? Math.min(stats.totalUsers * 5, 100) : 0}
+                        />
 
                         <Separator />
 
-                        <div className="grid gap-2">
-                            <Dialog>
-                                <DialogTrigger asChild>
-                                    <Button className="w-full rounded-xl">
-                                        + Tạo đơn nhanh
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent className="sm:max-w-130">
-                                    <DialogHeader>
-                                        <DialogTitle>Tạo đơn nhanh</DialogTitle>
-                                        <DialogDescription>
-                                            Demo form. Bạn gắn API POST /orders là xong.
-                                        </DialogDescription>
-                                    </DialogHeader>
 
-                                    <div className="grid gap-4 py-2">
-                                        <div className="grid gap-2">
-                                            <Label>Mã đơn</Label>
-                                            <Input placeholder="VD: OD-10422" />
-                                        </div>
-                                        <div className="grid gap-2">
-                                            <Label>Tên khách</Label>
-                                            <Input placeholder="VD: Nguyễn Văn A" />
-                                        </div>
-                                        <div className="grid gap-2">
-                                            <Label>Tổng tiền</Label>
-                                            <Input placeholder="VD: 1290000" />
-                                        </div>
-                                    </div>
-
-                                    <DialogFooter>
-                                        <Button variant="outline">Hủy</Button>
-                                        <Button>Tạo</Button>
-                                    </DialogFooter>
-                                </DialogContent>
-                            </Dialog>
-
-                            <Button variant="outline" className="w-full rounded-xl">
-                                Xuất báo cáo
-                            </Button>
-                        </div>
                     </CardContent>
                 </Card>
             </div>
 
-            {/* Recent orders */}
             <Card className="rounded-2xl my-2">
                 <CardHeader>
                     <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                         <div>
                             <CardTitle>Đơn gần đây</CardTitle>
-                            <CardDescription>
-                                Có search + filter + actions menu
-                            </CardDescription>
+
                         </div>
 
                         <Tabs
@@ -287,56 +200,11 @@ const OverviewsDashboard = () => {
                         </TableHeader>
                         <TableBody>
                             {filteredOrders.map((o: any) => (
-                                <TableRow key={o.id}>
-                                    <TableCell className="font-medium">#{o.id}</TableCell>
-                                    <TableCell>{o.customer}</TableCell>
-                                    <TableCell className="hidden md:table-cell">
-                                        {o.items}
-                                    </TableCell>
-                                    <TableCell className="hidden md:table-cell text-muted-foreground">
-                                        {o.createdAt ? new Date(o.createdAt).toLocaleString("vi-VN") : ""}
-                                    </TableCell>
-                                    <TableCell>{formatVND(o.total)}</TableCell>
-                                    <TableCell>
-                                        <StatusBadge status={o.status?.toUpperCase() || "PENDING"} />
-                                    </TableCell>
-                                    <TableCell className="text-right">
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    className="rounded-xl"
-                                                >
-                                                    ...
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end" className="w-44">
-                                                <DropdownMenuItem>
-                                                    Xem chi tiết
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem>
-                                                    In hóa đơn
-                                                </DropdownMenuItem>
-                                                <DropdownMenuSeparator />
-                                                <DropdownMenuItem className="text-destructive">
-                                                    Hủy đơn
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </TableCell>
-                                </TableRow>
+                                <OverviewList key={o.id} o={o} />
                             ))}
 
                             {filteredOrders.length === 0 && (
-                                <TableRow>
-                                    <TableCell
-                                        colSpan={7}
-                                        className="py-10 text-center text-muted-foreground"
-                                    >
-                                        Không có đơn nào.
-                                    </TableCell>
-                                </TableRow>
+                                <OverviesEmpty />
                             )}
                         </TableBody>
                     </Table>
