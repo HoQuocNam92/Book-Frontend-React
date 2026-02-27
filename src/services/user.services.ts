@@ -1,7 +1,7 @@
 import type { FormProfile } from "@/types/Profile";
 import { instance } from "@/utils/instance";
-export const getUsers = async () => {
-    const res = await instance.get("/users");
+export const getUsers = async (page: number) => {
+    const res = await instance.get(`/users?page=${page}`);
     return res.data;
 };
 

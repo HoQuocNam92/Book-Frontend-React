@@ -4,9 +4,10 @@ import { RefreshCw, Users } from "lucide-react";
 import { useUsers } from "@/hooks/useUsers";
 import UserListDashboard from "./UserListDashboard";
 import UserDeleteDialog from "./UserDeleteDialog";
+import Pagination from "@/components/common/Pagination";
 
 export default function UsersDashboard() {
-    const { getUsers, deleteUser } = useUsers();
+    const { getUsers, deleteUser, page, setPage } = useUsers();
 
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [deletingUserId, setDeletingUserId] = useState<number | null>(null);
@@ -28,7 +29,8 @@ export default function UsersDashboard() {
             });
         }
     };
-
+    const totalPages = getUsers.data?.totalPages
+    console.log("totalPages", totalPages)
     return (
         <div className="w-full space-y-4">
             {/* Header */}
@@ -67,13 +69,13 @@ export default function UsersDashboard() {
                 onDelete={handleDelete}
             />
 
-            {/* Delete Dialog */}
             <UserDeleteDialog
                 open={deleteOpen}
                 setOpen={setDeleteOpen}
                 onConfirm={handleConfirmDelete}
                 loading={deleteUser.isPending}
             />
+            <Pagination page={page} onChange={() => setPage(page)} totalPages={totalPages || 1} />
         </div>
     );
 }
