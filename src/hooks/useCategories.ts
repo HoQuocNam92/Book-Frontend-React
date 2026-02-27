@@ -1,13 +1,14 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import * as categoryServices from "@/services/category.services";
 import type { CategoryInput } from "@/services/category.services";
+import { useState } from "react";
 
 export const useCategories = () => {
     const queryClient = useQueryClient();
-
+    const [page, setPage] = useState(1);
     const getCategories = useQuery({
-        queryKey: ["getCategories"],
-        queryFn: categoryServices.getCategories,
+        queryKey: ["getCategories", page],
+        queryFn: () => categoryServices.getCategories(page),
         refetchOnWindowFocus: false,
     });
 
@@ -15,7 +16,7 @@ export const useCategories = () => {
         mutationFn: (data: CategoryInput) =>
             categoryServices.createCategory(data),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["getCategories"] });
+            queryClient.invalidateQueries({ queryKey: ["getCategories", page] });
         },
     });
 
@@ -23,7 +24,7 @@ export const useCategories = () => {
         mutationFn: (params: { id: number; data: CategoryInput }) =>
             categoryServices.updateCategory(params.id, params.data),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["getCategories"] });
+            queryClient.invalidateQueries({ queryKey: ["getCategories", page] });
         },
     });
 
@@ -39,5 +40,7 @@ export const useCategories = () => {
         createCategory,
         updateCategory,
         deleteCategory,
+        page,
+        setPage,
     };
 };
