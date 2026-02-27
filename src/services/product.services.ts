@@ -13,6 +13,11 @@ export const getProducts = async () => {
     return res.data;
 }
 
+export const getProductBySlug = async (slug: string) => {
+    const res = await instance.get(`/products/detail/${slug}`);
+    return res.data;
+}
+
 export const createProduct = async (data: FormData) => {
     const res = await instance.post(`/products`, data, {
         headers: {

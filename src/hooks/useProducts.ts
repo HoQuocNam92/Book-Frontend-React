@@ -15,8 +15,7 @@ export const useProducts = () => {
     const getProducts = useQuery({
         queryKey: ['getProducts'],
         queryFn: async () => await productServices.getProducts(),
-        refetchOnWindowFocus: false,
-        placeholderData: keepPreviousData
+        staleTime: 5 * 60 * 1000,
 
     })
 

@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Boxes, ClipboardList, LayoutDashboard, LogOut, Package, Settings, Truck, Users } from 'lucide-react';
+import { Boxes, ClipboardList, FolderTree, LayoutDashboard, LogOut, Package, Settings, Tag, Truck, Users } from 'lucide-react';
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 
@@ -70,9 +70,19 @@ const Sidebar = () => {
 
                         />
                         <SideItem
+                            icon={Tag}
+                            label="Thương hiệu"
+                            onClick={() => onNavigate("brands")}
+                        />
+                        <SideItem
+                            icon={FolderTree}
+                            label="Danh mục"
+                            onClick={() => onNavigate("categories")}
+                        />
+                        <SideItem
                             icon={Users}
                             label="Khách hàng"
-                            onClick={() => onNavigate("customers")}
+                            onClick={() => onNavigate("users")}
                         />
                         <SideItem
                             icon={Truck}
