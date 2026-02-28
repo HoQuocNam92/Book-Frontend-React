@@ -1,8 +1,6 @@
 const URL_BASE = "http://localhost:8080/api/";
 import axios from "axios";
-import { useAuthStore } from "@/stores/auth.stores";
-import { refreshToken, signOut } from "@/services/auth.services";
-
+import { refreshToken, signOutInstance } from "@/services/auth.services";
 export const instance = axios.create({
     baseURL: URL_BASE,
     timeout: 10000,
@@ -16,7 +14,9 @@ instance.interceptors.response.use(
     (res) => res,
     async (error) => {
         const originalRequest = error.config;
-
+        if (originalRequest.url === "auth/refresh-token" || originalRequest.url === "auth/sign-out") {
+            return Promise.reject(error);
+        }
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
 
@@ -24,8 +24,7 @@ instance.interceptors.response.use(
                 await refreshToken(); // refresh xong => backend set cookie mới
                 return instance(originalRequest); // retry request cũ
             } catch (err) {
-                useAuthStore.getState().logout?.();
-                await signOut();
+                await signOutInstance();
                 return Promise.reject(err);
             }
         }
