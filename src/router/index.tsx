@@ -19,6 +19,9 @@ import Cart from '@/pages/Cart';
 import CheckoutPage from '@/components/Checkout/CheckoutPage';
 import Profile from '@/pages/Profile';
 import ProductDetail from '@/pages/ProductDetail';
+import BannersDashboard from '@/components/Dashboard/Banners/BannersDashboard';
+import CouponsDashboard from '@/components/Dashboard/Coupons/CouponsDashboard';
+import RevenueDashboard from '@/components/Dashboard/Revenue/RevenueDashboard';
 
 export const router = createBrowserRouter(
     [
@@ -106,6 +109,18 @@ export const router = createBrowserRouter(
                 {
                     path: 'users',
                     element: <UsersDashboard />,
+                },
+                {
+                    path: 'banners',
+                    element: <BannersDashboard />
+                },
+                {
+                    path: 'coupons',
+                    element: <CouponsDashboard />
+                },
+                {
+                    path: 'revenue',
+                    element: <RevenueDashboard />
                 }
             ]
         },
