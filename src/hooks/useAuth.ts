@@ -9,7 +9,7 @@ const useAuth = () => {
     const signInMutation = useMutation({
         mutationFn: async (data: signInForm) => await signIn(data),
         onSuccess: (data) => {
-            useAuthStore.getState().setAuth(data.user);
+            useAuthStore.getState().setUser(data.user);
         }
     })
 
@@ -17,6 +17,7 @@ const useAuth = () => {
     const signUpMutation = useMutation({
         mutationFn: async (data: signUpForm) => await signUp(data)
     })
+
     const resetPasswordMutation = useMutation({
         mutationFn: async (email: string) => await resetPassword(email)
     })

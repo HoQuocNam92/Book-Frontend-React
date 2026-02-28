@@ -15,7 +15,7 @@ export const signUp = async (data: signUpForm) => {
 
 
 export const refreshToken = async () => {
-    const res = await instance.post('auth/sign-in', {}, {
+    const res = await instance.post('auth/refresh-token', {}, {
         withCredentials: true
     });
     return res.data
@@ -24,7 +24,6 @@ export const refreshToken = async () => {
 
 export const resetPassword = async (email: string) => {
     const res = await instance.post('auth/forgot-password', { email });
-    console.log("Check res", res);
     return res.data
 }
 

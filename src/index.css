@@ -7,6 +7,9 @@
   margin: 0 auto;
 }
 
+.swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal {
+  bottom: -5px;
+}
 
 .container-dashboard {
   max-width: 100%;

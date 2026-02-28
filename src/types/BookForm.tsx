@@ -1,4 +1,4 @@
-type BookStatus = "active" | "draft" | "archived"
+import type { BookStatus } from "@/components/Dashboard/Products/statusBadge"
 
 export type BookForm = {
     // Books
@@ -9,18 +9,11 @@ export type BookForm = {
     discount_percent?: number
     stock: number
     description?: string
-    brand_id?: number
-    category_id?: number
+    brand_id?: string
+    category_id?: string
     status: BookStatus
-
-    // BookPromotions
-    promotion?: {
-        content: string
-    }
-
-    // BookImages
+    content: string
     images: { url: string }[]
 
-    // BookAttributes
     attributes: { attr_key: string; attr_value: string }[]
 }

@@ -9,9 +9,20 @@ import NotFound from '@/pages/NotFound';
 import DashboardLayout from '@/layouts/DashboardLayout';
 import ProductsDashboard from '@/components/Dashboard/Products/ProductsDashboard';
 import OverviewsDashboard from '@/components/Dashboard/Overviews/OverviewsDashboard';
-import ProductDetailPage from '@/components/Detail/ProductDetailPage';
 import HomeBookshelfSection from '@/components/Home/HomeBookshelfSection';
 import ProductForm from '@/components/Dashboard/Products/ProductForm';
+import BrandsDashboard from '@/components/Dashboard/Brands/BrandsDashboard';
+import CategoriesDashboard from '@/components/Dashboard/Categories/CategoriesDashboard';
+import UsersDashboard from '@/components/Dashboard/Users/UsersDashboard';
+import OrdersDashboard from '@/components/Dashboard/Orders/OrdersDashboard';
+import Cart from '@/pages/Cart';
+import CheckoutPage from '@/components/Checkout/CheckoutPage';
+import Profile from '@/pages/Profile';
+import ProductDetail from '@/pages/ProductDetail';
+import BannersDashboard from '@/components/Dashboard/Banners/BannersDashboard';
+import CouponsDashboard from '@/components/Dashboard/Coupons/CouponsDashboard';
+import RevenueDashboard from '@/components/Dashboard/Revenue/RevenueDashboard';
+
 export const router = createBrowserRouter(
     [
         {
@@ -28,8 +39,20 @@ export const router = createBrowserRouter(
                     element: <BookByCategory />
                 },
                 {
+                    path: '/gio-hang',
+                    element: <Cart />
+                },
+                {
+                    path: '/thanh-toan',
+                    element: <CheckoutPage />
+                },
+                {
+                    path: '/ho-so',
+                    element: <Profile />
+                },
+                {
                     path: '/:slug',
-                    element: <ProductDetailPage />
+                    element: <ProductDetail />
                 }
 
             ]
@@ -63,7 +86,7 @@ export const router = createBrowserRouter(
                 },
                 {
                     path: 'orders',
-                    element: <ProductsDashboard />
+                    element: <OrdersDashboard />
                 },
                 {
                     path: 'products',
@@ -74,6 +97,30 @@ export const router = createBrowserRouter(
                     path: 'products/create',
                     element: <ProductForm />,
 
+                },
+                {
+                    path: 'brands',
+                    element: <BrandsDashboard />,
+                },
+                {
+                    path: 'categories',
+                    element: <CategoriesDashboard />,
+                },
+                {
+                    path: 'users',
+                    element: <UsersDashboard />,
+                },
+                {
+                    path: 'banners',
+                    element: <BannersDashboard />
+                },
+                {
+                    path: 'coupons',
+                    element: <CouponsDashboard />
+                },
+                {
+                    path: 'revenue',
+                    element: <RevenueDashboard />
                 }
             ]
         },
@@ -87,4 +134,5 @@ export const router = createBrowserRouter(
         }
     ]
 )
+
 

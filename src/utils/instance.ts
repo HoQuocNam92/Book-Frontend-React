@@ -21,8 +21,8 @@ instance.interceptors.response.use(
             originalRequest._retry = true;
 
             try {
-                await refreshToken(); // refresh xong => backend set cookie mới
-                return instance(originalRequest); // retry request cũ
+                await refreshToken();
+                return instance(originalRequest);
             } catch (err) {
                 await signOutInstance();
                 return Promise.reject(err);

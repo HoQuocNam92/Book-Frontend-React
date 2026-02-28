@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Boxes, ClipboardList, LayoutDashboard, LogOut, Package, Settings, Truck, Users } from 'lucide-react';
+import { Boxes, ClipboardList, FolderTree, LayoutDashboard, LogOut, Package, Settings, Tag, Truck, Users, Image as ImageIcon, Ticket, TrendingUp } from 'lucide-react';
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 
@@ -59,6 +59,11 @@ const Sidebar = () => {
                             onClick={() => onNavigate("overviews")}
                         />
                         <SideItem
+                            icon={TrendingUp}
+                            label="Doanh thu"
+                            onClick={() => onNavigate("revenue")}
+                        />
+                        <SideItem
                             icon={ClipboardList}
                             label="Đơn hàng"
                             onClick={() => onNavigate("orders")}
@@ -70,9 +75,29 @@ const Sidebar = () => {
 
                         />
                         <SideItem
+                            icon={Tag}
+                            label="Thương hiệu"
+                            onClick={() => onNavigate("brands")}
+                        />
+                        <SideItem
+                            icon={FolderTree}
+                            label="Danh mục"
+                            onClick={() => onNavigate("categories")}
+                        />
+                        <SideItem
+                            icon={ImageIcon}
+                            label="Banners"
+                            onClick={() => onNavigate("banners")}
+                        />
+                        <SideItem
+                            icon={Ticket}
+                            label="Mã giảm giá"
+                            onClick={() => onNavigate("coupons")}
+                        />
+                        <SideItem
                             icon={Users}
                             label="Khách hàng"
-                            onClick={() => onNavigate("customers")}
+                            onClick={() => onNavigate("users")}
                         />
                         <SideItem
                             icon={Truck}
