@@ -1,0 +1,40 @@
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+    getOrders,
+    updateOrderStatus,
+    deleteOrder,
+} from "@/services/order.services";
+import { useState } from "react";
+
+export const useOrders = () => {
+    const [page, setPage] = useState(1);
+    const queryClient = useQueryClient();
+    const getOrdersQuery = useQuery({
+        queryKey: ["orders", page],
+        queryFn: () => getOrders(page),
+        staleTime: 1 * 60 * 1000,
+    });
+
+    const updateOrderStatusMutation = useMutation({
+        mutationFn: ({ id, status }: { id: number; status: string }) =>
+            updateOrderStatus(id, status),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["orders", page] });
+        },
+    });
+
+    const deleteOrderMutation = useMutation({
+        mutationFn: (id: number) => deleteOrder(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["orders", page] });
+        },
+    });
+
+    return {
+        getOrders: getOrdersQuery,
+        updateOrderStatus: updateOrderStatusMutation,
+        deleteOrder: deleteOrderMutation,
+        page,
+        setPage,
+    };
+};
