@@ -3,13 +3,13 @@ import type { signUpForm } from '@/schema/signUp,schema';
 import { useMutation } from '@tanstack/react-query';
 import { signIn, signUp, resetPassword, signOut } from '@/services/auth.services';
 import { useAuthStore } from '@/stores/auth.stores';
+import { useNavigate } from 'react-router-dom';
 const useAuth = () => {
+    const navigate = useNavigate();
     const signInMutation = useMutation({
-        mutationFn: async (data: signInForm) => {
-            const res = await signIn(data);
-            console.log(res);
-            useAuthStore.getState().setUser(res.user);
-            return res;
+        mutationFn: async (data: signInForm) => await signIn(data),
+        onSuccess: (data) => {
+            useAuthStore.getState().setUser(data.user);
         }
     })
 
@@ -22,10 +22,10 @@ const useAuth = () => {
         mutationFn: async (email: string) => await resetPassword(email)
     })
     const signOutMutation = useMutation({
-        mutationFn: async () => {
-            const res = await signOut();
+        mutationFn: async () => await signOut(),
+        onSuccess: () => {
             useAuthStore.getState().logout();
-            return res;
+            navigate('/auth/sign-in');
         }
     })
 
