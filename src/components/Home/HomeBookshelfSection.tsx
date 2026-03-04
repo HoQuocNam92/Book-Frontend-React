@@ -26,7 +26,7 @@ export default function HomeBookshelfSection() {
         newBanners?.error ||
         featuredBanners?.error
     ) return null
-    console.log("featuredBanners data:", featuredBanners?.data)
+    console.log("featuredBanners data:", getProducts?.data)
     return (
         <section className="my-2">
             <div className="mx-auto w-full container px-4">
