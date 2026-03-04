@@ -7,3 +7,10 @@ export type BookType = {
     price?: number
     discount_percent?: number
 }
+
+export type BookTopType = {
+    bookId: number
+    title: string
+    quantity: number
+    revenue: number
+}

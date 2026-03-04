@@ -8,6 +8,7 @@ import { SpinnerCustom } from "@/components/ui/spinner"
 
 const statusConfig: Record<string, { label: string; color: string }> = {
     pending: { label: "Chờ xác nhận", color: "bg-yellow-100 text-yellow-700" },
+    confirmed: { label: "Đã xác nhận", color: "bg-blue-100 text-blue-700" },
     paid: { label: "Đã thanh toán", color: "bg-blue-100 text-blue-700" },
     shipping: { label: "Đang giao", color: "bg-purple-100 text-purple-700" },
     completed: { label: "Hoàn thành", color: "bg-green-100 text-green-700" },
