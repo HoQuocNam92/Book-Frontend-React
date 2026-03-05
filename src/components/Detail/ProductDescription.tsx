@@ -18,7 +18,6 @@ const ProductDescription = ({ product, related }: {
                     <div dangerouslySetInnerHTML={{ __html: product.description || "" }} />
                 </CardContent>
             </Card>
-            <MySwiperComponent data={related} />
             <Reviews product={product} />
 
         </div>
