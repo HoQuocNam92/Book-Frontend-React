@@ -94,8 +94,10 @@ const ProductDetail = () => {
                 </div>
 
                 <ProductDescription product={product} related={related} />
-                <MySwiperComponent data={related} />
 
+            </div>
+            <div className="card">
+                <MySwiperComponent data={related} />
             </div>
         </div>
     )

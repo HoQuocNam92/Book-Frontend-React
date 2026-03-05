@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+
+
+
 .container {
   max-width: 100%;
   width: 1200px;
