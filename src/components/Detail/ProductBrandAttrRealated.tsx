@@ -1,8 +1,8 @@
-import ProductRelated from '@/components/Detail/ProductRelated'
+import ProductRelated from '@/components/Related/ProductRelated'
 import SpecRowAttributes from '@/components/Detail/SpecRowAttributes'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
-const ProductBrandAttrRealated = ({ product, brand, related }: any) => {
+const ProductBrandAttrRealated = ({ product, brand, }: any) => {
   return (
     <div className="col-span-12 lg:col-span-3 space-y-4">
       <Card className="rounded-2xl">
@@ -36,9 +36,7 @@ const ProductBrandAttrRealated = ({ product, brand, related }: any) => {
 
         )}
 
-      {related.length > 0 && (
-        <ProductRelated related={related} />
-      )}
+
     </div>
   )
 }

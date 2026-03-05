@@ -11,11 +11,14 @@ import ProductImage from "@/components/Detail/ProductImage"
 import ProductInfo from "@/components/Detail/ProductInfo"
 import ProductDescription from "@/components/Detail/ProductDescription"
 import ProductBrandAttrRealated from "@/components/Detail/ProductBrandAttrRealated"
+import ProductRelated from "@/components/Related/ProductRelated"
+import useRelated from "@/hooks/useRelated"
+import MySwiperComponent from "@/components/Swiper/Swiper"
 
 const ProductDetail = () => {
     const navigate = useNavigate()
     const user = useAuthStore((s) => s.user)
-
+    const { getProductRelated } = useRelated()
     const setItemCount = useCartStore((s) => s.setItemCount)
     const { createCartItem } = useCarts()
     const { getProductBySlug } = useProductDetail()
@@ -33,12 +36,12 @@ const ProductDetail = () => {
     const salePrice = product?.sale_price ? Number(product.sale_price) : 0
     const finalPrice = salePrice > 0 ? salePrice : price
     const discount = product?.discount_percent || 0
-
     const [qty, setQty] = useState<number>(1)
-    const related = product?.relatedBooks || []
+
     const category = product?.Categories?.name || "—"
     const brand = product?.Brands?.name || "—"
-
+    const related = getProductRelated(product?.Categories
+        ?.id || 0).data?.data || []
     const goPrev = () => {
         if (images.length === 0) return
         const idx = images.indexOf(displayImage || "")
@@ -70,6 +73,7 @@ const ProductDetail = () => {
         }
     }
     const isPending = createCartItem.isPending
+    console.log("related", related)
     return (
         <div className="container bg-neutral-50">
             <div className="px-4 py-5">
@@ -86,10 +90,12 @@ const ProductDetail = () => {
 
                     <ProductInfo product={product} finalPrice={finalPrice} salePrice={salePrice} discount={discount} qty={qty} setQty={setQty} handleAddToCart={handleAddToCart} isPending={isPending} />
 
-                    <ProductBrandAttrRealated product={product} brand={brand} related={related} />
+                    <ProductBrandAttrRealated product={product} brand={brand} />
                 </div>
 
                 <ProductDescription product={product} related={related} />
+                <MySwiperComponent data={related} />
+
             </div>
         </div>
     )
