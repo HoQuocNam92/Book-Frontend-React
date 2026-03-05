@@ -10,8 +10,8 @@ export const getOrderById = async (id: number) => {
     return res.data;
 };
 
-export const getMyOrders = async () => {
-    const res = await instance.get("/orders/my");
+export const getMyOrders = async (page: number) => {
+    const res = await instance.get(`/orders/my?page=${page}`);
     return res.data;
 };
 

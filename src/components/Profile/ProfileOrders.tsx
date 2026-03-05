@@ -1,10 +1,11 @@
 import { useState } from "react"
-import { useQuery } from "@tanstack/react-query"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Package, ChevronDown, ChevronUp } from "lucide-react"
-import { getMyOrders } from "@/services/order.services"
 import { formatVND } from "@/utils/formatVND"
 import { SpinnerCustom } from "@/components/ui/spinner"
+import OrderEmpty from "@/components/Orders/OrderEmpty"
+import { useOrders } from "@/hooks/useOrders"
+import Pagination from "@/components/common/Pagination"
 
 const statusConfig: Record<string, { label: string; color: string }> = {
     pending: { label: "Chờ xác nhận", color: "bg-yellow-100 text-yellow-700" },
@@ -17,29 +18,19 @@ const statusConfig: Record<string, { label: string; color: string }> = {
 
 export default function ProfileOrders() {
     const [expandedId, setExpandedId] = useState<number | null>(null)
+    const { getMyOrders, setPage, page } = useOrders()
 
-    const { data, isLoading } = useQuery({
-        queryKey: ["my-orders"],
-        queryFn: getMyOrders,
-    })
+    if (getMyOrders?.isLoading) return <SpinnerCustom />
 
-    if (isLoading) return <SpinnerCustom />
-
-    const orders = data?.data || []
-
+    const orders = getMyOrders?.data?.data || []
+    console.log("My Orders:", orders)
     if (orders.length === 0) {
-        return (
-            <Card className="rounded-2xl">
-                <CardContent className="py-16 text-center">
-                    <Package className="mx-auto h-12 w-12 text-neutral-300" />
-                    <p className="mt-3 text-sm text-muted-foreground">Bạn chưa có đơn hàng nào</p>
-                </CardContent>
-            </Card>
-        )
+        return <OrderEmpty />
     }
 
     return (
         <div className="space-y-4">
+
             <Card className="rounded-2xl">
                 <CardHeader className="pb-2">
                     <CardTitle className="text-base flex items-center gap-2">
@@ -119,7 +110,6 @@ export default function ProfileOrders() {
                                             ))}
                                         </div>
 
-                                        {/* Address */}
                                         {order.Addresses && (
                                             <div className="text-xs text-muted-foreground border-t pt-2">
                                                 <span className="font-medium text-foreground">Giao đến: </span>
@@ -144,7 +134,9 @@ export default function ProfileOrders() {
                         )
                     })}
                 </CardContent>
+
             </Card>
+            <Pagination totalPages={getMyOrders?.data.totalPages || 1} page={page} onChange={() => setPage(page + 1)} />
         </div>
     )
 }
