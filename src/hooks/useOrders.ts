@@ -3,6 +3,7 @@ import {
     getOrders,
     updateOrderStatus,
     deleteOrder,
+    getMyOrders
 } from "@/services/order.services";
 import { useState } from "react";
 
@@ -29,9 +30,14 @@ export const useOrders = () => {
             queryClient.invalidateQueries({ queryKey: ["orders", page] });
         },
     });
-
+    const getMyOrderQuery = useQuery({
+        queryKey: ["my-orders", page],
+        queryFn: async () => await getMyOrders(page),
+        staleTime: 1 * 60 * 1000,
+    });
     return {
         getOrders: getOrdersQuery,
+        getMyOrders: getMyOrderQuery,
         updateOrderStatus: updateOrderStatusMutation,
         deleteOrder: deleteOrderMutation,
         page,
