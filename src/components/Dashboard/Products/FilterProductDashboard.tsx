@@ -15,14 +15,13 @@ import { Badge } from "@/components/ui/badge"
 
 import { useMemo, useState } from "react"
 import type { Book } from "@/components/Dashboard/Products/types/Book"
-import { seedBooks } from "@/components/Dashboard/Products/data/seedBooks"
 import type { BookStatus } from "@/components/Dashboard/Products/statusBadge"
 
 
 
 const FilterProductDashboard = () => {
     const [q, setQ] = useState("")
-    const [books, setBooks] = useState<Book[]>(seedBooks)
+    const [books, setBooks] = useState<Book[]>([])
     const [status, setStatus] = useState<BookStatus | "ALL">("ALL")
     const [selected, setSelected] = useState<Record<number, boolean>>({})
     const selectedIds = useMemo(() => {

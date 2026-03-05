@@ -96,7 +96,7 @@ export default function ImageDndUpload({
     maxImages?: number
 }) {
     const inputRef = React.useRef<HTMLInputElement | null>(null)
-
+    console.log("Check value: ", value)
     const handlePickFiles = () => {
         inputRef.current?.click()
     }

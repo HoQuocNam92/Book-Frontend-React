@@ -2,7 +2,7 @@ import { useState } from "react"
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import type { Book } from "@/types/Book"
+import type { BookType } from "@/types/Book"
 import BookList from "@/components/Books/BookList"
 
 import { useProducts } from "@/hooks/useProducts"
@@ -44,7 +44,7 @@ export default function BookByCategory() {
 
     if (getProductByCategory.isLoading) { return <SpinnerCustom /> }
     if (getProductByCategory.error) { navigate('/oops') }
-    const filtered: Book[] = getProductByCategory?.data?.data?.filter((b: Book) => {
+    const filtered: BookType[] = getProductByCategory?.data?.data?.filter((b: BookType) => {
         const okBrand = selectedBrand ? true : true
         const okPrice = b.price! >= priceRange[0] && b.price! <= priceRange[1]
         return okBrand && okPrice

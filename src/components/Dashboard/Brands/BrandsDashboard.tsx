@@ -58,7 +58,7 @@ export default function BrandsDashboard() {
             });
         }
     };
-    const brands = getBrands.data?.brands || [];
+    const brands = getBrands.data?.data || [];
     const totalPages = getBrands.data?.totalPages || 1;
     return (
         <div className="w-full space-y-4">
