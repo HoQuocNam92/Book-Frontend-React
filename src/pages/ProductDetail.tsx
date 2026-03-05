@@ -14,6 +14,7 @@ import ProductBrandAttrRealated from "@/components/Detail/ProductBrandAttrRealat
 import ProductRelated from "@/components/Related/ProductRelated"
 import useRelated from "@/hooks/useRelated"
 import MySwiperComponent from "@/components/Swiper/Swiper"
+import Reviews from "@/components/Reviews/Reviews"
 
 const ProductDetail = () => {
     const navigate = useNavigate()
@@ -73,7 +74,7 @@ const ProductDetail = () => {
         }
     }
     const isPending = createCartItem.isPending
-    console.log("related", related)
+    console.log("product", product)
     return (
         <div className="container bg-neutral-50">
             <div className="px-4 py-5">
@@ -94,11 +95,11 @@ const ProductDetail = () => {
                 </div>
 
                 <ProductDescription product={product} related={related} />
+                <Reviews id={product.id} />
+                <MySwiperComponent data={related} />
 
             </div>
-            <div className="card">
-                <MySwiperComponent data={related} />
-            </div>
+
         </div>
     )
 }

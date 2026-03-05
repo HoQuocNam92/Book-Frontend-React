@@ -18,7 +18,6 @@ const ProductDescription = ({ product, related }: {
                     <div dangerouslySetInnerHTML={{ __html: product.description || "" }} />
                 </CardContent>
             </Card>
-            <Reviews product={product} />
 
         </div>
     )
