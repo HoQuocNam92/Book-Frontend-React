@@ -1,12 +1,12 @@
 import { useQuery, useMutation, keepPreviousData, useQueryClient } from "@tanstack/react-query"
 import * as productServices from '@/services/product.services'
-import type { FormProductInput } from "@/schema/formProduct.schema"
 import { useParams, useSearchParams } from "react-router-dom"
+import type { FormProductQuickActionsInput } from "@/schema/product.schema"
 export const useProducts = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const pageParam = searchParams.get("page")
     const pageNumber = pageParam ? Number(pageParam) : 1
-    const category = useParams().slug || "all"
+    const category = useParams().category_slug || "all"
     const setPage = (page: number) => {
         setSearchParams({ page: String(page) })
     }
@@ -38,7 +38,7 @@ export const useProducts = () => {
     })
 
     const updateProduct = useMutation({
-        mutationFn: async (params: { id: string, data: FormProductInput }) => await productServices.updateProduct(params.id, params.data),
+        mutationFn: async (params: { id: string, data: FormData }) => await productServices.updateProduct(params.id, params.data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['getProducstByPage', pageNumber] })
             queryClient.invalidateQueries({ queryKey: ['getProducts'] })
@@ -54,11 +54,20 @@ export const useProducts = () => {
             queryClient.invalidateQueries({ queryKey: ['getProductByCategory', category, pageNumber] })
         }
     })
+    const updateProductQuickActions = useMutation({
+        mutationFn: async (params: { id: string, data: FormProductQuickActionsInput }) => await productServices.updateProductQuickActions(params.id, params.data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['getProducstByPage', pageNumber] })
+            queryClient.invalidateQueries({ queryKey: ['getProducts'] })
+            queryClient.invalidateQueries({ queryKey: ['getProductByCategory', category, pageNumber] })
+        }
+    })
     return {
         getProducts,
         getProductByCategory,
         createProduct,
         updateProduct,
+        updateProductQuickActions,
         deleteProduct: deleteProduct.mutate,
         setPageNumber: setPage,
         pageNumber

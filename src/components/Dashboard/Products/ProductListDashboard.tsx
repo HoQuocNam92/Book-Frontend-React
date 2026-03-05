@@ -9,7 +9,7 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { Checkbox } from "@/components/ui/checkbox"
-import { BadgeCheck, BookOpen, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Eye, Filter, Layers, Pencil, Plus, Trash2 } from 'lucide-react'
+import { BadgeCheck, BookOpen, Eye, Filter, Layers, Pencil, Plus, Trash2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { statusBadge, type BookStatus } from '@/components/Dashboard/Products/statusBadge'
 import { Button } from '@/components/ui/button'
@@ -21,10 +21,10 @@ import type { Book } from '@/components/Dashboard/Products/types/Book'
 import { formatVND } from '@/utils/formatVND'
 import { SpinnerCustom } from '@/components/ui/spinner'
 import Pagination from '@/components/common/Pagination'
-const ProductListDashboard = ({ selected, setSelected, setOpen, products, loading, errors, setPageNumber, pageNumber }: { selected: any, setSelected: any, setOpen: any, products: any, loading: boolean, errors: any, setPageNumber: any, pageNumber: any }) => {
+const ProductListDashboard = ({ handleUpdateProductQuickActions, selected, setSelected, setOpen, products, loading, errors, setPageNumber, pageNumber }: { selected: any, setSelected: any, setOpen: any, products: any, loading: boolean, errors: any, setPageNumber: any, pageNumber: any, handleUpdateProductQuickActions: (id: string, data: any) => Promise<any> }) => {
     const [books, setBooks] = useState<Book[]>(products?.data)
 
-
+    console.log("Check bookssss", books)
 
     const allVisibleSelected = books?.length
         ? books.every((b: any) => selected[b.id])
@@ -36,6 +36,9 @@ const ProductListDashboard = ({ selected, setSelected, setOpen, products, loadin
         navigate('/dashboard/products/create')
     }
 
+    const handleEditProduct = (slug: string) => {
+        navigate(`/dashboard/products/edit/${slug}`)
+    }
 
 
     const toggleRow = (id: number) => {
@@ -49,23 +52,7 @@ const ProductListDashboard = ({ selected, setSelected, setOpen, products, loadin
             return next
         })
     }
-    const onQuickToggleFeatured = (id: number) => {
-        const now = new Date().toISOString()
-        setBooks((prev) =>
-            prev.map((b) => (b.id === id ? { ...b, isFeatured: !b.isFeatured, updatedAt: now } : b))
-        )
-    }
 
-    const onQuickToggleStatus = (id: number) => {
-        const now = new Date().toISOString()
-        setBooks((prev) =>
-            prev.map((b) => {
-                if (b.id !== id) return b
-                const next: BookStatus = b.status === "active" ? "draft" : "active"
-                return { ...b, status: next, updatedAt: now }
-            })
-        )
-    }
 
     const handleDelete = (id: number) => {
         if (!selected?.[id]) {
@@ -226,20 +213,25 @@ const ProductListDashboard = ({ selected, setSelected, setOpen, products, loadin
                                                     <DropdownMenuContent align="end" className="w-56">
                                                         <DropdownMenuLabel>Quick actions</DropdownMenuLabel>
                                                         <DropdownMenuSeparator />
-                                                        <DropdownMenuItem className="gap-2"  >
+                                                        <DropdownMenuItem className="gap-2" onClick={() => handleEditProduct(b.slug)}>
                                                             <Pencil className="h-4 w-4" />
                                                             Edit
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem
                                                             className="gap-2"
-                                                            onClick={() => onQuickToggleFeatured(b.id)}
+                                                            onClick={() => handleUpdateProductQuickActions(b.id, {
+                                                                is_featured: !b.isFeatured,
+                                                            })}
                                                         >
                                                             <BadgeCheck className="h-4 w-4" />
                                                             Toggle featured
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem
                                                             className="gap-2"
-                                                            onClick={() => onQuickToggleStatus(b.id)}
+                                                            onClick={() => handleUpdateProductQuickActions(b.id, {
+                                                                status: b.status === "active" ? "draft" : "active",
+
+                                                            })}
                                                         >
                                                             <Layers className="h-4 w-4" />
                                                             Toggle active/draft

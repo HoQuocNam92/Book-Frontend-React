@@ -17,14 +17,28 @@ import type { SubmitHandler } from "react-hook-form"
 import MyEditor from "@/components/Dashboard/Products/QuilEditor"
 import ImageDndUpload, { type ProductImageItem } from "@/components/DndKit/ImageDndList"
 import { useEffect, useState } from "react"
-import { formProductSchema, type FormProductInput } from "@/schema/formProduct.schema"
+import { formProductSchema, type FormProductInput } from "@/schema/product.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useProducts } from "@/hooks/useProducts"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, } from "react-router-dom"
+import { useBrands } from "@/hooks/useBrands"
+import { useCategories } from "@/hooks/useCategories"
+import { SpinnerCustom } from "@/components/ui/spinner"
+import Oops from "@/pages/Oops"
+import { useProductDetail } from "@/hooks/useProductDetail"
 const ProductForm = () => {
-    const { register, handleSubmit, control, setValue, formState: { errors }, } = useForm({
-        resolver: zodResolver(formProductSchema)
+    const navigate = useNavigate()
+    const { getProductBySlug } = useProductDetail();
+    const { getBrands } = useBrands()
+    const { getCategories } = useCategories()
+    const brands = getBrands.data?.data || []
+    const categories = getCategories.data?.data || []
+    const productData = getProductBySlug.data?.data
+
+    const { register, handleSubmit, control, setValue, reset, formState: { errors }, } = useForm({
+        resolver: zodResolver(formProductSchema),
     });
+
     const { createProduct } = useProducts()
     const [images, setImages] = useState<ProductImageItem[]>([])
     const [attrKey, setAttrKey] = useState<{ attr_key: string; attr_value: string }[]>([])
@@ -50,8 +64,6 @@ const ProductForm = () => {
             images.forEach((image) => {
                 formData.append("images", image.file)
             })
-
-
 
             const res = await createProduct.mutateAsync(formData)
             alert(res.message || "Tao sản phẩm thành công")
@@ -83,14 +95,43 @@ const ProductForm = () => {
         newAttrKey.splice(index, 1)
         setAttrKey(newAttrKey)
     }
-    const navigate = useNavigate()
     const handleCancel = () => {
         navigate(-1);
     }
     useEffect(() => {
-        setValue("attributes", attrKey)
-        setValue("images", images.map(x => x.file))
-    }, [attrKey, images])
+        if (!productData) return
+
+        reset({
+            title: productData.title,
+            price: productData.price,
+            discount_percent: productData.discount_percent ?? 0,
+            stock: productData.stock,
+            description: productData.description || "",
+            brand_id: productData.Brands?.id?.toString() || "",
+            category_id: productData.Categories?.id?.toString() || "",
+            status: productData.status,
+            content: productData.BookPromotions.map((promo: { content: string }) => promo.content).join("\n") || "",
+            is_featured: productData.isFeatured || false,
+
+        })
+        setAttrKey(productData.BookAttributes.map((attr: { attr_key: string, attr_value: string }) => ({
+            attr_key: attr.attr_key,
+            attr_value: attr.attr_value
+        })))
+        setImages(productData.BookImages.map((img: { id: number, url: string }) => ({
+            id: img.id.toString(),
+            file: null,
+            preview: img.url
+        })))
+    }, [productData, reset,])
+
+
+    if (getBrands.isLoading || getCategories.isLoading || getProductBySlug.isLoading) {
+        return <SpinnerCustom />
+    }
+    if (getBrands.error || getCategories.error || getProductBySlug.error) {
+        return <Oops />
+    }
     return (
         <form onSubmit={handleSubmit(onSubmit, (errors) => {
             console.log("Form errors:", errors)
@@ -129,7 +170,7 @@ const ProductForm = () => {
                                                 rules={{ required: true }}
                                                 render={
                                                     (({ field }) => (
-                                                        <Select value={field.value} onValueChange={field.onChange}>
+                                                        <Select key={field.value} value={field.value} onValueChange={field.onChange}>
                                                             <SelectTrigger>
                                                                 <SelectValue placeholder="Select status" />
                                                             </SelectTrigger>
@@ -169,42 +210,50 @@ const ProductForm = () => {
                                             {errors.stock && <p className="text-sm text-red-500">{errors.stock.message}</p>}
                                         </div>
 
-                                        <div className="space-y-2">
-                                            <Label>Danh mục</Label>
-                                            <Controller
-                                                name="category_id"
-                                                control={control}
-                                                rules={{ required: true }}
-                                                render={({ field }) => (
-                                                    <Select value={field.value} onValueChange={field.onChange}>
-                                                        <SelectTrigger>
-                                                            <SelectValue placeholder="Select category" />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                            <SelectItem value="1">Category 1</SelectItem>
-                                                            <SelectItem value="2">Category 2</SelectItem>
-                                                        </SelectContent>
-                                                    </Select>
-                                                )}
-                                            />
-                                            {
-                                                errors.category_id && <p className="text-sm text-red-500">{errors.category_id.message}</p>
+                                        <div className=" flex">
+                                            <div className="me-2 space-y-2">
 
-                                            }
+                                                <Label>Danh mục</Label>
+                                                <Controller
+                                                    name="category_id"
+                                                    control={control}
+                                                    rules={{ required: true }}
+                                                    render={({ field }) => (
+                                                        <Select key={field.value} value={field.value} onValueChange={field.onChange}>
+                                                            <SelectTrigger>
+                                                                <SelectValue placeholder="Select category" />
+                                                            </SelectTrigger>
+                                                            <SelectContent>
+                                                                {categories.map((category: { id: number, name: string }) => (
+                                                                    <SelectItem key={category.id} value={category.id.toString()}>{category.name}</SelectItem>
+                                                                ))}
+                                                            </SelectContent>
+                                                        </Select>
+                                                    )}
+                                                />
+                                                {
+                                                    errors.category_id && <p className="text-sm text-red-500">{errors.category_id.message}</p>
+
+                                                }
+                                            </div>
+                                            <div className="space-y-2">
+
+                                                <Label>Nổi bật</Label>
+                                                <Input type="checkbox" {...register("is_featured")} checked={productData?.isFeatured} />
+                                                {
+                                                    errors.is_featured && <p className="text-sm text-red-500">{errors.is_featured.message}</p>
+
+                                                }
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="rounded-2xl border p-5">
-                                    <div className="mb-4">
-                                        <p className="text-base font-semibold">Khuyến mãi</p>
-                                        <p className="text-sm text-muted-foreground">
-                                            Thông tin bổ sung hiển thị trên trang sản phẩm.
-                                        </p>
-                                    </div>
+
 
                                     <div className="space-y-2">
-                                        <Label>Promotion text</Label>
+                                        <Label>Khuyến mãi</Label>
                                         <Textarea
                                             placeholder="Example: Free shipping • Gift included • 1-year warranty..."
                                             className="min-h-30"
@@ -236,19 +285,23 @@ const ProductForm = () => {
 
                                     <div className="space-y-5">
                                         <div className="space-y-2">
-                                            <Label>Brand</Label>
+                                            <Label>Thương hiệu</Label>
                                             <Controller
                                                 name="brand_id"
                                                 control={control}
                                                 rules={{ required: false }}
                                                 render={({ field }) => (
-                                                    <Select value={field.value} onValueChange={field.onChange}>
+                                                    <Select key={field.value ?? ""} value={field.value ?? ""}
+                                                        onValueChange={field.onChange}>
                                                         <SelectTrigger>
                                                             <SelectValue placeholder="Select brand" />
                                                         </SelectTrigger>
                                                         <SelectContent>
-                                                            <SelectItem value="1">Brand 1</SelectItem>
-                                                            <SelectItem value="2">Brand 2</SelectItem>
+                                                            {
+                                                                brands.map((brand: { id: number, name: string }) => (
+                                                                    <SelectItem key={brand.id} value={brand.id.toString()}>{brand.name}</SelectItem>
+                                                                ))
+                                                            }
                                                         </SelectContent>
                                                     </Select>
                                                 )}
@@ -260,7 +313,7 @@ const ProductForm = () => {
                                         </div>
 
                                         <div className="space-y-2">
-                                            <Label>Attributes</Label>
+                                            <Label>Thuộc tính</Label>
                                             <div className=" gap-2 my-3">
                                                 {attrKey.length > 0 && (
                                                     <div className="  my-2">

@@ -35,7 +35,7 @@ export const router = createBrowserRouter(
                 }
                 ,
                 {
-                    path: '/danh-muc/:slug?',
+                    path: '/danh-muc/:category_slug?',
                     element: <BookByCategory />
                 },
                 {
@@ -97,6 +97,10 @@ export const router = createBrowserRouter(
                     path: 'products/create',
                     element: <ProductForm />,
 
+                },
+                {
+                    path: 'products/edit/:slug',
+                    element: <ProductForm />,
                 },
                 {
                     path: 'brands',

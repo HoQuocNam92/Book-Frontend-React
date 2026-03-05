@@ -20,9 +20,20 @@ export const formProductSchema = z.object({
     category_id: z.string("Vui lòng chọn danh mục"),
     status: z.enum(["active", "draft", "archived"], "Vui lòng chọn trạng thái sản phẩm").default("active"),
     content: z.string(),
+    is_featured: z.boolean().default(false),
     attributes: z.array(z.object({ attr_key: z.string(), attr_value: z.string() })),
     images: z.array(z.instanceof(File)).optional()
 });
 
 
 export type FormProductInput = z.infer<typeof formProductSchema>;
+
+
+
+export const fromProductQuickActionsSchema = z.object({
+    status: z.enum(["active", "draft", "archived"], "Vui lòng chọn trạng thái sản phẩm").optional(),
+    is_featured: z.boolean().optional(),
+}
+)
+
+export type FormProductQuickActionsInput = z.infer<typeof fromProductQuickActionsSchema>
