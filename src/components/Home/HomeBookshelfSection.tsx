@@ -26,9 +26,10 @@ export default function HomeBookshelfSection() {
         newBanners?.error ||
         featuredBanners?.error
     ) return null
+
     return (
-        <section className="my-2">
-            <div className="mx-auto w-full container px-4">
+        <section className="py-6">
+            <div className="mx-auto w-full container px-4 space-y-2">
                 <HomeSales
                     discountBooks={getProducts?.data?.data?.discountBooks}
                     banners={salesBanners?.data}

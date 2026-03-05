@@ -1,24 +1,22 @@
-import Reviews from '@/components/Reviews/Reviews'
-import MySwiperComponent from '@/components/Swiper/Swiper'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import type { BookType } from '@/types/Book'
-import React from 'react'
+import { FileText } from 'lucide-react'
 
-const ProductDescription = ({ product, related }: {
-    product: any
-    related: BookType[]
-}) => {
+const ProductDescription = ({ product }: { product: any }) => {
     return (
-        <div className="mt-6 space-y-6">
-            <Card className="rounded-2xl">
-                <CardHeader className="pb-2">
-                    <CardTitle className="text-base">THÔNG TIN SẢN PHẨM</CardTitle>
+        <div className="mt-6">
+            <Card className="rounded-2xl border-0 shadow-sm">
+                <CardHeader className="pb-2 border-b border-neutral-100">
+                    <CardTitle className="flex items-center gap-2 text-base font-semibold text-neutral-700">
+                        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-orange-400 to-amber-400">
+                            <FileText className="h-4 w-4 text-white" />
+                        </div>
+                        THÔNG TIN SẢN PHẨM
+                    </CardTitle>
                 </CardHeader>
-                <CardContent className="prose prose-neutral max-w-none p-5">
+                <CardContent className="prose prose-neutral prose-sm max-w-none p-6">
                     <div dangerouslySetInnerHTML={{ __html: product.description || "" }} />
                 </CardContent>
             </Card>
-
         </div>
     )
 }
