@@ -13,37 +13,45 @@ const HomeShelfBookCard = ({
     onClick?: () => void
 }) => {
     const displayPrice = book.sale_price && book.sale_price > 0 ? book.sale_price : book.price
+    const hasDiscount = book.discount_percent && book.discount_percent > 0
+
     return (
         <div
             className={cn(
-                "group cursor-pointer border-r relative border-neutral-200 p-4",
+                "group cursor-pointer relative bg-white rounded-2xl p-3 transition-all duration-200 hover:shadow-lg hover:-translate-y-1 border border-neutral-100",
                 className
             )}
             onClick={onClick}
         >
-            <div className="mx-auto w-full max-w-[150px]">
-                <div className="aspect-[3/4] overflow-hidden rounded-xl bg-white">
-                    <LazyImage src={book.BookImages} alt={book.title} />
-                    )
+            {/* Discount badge */}
+            {hasDiscount && (
+                <div className="absolute top-2 right-2 z-10 rounded-full bg-gradient-to-br from-red-500 to-orange-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm">
+                    -{book.discount_percent}%
+                </div>
+            )}
+
+            {/* Book cover */}
+            <div className="mx-auto w-full max-w-[140px]">
+                <div className="aspect-[3/4] overflow-hidden rounded-xl bg-neutral-50 shadow-sm">
+                    <div className="h-full w-full transition-transform duration-300 group-hover:scale-105">
+                        <LazyImage src={book.BookImages} alt={book.title} />
+                    </div>
                 </div>
             </div>
 
-            <div className="mt-3 line-clamp-2 min-h-10 text-sm font-medium text-neutral-800">
+            {/* Title */}
+            <div className="mt-3 line-clamp-2 min-h-[2.5rem] text-xs font-medium text-neutral-800 leading-snug">
                 {book.title}
             </div>
 
-            <div className="mt-2 flex flex-wrap items-end gap-2">
-                <div className="text-xs text-muted-foreground line-through">
-                    {formatVND(book.price!)}
-                </div>
-
-                <div className="text-base font-bold text-orange-600">
+            {/* Price */}
+            <div className="mt-2 flex flex-col gap-0.5">
+                <div className="text-sm font-bold text-orange-500">
                     {formatVND(displayPrice!)}
                 </div>
-
-                {book.discount_percent && book.discount_percent > 0 && (
-                    <div className="bg-orange-500 hover:bg-orange-500 absolute right-2 top-2 rounded px-1 text-xs font-semibold text-white">
-                        -{book.discount_percent}%
+                {hasDiscount && (
+                    <div className="text-[11px] text-neutral-400 line-through">
+                        {formatVND(book.price!)}
                     </div>
                 )}
             </div>

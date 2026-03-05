@@ -11,10 +11,10 @@ import ProductImage from "@/components/Detail/ProductImage"
 import ProductInfo from "@/components/Detail/ProductInfo"
 import ProductDescription from "@/components/Detail/ProductDescription"
 import ProductBrandAttrRealated from "@/components/Detail/ProductBrandAttrRealated"
-import ProductRelated from "@/components/Related/ProductRelated"
 import useRelated from "@/hooks/useRelated"
 import MySwiperComponent from "@/components/Swiper/Swiper"
 import Reviews from "@/components/Reviews/Reviews"
+import { Home, ChevronRight } from "lucide-react"
 
 const ProductDetail = () => {
     const navigate = useNavigate()
@@ -41,8 +41,8 @@ const ProductDetail = () => {
 
     const category = product?.Categories?.name || "—"
     const brand = product?.Brands?.name || "—"
-    const related = getProductRelated(product?.Categories
-        ?.id || 0).data?.data || []
+    const related = getProductRelated(product?.Categories?.id || 0).data?.data || []
+
     const goPrev = () => {
         if (images.length === 0) return
         const idx = images.indexOf(displayImage || "")
@@ -55,10 +55,10 @@ const ProductDetail = () => {
         const next = idx >= images.length - 1 ? 0 : idx + 1
         setActiveImage(images[next])
     }
+
     if (getProductBySlug.isLoading) return <SpinnerCustom />
-    if (getProductBySlug.error || !product) {
-        return <Oops />
-    }
+    if (getProductBySlug.error || !product) return <Oops />
+
     const handleAddToCart = async () => {
         if (!user) {
             navigate("/auth/sign-in")
@@ -74,33 +74,73 @@ const ProductDetail = () => {
         }
     }
     const isPending = createCartItem.isPending
-    console.log("product", product)
+
     return (
-        <div className="container bg-neutral-50">
-            <div className="px-4 py-5">
-                <div className="mb-3 text-sm text-muted-foreground">
-                    <span className="cursor-pointer hover:text-foreground" onClick={() => navigate("/")}>Trang chủ</span>
-                    <span className="mx-2">›</span>
-                    <span className="cursor-pointer hover:text-foreground">{category}</span>
-                    <span className="mx-2">›</span>
-                    <span className="text-foreground">{product.title}</span>
-                </div>
+        <div className="min-h-screen bg-neutral-50">
+            <div className="container px-4 py-6">
+                {/* Breadcrumb */}
+                <nav className="mb-5 flex items-center gap-1.5 text-sm text-neutral-400">
+                    <button
+                        onClick={() => navigate("/")}
+                        className="flex items-center gap-1 rounded-md px-1.5 py-0.5 hover:bg-neutral-200 hover:text-neutral-700 transition-colors"
+                    >
+                        <Home className="h-3.5 w-3.5" />
+                        <span>Trang chủ</span>
+                    </button>
+                    <ChevronRight className="h-3.5 w-3.5 shrink-0" />
+                    <button className="rounded-md px-1.5 py-0.5 hover:bg-neutral-200 hover:text-neutral-700 transition-colors">
+                        {category}
+                    </button>
+                    <ChevronRight className="h-3.5 w-3.5 shrink-0" />
+                    <span className="line-clamp-1 font-medium text-neutral-600">{product.title}</span>
+                </nav>
 
-                <div className="grid grid-cols-12 gap-5">
-                    <ProductImage images={images} activeImage={activeImage} setActiveImage={setActiveImage} title={product.title} goPrev={goPrev} goNext={goNext} />
+                {/* Main product grid */}
+                <div className="grid grid-cols-12 gap-4">
+                    <ProductImage
+                        images={images}
+                        activeImage={activeImage}
+                        setActiveImage={setActiveImage}
+                        title={product.title}
+                        goPrev={goPrev}
+                        goNext={goNext}
+                    />
 
-                    <ProductInfo product={product} finalPrice={finalPrice} salePrice={salePrice} discount={discount} qty={qty} setQty={setQty} handleAddToCart={handleAddToCart} isPending={isPending} />
+                    <ProductInfo
+                        product={product}
+                        finalPrice={finalPrice}
+                        salePrice={salePrice}
+                        discount={discount}
+                        qty={qty}
+                        setQty={setQty}
+                        handleAddToCart={handleAddToCart}
+                        isPending={isPending}
+                    />
 
                     <ProductBrandAttrRealated product={product} brand={brand} />
                 </div>
 
-                <ProductDescription product={product} related={related} />
-                <Reviews id={product.id} />
-                <MySwiperComponent data={related} />
+                {/* Description */}
+                <ProductDescription product={product} />
 
+                {/* Reviews */}
+                <div className="mt-6">
+                    <Reviews id={product.id} />
+                </div>
+
+                {/* Related books */}
+                {related.length > 0 && (
+                    <div className="mt-8">
+                        <div className="mb-4 flex items-center gap-3">
+                            <div className="h-6 w-1.5 rounded-full bg-gradient-to-b from-orange-500 to-amber-400" />
+                            <h2 className="text-lg font-bold text-neutral-800">Sách tương tự</h2>
+                        </div>
+                        <MySwiperComponent data={related} />
+                    </div>
+                )}
             </div>
-
         </div>
     )
 }
+
 export default ProductDetail
