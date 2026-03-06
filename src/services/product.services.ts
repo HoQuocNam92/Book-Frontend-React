@@ -1,4 +1,4 @@
-import type { FormProductInput, FormProductQuickActionsInput } from "@/schema/product.schema";
+import type { FormProductQuickActionsInput } from "@/schema/product.schema";
 import { instance } from "@/utils/instance"
 
 
