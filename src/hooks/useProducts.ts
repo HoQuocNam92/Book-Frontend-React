@@ -23,7 +23,7 @@ export const useProducts = () => {
     const getProductByCategory = useQuery({
         queryKey: ['getProductByCategory', category, pageNumber],
         queryFn: async () => await productServices.getProductByCategory(category, pageNumber),
-        enabled: !!pageNumber,
+        enabled: !!category,
         staleTime: 5 * 60 * 1000,
         placeholderData: keepPreviousData
     })
