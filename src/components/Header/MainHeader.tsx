@@ -34,7 +34,9 @@ const MainHeader = () => {
             <div className="container mx-auto px-4 py-4 flex items-center gap-6">
                 {/* Logo */}
                 <div className="flex items-center gap-2 min-w-[180px]">
-                    <img src="/logo.png" alt="AlphaBooks" className="h-10" />
+                    <Link to="/">
+                        <img src="/images/logo.png" alt="AlphaBooks" className="h-10" />
+                    </Link>
                 </div>
 
                 {/* Search */}
@@ -45,7 +47,7 @@ const MainHeader = () => {
                     />
                     <Button
                         size="icon"
-                        className="absolute right-1 top-1/2 -translate-y-1/2 bg-orange-500 hover:bg-orange-600"
+                        className="absolute right-0 top-1/2 cursor-pointer -translate-y-1/2 bg-orange-500 hover:bg-orange-600"
                     >
                         <Search className="h-4 w-4" />
                     </Button>
@@ -57,7 +59,7 @@ const MainHeader = () => {
                         <Phone className="h-4 w-4 text-orange-500" />
                         <span>
                             Gọi đặt hàng <br />
-                            <b>0932329959</b>
+                            <b>0387901461</b>
                         </span>
                     </div>
 
