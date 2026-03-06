@@ -21,7 +21,7 @@ export const formProductSchema = z.object({
     status: z.enum(["active", "draft", "archived"], "Vui lòng chọn trạng thái sản phẩm").default("active"),
     content: z.string(),
     is_featured: z.boolean().default(false),
-    attributes: z.array(z.object({ attr_key: z.string(), attr_value: z.string() })),
+    attributes: z.array(z.object({ attr_key: z.string(), attr_value: z.string() })).optional(),
     images: z.array(z.instanceof(File)).optional()
 });
 

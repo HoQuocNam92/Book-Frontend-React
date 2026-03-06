@@ -28,6 +28,8 @@ import Oops from "@/pages/Oops"
 import { useProductDetail } from "@/hooks/useProductDetail"
 const ProductForm = () => {
     const navigate = useNavigate()
+    const { createProduct, updateProduct } = useProducts()
+
     const { getProductBySlug } = useProductDetail();
     const { getBrands } = useBrands()
     const { getCategories } = useCategories()
@@ -39,7 +41,7 @@ const ProductForm = () => {
         resolver: zodResolver(formProductSchema),
     });
 
-    const { createProduct } = useProducts()
+    const [isEdit, setIsEdit] = useState(false)
     const [images, setImages] = useState<ProductImageItem[]>([])
     const [attrKey, setAttrKey] = useState<{ attr_key: string; attr_value: string }[]>([])
     const onSubmit: SubmitHandler<FormProductInput> = async (data) => {
@@ -65,8 +67,10 @@ const ProductForm = () => {
                 formData.append("images", image.file)
             })
 
-            const res = await createProduct.mutateAsync(formData)
-            alert(res.message || "Tao sản phẩm thành công")
+
+            console.log("Check formData entries:", isEdit)
+            const res = isEdit ? await updateProduct.mutateAsync({ id: productData.id, data: formData }) : await createProduct.mutateAsync(formData)
+            alert(res.message || "Thành công")
             setValue("title", "")
             setValue("price", 0)
             setValue("discount_percent", 0)
@@ -82,6 +86,7 @@ const ProductForm = () => {
             console.error("Error creating product:", error)
         }
     }
+
     const [key, setKey] = useState("")
     const [valueAttr, setValueAttr] = useState("")
     const handleAttributeAdd = (data: any) => {
@@ -101,6 +106,9 @@ const ProductForm = () => {
     useEffect(() => {
         if (!productData) return
 
+        if (productData) {
+            setIsEdit(true)
+        }
         reset({
             title: productData.title,
             price: productData.price,
@@ -140,7 +148,7 @@ const ProductForm = () => {
             <div className="w-full">
                 <Card className="w-full max-w-6xl rounded-3xl border shadow-sm">
                     <CardHeader className="space-y-1">
-                        <CardTitle className="text-xl font-bold">Tạo sản phẩm</CardTitle>
+                        <CardTitle className="text-xl font-bold">{isEdit ? "Sửa" : "Tạo"}  sản phẩm</CardTitle>
                         <p className="text-sm text-muted-foreground">
                             Điền thông tin sản phẩm và xuất bản nó vào cửa hàng của bạn.
                         </p>
@@ -362,7 +370,7 @@ const ProductForm = () => {
                                 <Button onClick={handleCancel} variant="outline" type="button">
                                     Hủy bỏ
                                 </Button>
-                                <Button type="submit">Tạo sản phẩm</Button>
+                                <Button type="submit">{isEdit ? "Cập nhật" : "Tạo"} sản phẩm</Button>
                             </div>
                         </div>
                     </CardContent>
