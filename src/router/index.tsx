@@ -22,6 +22,10 @@ import ProductDetail from '@/pages/ProductDetail';
 import BannersDashboard from '@/components/Dashboard/Banners/BannersDashboard';
 import CouponsDashboard from '@/components/Dashboard/Coupons/CouponsDashboard';
 import RevenueDashboard from '@/components/Dashboard/Revenue/RevenueDashboard';
+import NewsDashboard from '@/components/Dashboard/News/NewsDashboard';
+import AllCategories from '@/pages/AllCategories';
+import NewsPage from '@/pages/NewsPage';
+import NewsDetail from '@/pages/NewsDetail';
 
 export const router = createBrowserRouter(
     [
@@ -35,8 +39,20 @@ export const router = createBrowserRouter(
                 }
                 ,
                 {
-                    path: '/danh-muc/:category_slug?',
+                    path: '/danh-muc',
+                    element: <AllCategories />
+                },
+                {
+                    path: '/danh-muc/:category_slug',
                     element: <BookByCategory />
+                },
+                {
+                    path: '/tin-tuc',
+                    element: <NewsPage />
+                },
+                {
+                    path: '/tin-tuc/:slug',
+                    element: <NewsDetail />
                 },
                 {
                     path: '/gio-hang',
@@ -125,6 +141,10 @@ export const router = createBrowserRouter(
                 {
                     path: 'revenue',
                     element: <RevenueDashboard />
+                },
+                {
+                    path: 'news',
+                    element: <NewsDashboard />
                 }
             ]
         },

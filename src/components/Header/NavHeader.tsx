@@ -1,5 +1,6 @@
 import { Menu } from 'lucide-react'
 import { Link } from 'react-router-dom';
+
 const NavHeader = () => {
     return (
         <div className="bg-orange-500 text-white">
@@ -11,7 +12,7 @@ const NavHeader = () => {
 
                 <nav className="flex gap-6 text-sm font-medium">
                     <a className="hover:underline" href="#">Giới thiệu</a>
-                    <a className="hover:underline" href="#">Tin tức</a>
+                    <Link className="hover:underline" to="/tin-tuc">Tin tức</Link>
                     <a className="hover:underline" href="#">Hợp tác</a>
                 </nav>
             </div>
