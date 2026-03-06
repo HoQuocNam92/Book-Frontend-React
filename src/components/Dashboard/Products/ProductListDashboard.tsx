@@ -24,7 +24,6 @@ import Pagination from '@/components/common/Pagination'
 const ProductListDashboard = ({ handleUpdateProductQuickActions, selected, setSelected, setOpen, products, loading, errors, setPageNumber, pageNumber }: { selected: any, setSelected: any, setOpen: any, products: any, loading: boolean, errors: any, setPageNumber: any, pageNumber: any, handleUpdateProductQuickActions: (id: string, data: any) => Promise<any> }) => {
     const [books, setBooks] = useState<Book[]>(products?.data)
 
-    console.log("Check bookssss", books)
 
     const allVisibleSelected = books?.length
         ? books.every((b: any) => selected[b.id])
