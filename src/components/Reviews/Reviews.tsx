@@ -29,7 +29,6 @@ const Reviews = ({ id }: { id: number }) => {
             alert(error.response?.data?.message || "Gửi đánh giá thất bại. Vui lòng thử lại sau.")
         }
     }
-    console.log("reviews", reviews)
     return (
         <div>
             <Card className="rounded-2xl">

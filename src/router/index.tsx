@@ -25,6 +25,7 @@ import RevenueDashboard from '@/components/Dashboard/Revenue/RevenueDashboard';
 import NewsDashboard from '@/components/Dashboard/News/NewsDashboard';
 import NewsPage from '@/pages/NewsPage';
 import NewsDetail from '@/pages/NewsDetail';
+import OAuthSuccess from '@/pages/OAuthSuccess';
 
 export const router = createBrowserRouter(
     [
@@ -66,7 +67,10 @@ export const router = createBrowserRouter(
                     path: '/:slug',
                     element: <ProductDetail />
                 }
-
+                , {
+                    path: '/oauth-success',
+                    element: <OAuthSuccess />
+                }
             ]
         },
         {

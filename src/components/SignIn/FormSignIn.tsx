@@ -23,8 +23,9 @@ const FormSignIn = () => {
             alert(error.response.data.message)
         }
     };
-    const handleSignInWithGoogle = () => {
-        window.open(`${import.meta.env.VITE_BASE_URL}/auth/google`, "_self");
+    const handleSignInWithGoogle = async () => {
+        window.open(`${import.meta.env.VITE_API_BASE_URL}/auth/google`, "_self");
+
     }
     return (
         <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
