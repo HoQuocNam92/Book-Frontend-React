@@ -24,6 +24,7 @@ export default function ProfileInfo() {
     const { getProfile, updateProfile } = useProfile()
 
     const profile = getProfile.data?.data
+    console.log("profile", profile)
     const handleUpdateProfile = async () => {
         try {
             const formDataUser = new FormData();

@@ -3,7 +3,6 @@ import { useAuthStore } from '@/stores/auth.stores'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 const useProfile = () => {
     const queryClient = useQueryClient()
-    // const user = useAuthStore((s) => s.user)
     const getProfileQuery = useQuery({
         queryKey: ["profile"],
         queryFn: async () => {
