@@ -26,6 +26,7 @@ import NewsDashboard from '@/components/Dashboard/News/NewsDashboard';
 import NewsPage from '@/pages/NewsPage';
 import NewsDetail from '@/pages/NewsDetail';
 import OAuthSuccess from '@/pages/OAuthSuccess';
+import ProtectedRoute from '../pages/ProtectedRoute';
 
 export const router = createBrowserRouter(
     [
@@ -94,7 +95,9 @@ export const router = createBrowserRouter(
         },
         {
             path: '/dashboard',
-            element: <DashboardLayout />,
+            element: <ProtectedRoute roles={[1, 3]}>
+                <DashboardLayout />
+            </ProtectedRoute>,
             children: [
                 {
                     path: 'overviews?',
