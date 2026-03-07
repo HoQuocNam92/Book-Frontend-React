@@ -68,7 +68,6 @@ const ProductForm = () => {
             })
 
 
-            console.log("Check formData entries:", isEdit)
             const res = isEdit ? await updateProduct.mutateAsync({ id: productData.id, data: formData }) : await createProduct.mutateAsync(formData)
             alert(res.message || "Thành công")
             setValue("title", "")

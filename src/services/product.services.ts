@@ -28,7 +28,6 @@ export const createProduct = async (data: FormData) => {
 }
 
 export const updateProduct = async (id: string, data: FormData) => {
-    console.log("Check data in service", data)
     const res = await instance.put(`/products/${id}`, data);
     return res.data;
 }

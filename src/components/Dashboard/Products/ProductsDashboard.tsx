@@ -22,7 +22,6 @@ export default function BooksDashboard() {
     const handleUpdateProductQuickActions = async (id: string, data: FormProductQuickActionsInput) => {
 
         try {
-            console.log("Check data in dashboard", data)
 
             const res = await updateProductQuickActions.mutateAsync({ id, data })
             alert(res.message || "Cập nhật sản phẩm thành công")
