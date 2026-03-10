@@ -14,12 +14,12 @@ instance.interceptors.response.use(
     (res) => res,
     async (error) => {
         const originalRequest = error.config;
-        if (originalRequest.url === "auth/refresh-token" || originalRequest.url === "/users/profile") {
-            return Promise.reject(error);
-        }
+
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
-
+            if (originalRequest.url === "auth/refresh-token" || originalRequest.url === "/users/profile") {
+                return Promise.reject(error);
+            }
             try {
                 await refreshToken();
                 return instance(originalRequest);
