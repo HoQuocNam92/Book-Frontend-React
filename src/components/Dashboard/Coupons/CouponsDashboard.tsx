@@ -6,6 +6,7 @@ import CouponListDashboard from "./CouponListDashboard";
 import CouponForm from "./CouponForm";
 import type { CouponFormData } from "./CouponForm";
 import CouponDeleteDialog from "./CouponDeleteDialog";
+import type { CouponPayload } from "@/services/coupon.services";
 
 export default function CouponsDashboard() {
     const { getCoupons, createCoupon, updateCoupon, deleteCoupon } = useCoupons();
@@ -30,7 +31,7 @@ export default function CouponsDashboard() {
         setDeleteOpen(true);
     };
 
-    const handleFormSubmit = (data: { code: string; discount: number; expired_at: string }) => {
+    const handleFormSubmit = (data: CouponPayload) => {
         if (editingCoupon?.id) {
             updateCoupon.mutate(
                 { id: editingCoupon.id, data },

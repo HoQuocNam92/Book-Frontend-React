@@ -27,6 +27,7 @@ import NewsPage from '@/pages/NewsPage';
 import NewsDetail from '@/pages/NewsDetail';
 import OAuthSuccess from '@/pages/OAuthSuccess';
 import ProtectedRoute from '../pages/ProtectedRoute';
+import CheckoutSuccess from '@/components/Checkout/CheckoutSuccess';
 
 export const router = createBrowserRouter(
     [
@@ -63,6 +64,10 @@ export const router = createBrowserRouter(
                 {
                     path: '/ho-so',
                     element: <Profile />
+                },
+                {
+                    path: '/dat-hang-thanh-cong',
+                    element: <CheckoutSuccess />
                 },
                 {
                     path: '/:slug',

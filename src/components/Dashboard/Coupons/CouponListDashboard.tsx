@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Pencil, Trash2, Ticket, Plus } from "lucide-react";
 import { SpinnerCustom } from "@/components/ui/spinner";
+import { formatVND } from "@/utils/formatVND";
 
 interface CouponListProps {
     coupons: any[];
@@ -21,6 +22,7 @@ interface CouponListProps {
 }
 
 const isExpired = (date: string) => new Date(date) < new Date();
+const isNotStarted = (startAt?: string) => startAt && new Date(startAt) > new Date();
 
 const CouponListDashboard = ({ coupons, loading, error, onEdit, onDelete, onCreate }: CouponListProps) => {
     if (loading) return <SpinnerCustom />;
@@ -51,22 +53,42 @@ const CouponListDashboard = ({ coupons, loading, error, onEdit, onDelete, onCrea
         );
     }
 
+    const getStatusBadge = (coupon: any) => {
+        if (coupon.expired_at && isExpired(coupon.expired_at))
+            return <Badge variant="destructive">Hết hạn</Badge>;
+        if (isNotStarted(coupon.start_at))
+            return <Badge variant="secondary">Chưa bắt đầu</Badge>;
+        if (coupon.usage_limit !== null && coupon.usage_limit !== undefined && coupon.usage_count >= coupon.usage_limit)
+            return <Badge variant="destructive">Đã hết lượt</Badge>;
+        return <Badge variant="default">Còn hiệu lực</Badge>;
+    };
+
+    const formatDiscount = (coupon: any) => {
+        const val = Number(coupon.discount);
+        if (coupon.discount_type === "fixed") return `-${formatVND(val)}`;
+        return `-${val}%`;
+    };
+
     return (
         <div className="rounded-2xl border overflow-hidden">
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>Mã</TableHead>
-                        <TableHead>Giảm giá</TableHead>
-                        <TableHead>Ngày hết hạn</TableHead>
-                        <TableHead>Trạng thái</TableHead>
-                        <TableHead className="text-right">Hành động</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {coupons.map((coupon: any) => {
-                        const expired = coupon.expired_at && isExpired(coupon.expired_at);
-                        return (
+            <div className="overflow-x-auto">
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead className="min-w-[120px]">Mã</TableHead>
+                            <TableHead>Loại</TableHead>
+                            <TableHead>Giảm giá</TableHead>
+                            <TableHead className="min-w-[120px]">Đơn tối thiểu</TableHead>
+                            <TableHead className="min-w-[120px]">Giảm tối đa</TableHead>
+                            <TableHead>Lượt dùng</TableHead>
+                            <TableHead className="min-w-[100px]">Bắt đầu</TableHead>
+                            <TableHead className="min-w-[100px]">Hết hạn</TableHead>
+                            <TableHead>Trạng thái</TableHead>
+                            <TableHead className="text-right">Hành động</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {coupons.map((coupon: any) => (
                             <TableRow key={coupon.id}>
                                 <TableCell>
                                     <span className="font-mono font-semibold text-primary tracking-wider">
@@ -74,9 +96,35 @@ const CouponListDashboard = ({ coupons, loading, error, onEdit, onDelete, onCrea
                                     </span>
                                 </TableCell>
                                 <TableCell>
+                                    <Badge variant="outline" className="text-xs">
+                                        {coupon.discount_type === "fixed" ? "Cố định" : "Phần trăm"}
+                                    </Badge>
+                                </TableCell>
+                                <TableCell>
                                     <span className="font-semibold text-green-600">
-                                        -{coupon.discount}%
+                                        {formatDiscount(coupon)}
                                     </span>
+                                </TableCell>
+                                <TableCell className="text-sm text-muted-foreground">
+                                    {coupon.min_order_value ? formatVND(coupon.min_order_value) : "—"}
+                                </TableCell>
+                                <TableCell className="text-sm text-muted-foreground">
+                                    {coupon.max_discount ? formatVND(coupon.max_discount) : "—"}
+                                </TableCell>
+                                <TableCell className="text-sm">
+                                    <span className={
+                                        coupon.usage_limit && coupon.usage_count >= coupon.usage_limit
+                                            ? "text-destructive font-medium"
+                                            : "text-muted-foreground"
+                                    }>
+                                        {coupon.usage_count ?? 0}
+                                        {coupon.usage_limit ? ` / ${coupon.usage_limit}` : ""}
+                                    </span>
+                                </TableCell>
+                                <TableCell className="text-sm text-muted-foreground">
+                                    {coupon.start_at
+                                        ? new Date(coupon.start_at).toLocaleDateString("vi-VN")
+                                        : "—"}
                                 </TableCell>
                                 <TableCell className="text-sm text-muted-foreground">
                                     {coupon.expired_at
@@ -84,9 +132,7 @@ const CouponListDashboard = ({ coupons, loading, error, onEdit, onDelete, onCrea
                                         : "—"}
                                 </TableCell>
                                 <TableCell>
-                                    <Badge variant={expired ? "destructive" : "default"}>
-                                        {expired ? "Hết hạn" : "Còn hiệu lực"}
-                                    </Badge>
+                                    {getStatusBadge(coupon)}
                                 </TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
@@ -109,10 +155,10 @@ const CouponListDashboard = ({ coupons, loading, error, onEdit, onDelete, onCrea
                                     </div>
                                 </TableCell>
                             </TableRow>
-                        );
-                    })}
-                </TableBody>
-            </Table>
+                        ))}
+                    </TableBody>
+                </Table>
+            </div>
         </div>
     );
 };
