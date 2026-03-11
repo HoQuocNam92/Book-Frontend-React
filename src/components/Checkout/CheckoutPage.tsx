@@ -12,6 +12,7 @@ import useCarts from "@/hooks/useCarts"
 import useAddress from "@/hooks/useAddress"
 import useCheckout from "@/hooks/useCheckout"
 import { useCoupons } from "@/hooks/useCoupons"
+import { useCartStore } from "@/stores/cart.stores"
 
 export default function CheckoutPage() {
     const navigate = useNavigate()
@@ -23,7 +24,7 @@ export default function CheckoutPage() {
     const [couponCode, setCouponCode] = useState("")
     const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null)
     const [couponError, setCouponError] = useState("")
-
+    const clear = useCartStore().clear
     const { getCartByUserId } = useCarts()
     const { getAddress } = useAddress()
     const { createOrder } = useCheckout();
@@ -31,7 +32,7 @@ export default function CheckoutPage() {
     const handleApplyCoupon = async () => {
         if (!couponCode.trim()) return
         try {
-            const res = await validateCoupon.mutateAsync({ couponCode: couponCode.trim(), finalAmount })
+            const res = await validateCoupon.mutateAsync({ couponCode: couponCode.trim() })
             if (res?.data) {
                 setAppliedCoupon(res?.data)
             }
@@ -48,11 +49,11 @@ export default function CheckoutPage() {
     }
     const handleCreateOrder = async () => {
         try {
-            console.log("Check appliedCoupon", appliedCoupon)
-            const res = await createOrder.mutateAsync({ selectedAddress, paymentMethod, appliedCoupon, finalAmount })
-
-        } catch (error) {
-
+            const res = await createOrder.mutateAsync({ selectedAddress, paymentMethod, appliedCoupon })
+            clear()
+            navigate("/dat-hang-thanh-cong", { state: { orderSuccess: res?.data } })
+        } catch (error: any) {
+            alert(error?.response?.data?.message || "Đặt hàng thất bại")
         }
     }
 
