@@ -1,12 +1,18 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
+import Oops from '@/pages/Oops'
 import { formatVND } from '@/utils/formatVND'
 import { ArrowLeft, CheckCircle } from 'lucide-react'
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-const CheckoutSuccess = ({ orderSuccess }: { orderSuccess: any }) => {
+const CheckoutSuccess = () => {
+
+    const location = useLocation()
+    const orderSuccess = location.state?.orderSuccess
     const navigate = useNavigate();
+    if (!orderSuccess) return <Oops />
+
     return (
         <div className="container py-16 text-center">
             <div className="mx-auto max-w-lg">

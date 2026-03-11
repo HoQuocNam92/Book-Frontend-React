@@ -1,13 +1,13 @@
 import { placeOrder } from "@/services/checkout.services"
 import { useMutation } from "@tanstack/react-query"
+import { useNavigate } from "react-router-dom"
 
 const useCheckout = () => {
-    const createOrder = (selectedAddress: any, paymentMethod: any, appliedCoupon: any) => {
-        return useMutation({
-            mutationFn: () => placeOrder(selectedAddress!, paymentMethod, appliedCoupon?.code),
-
-        })
-    }
+    const navigate = useNavigate()
+    const createOrder = useMutation({
+        mutationFn: async (data: any) => await placeOrder(data),
+        onSuccess: () => navigate('/')
+    })
     return {
         createOrder
     }

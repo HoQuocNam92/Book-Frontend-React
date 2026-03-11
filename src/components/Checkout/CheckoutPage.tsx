@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, type SetStateAction } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -7,8 +7,7 @@ import { useNavigate, Link } from "react-router-dom"
 import { useAuthStore } from "@/stores/auth.stores"
 import { formatVND } from "@/utils/formatVND"
 import { SpinnerCustom } from "@/components/ui/spinner"
-import CheckoutSuccess from "@/components/Checkout/CheckoutSuccess"
-import CheckoutEmpty from "@/components/Checkout/CheckoutEmpty"
+
 import useCarts from "@/hooks/useCarts"
 import useAddress from "@/hooks/useAddress"
 import useCheckout from "@/hooks/useCheckout"
@@ -28,22 +27,33 @@ export default function CheckoutPage() {
     const { getCartByUserId } = useCarts()
     const { getAddress } = useAddress()
     const { createOrder } = useCheckout();
-    const { getCouponByCode } = useCoupons();
-    const orderMutation = createOrder(selectedAddress, paymentMethod, appliedCoupon)
-
-
-    const getCoupon = getCouponByCode(couponCode.trim())
+    const { validateCoupon } = useCoupons();
     const handleApplyCoupon = async () => {
         if (!couponCode.trim()) return
-        const { data } = await getCoupon.refetch()
-        if (data?.data) {
-            setAppliedCoupon(data?.data)
+        try {
+            const res = await validateCoupon.mutateAsync({ couponCode: couponCode.trim(), finalAmount })
+            if (res?.data) {
+                setAppliedCoupon(res?.data)
+            }
+        } catch (error: any) {
+            alert(error?.response?.data?.message)
         }
+
     }
+
     const handleRemoveCoupon = () => {
         setAppliedCoupon(null)
         setCouponCode("")
         setCouponError("")
+    }
+    const handleCreateOrder = async () => {
+        try {
+            console.log("Check appliedCoupon", appliedCoupon)
+            const res = await createOrder.mutateAsync({ selectedAddress, paymentMethod, appliedCoupon, finalAmount })
+
+        } catch (error) {
+
+        }
     }
 
     if (!user) {
@@ -56,7 +66,7 @@ export default function CheckoutPage() {
     const addresses = getAddress?.data?.data || []
     const totalAmount = items.reduce((sum: number, item: any) => sum + item.subtotal, 0)
     const totalItems = items.reduce((sum: number, item: any) => sum + item.quantity, 0)
-    const discountAmount = appliedCoupon ? Math.round(totalAmount * (appliedCoupon.discount / 100)) : 0
+    const discountAmount = appliedCoupon ? appliedCoupon?.discount : 0
     const finalAmount = totalAmount - discountAmount
 
     return (
@@ -251,10 +261,10 @@ export default function CheckoutPage() {
                                                 variant="outline"
                                                 size="sm"
                                                 onClick={handleApplyCoupon}
-                                                disabled={getCoupon.isLoading || !couponCode.trim()}
+                                                disabled={validateCoupon?.isPending || !couponCode.trim()}
                                                 className="shrink-0 border-orange-300 text-orange-600 hover:bg-orange-50 hover:text-orange-700"
                                             >
-                                                {getCoupon.isLoading
+                                                {validateCoupon?.isPending
                                                     ? <Loader2 className="h-4 w-4 animate-spin" />
                                                     : "Áp dụng"
                                                 }
@@ -304,10 +314,10 @@ export default function CheckoutPage() {
 
                                 <Button
                                     className="h-12 w-full rounded-xl bg-orange-500 text-base font-semibold hover:bg-orange-600"
-
-                                    disabled={orderMutation.isPending}
+                                    onClick={handleCreateOrder}
+                                    disabled={createOrder.isPending}
                                 >
-                                    {orderMutation.isPending ? "Đang xử lý..." : "Đặt hàng"}
+                                    {createOrder.isPending ? "Đang xử lý..." : "Đặt hàng"}
                                 </Button>
                             </CardContent>
                         </Card>
