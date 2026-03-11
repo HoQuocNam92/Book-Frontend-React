@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { couponService } from "@/services/couponService";
+import { couponService } from "@/services/coupon.services";
 
 export const useCoupons = () => {
     const queryClient = useQueryClient();
@@ -9,6 +9,15 @@ export const useCoupons = () => {
         queryFn: () => couponService.getAllCoupons(),
         refetchOnWindowFocus: false,
     });
+
+    const getCouponByCode = (code: string) => {
+        return useQuery({
+            queryKey: ["getCouponByCode", code],
+            queryFn: () => couponService.validateCouponByCode(code),
+            enabled: !!code,
+            refetchOnWindowFocus: false,
+        })
+    }
 
     const createCoupon = useMutation({
         mutationFn: (data: { code: string; discount: number; expired_at: string }) =>
@@ -33,5 +42,5 @@ export const useCoupons = () => {
         },
     });
 
-    return { getCoupons, createCoupon, updateCoupon, deleteCoupon };
+    return { getCoupons, createCoupon, updateCoupon, deleteCoupon, getCouponByCode };
 };
