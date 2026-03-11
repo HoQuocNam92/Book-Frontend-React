@@ -1,123 +1,63 @@
 import { useState } from "react"
-import { useQuery, useMutation } from "@tanstack/react-query"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { CheckCircle, MapPin, CreditCard, Truck, ArrowLeft, Package } from "lucide-react"
+import { CheckCircle, MapPin, CreditCard, Truck, Tag, X, Loader2 } from "lucide-react"
 import { useNavigate, Link } from "react-router-dom"
-import { getCart } from "@/services/cart.services"
-import { placeOrder, getAddresses } from "@/services/checkout.services"
 import { useAuthStore } from "@/stores/auth.stores"
-import { useCartStore } from "@/stores/cart.stores"
 import { formatVND } from "@/utils/formatVND"
 import { SpinnerCustom } from "@/components/ui/spinner"
+import CheckoutSuccess from "@/components/Checkout/CheckoutSuccess"
+import CheckoutEmpty from "@/components/Checkout/CheckoutEmpty"
+import useCarts from "@/hooks/useCarts"
+import useAddress from "@/hooks/useAddress"
+import useCheckout from "@/hooks/useCheckout"
+import { useCoupons } from "@/hooks/useCoupons"
 
 export default function CheckoutPage() {
     const navigate = useNavigate()
     const user = useAuthStore((s) => s.user)
-    const clearCartStore = useCartStore((s) => s.clear)
 
     const [selectedAddress, setSelectedAddress] = useState<number | null>(null)
     const [paymentMethod, setPaymentMethod] = useState("cod")
-    const [orderSuccess, setOrderSuccess] = useState<any>(null)
-    const [error, setError] = useState("")
 
-    const { data: cartData, isLoading: cartLoading } = useQuery({
-        queryKey: ["cart"],
-        queryFn: getCart,
-        enabled: !!user,
-    })
+    const [couponCode, setCouponCode] = useState("")
+    const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null)
+    const [couponError, setCouponError] = useState("")
 
-    const { data: addressData, isLoading: addressLoading } = useQuery({
-        queryKey: ["checkout-addresses"],
-        queryFn: getAddresses,
-        enabled: !!user,
-    })
+    const { getCartByUserId } = useCarts()
+    const { getAddress } = useAddress()
+    const { createOrder } = useCheckout();
+    const { getCouponByCode } = useCoupons();
+    const orderMutation = createOrder(selectedAddress, paymentMethod, appliedCoupon)
 
-    const orderMutation = useMutation({
-        mutationFn: () => placeOrder(selectedAddress!, paymentMethod),
-        onSuccess: (res) => {
-            setOrderSuccess(res.data)
-            clearCartStore()
-        },
-        onError: (err: any) => {
-            setError(err.response?.data?.message || "Đặt hàng thất bại, vui lòng thử lại")
-        },
-    })
+
+    const getCoupon = getCouponByCode(couponCode.trim())
+    const handleApplyCoupon = async () => {
+        if (!couponCode.trim()) return
+        const { data } = await getCoupon.refetch()
+        if (data?.data) {
+            setAppliedCoupon(data?.data)
+        }
+    }
+    const handleRemoveCoupon = () => {
+        setAppliedCoupon(null)
+        setCouponCode("")
+        setCouponError("")
+    }
 
     if (!user) {
         navigate("/auth/sign-in")
         return null
     }
-
-    if (cartLoading || addressLoading) return <SpinnerCustom />
-
-    const cart = cartData?.data
+    if (getCartByUserId.isLoading || getAddress.isLoading) return <SpinnerCustom />
+    const cart = getCartByUserId?.data
     const items = cart?.items || []
-    const addresses = addressData?.data || []
+    const addresses = getAddress?.data?.data || []
     const totalAmount = items.reduce((sum: number, item: any) => sum + item.subtotal, 0)
     const totalItems = items.reduce((sum: number, item: any) => sum + item.quantity, 0)
-
-    if (items.length === 0 && !orderSuccess) {
-        return (
-            <div className="container py-20 text-center">
-                <Package className="mx-auto h-16 w-16 text-neutral-300" />
-                <h2 className="mt-4 text-xl font-semibold">Giỏ hàng trống</h2>
-                <p className="mt-2 text-muted-foreground">Bạn cần thêm sản phẩm trước khi thanh toán</p>
-                <Button className="mt-6 bg-orange-500 hover:bg-orange-600" onClick={() => navigate("/")}>
-                    Tiếp tục mua sắm
-                </Button>
-            </div>
-        )
-    }
-
-    // Success screen
-    if (orderSuccess) {
-        return (
-            <div className="container py-16 text-center">
-                <div className="mx-auto max-w-lg">
-                    <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
-                        <CheckCircle className="h-12 w-12 text-green-600" />
-                    </div>
-                    <h2 className="mt-6 text-2xl font-bold">Đặt hàng thành công!</h2>
-                    <p className="mt-2 text-muted-foreground">
-                        Mã đơn hàng: <span className="font-semibold text-foreground">#{orderSuccess.id}</span>
-                    </p>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                        Cảm ơn bạn đã mua hàng. Chúng tôi sẽ liên hệ xác nhận đơn hàng sớm nhất.
-                    </p>
-
-                    <Card className="mt-6 rounded-2xl text-left">
-                        <CardContent className="p-5 space-y-3">
-                            <div className="text-sm font-semibold">Chi tiết đơn hàng</div>
-                            {orderSuccess.OrderItems?.map((oi: any) => (
-                                <div key={oi.id} className="flex justify-between text-sm">
-                                    <span className="text-muted-foreground">
-                                        {oi.Books?.title} × {oi.quantity}
-                                    </span>
-                                    <span className="font-medium">
-                                        {formatVND(Number(oi.price) * oi.quantity)}
-                                    </span>
-                                </div>
-                            ))}
-                            <Separator />
-                            <div className="flex justify-between font-semibold">
-                                <span>Tổng cộng</span>
-                                <span className="text-orange-600">{formatVND(Number(orderSuccess.total))}</span>
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    <div className="mt-6 flex gap-3 justify-center">
-                        <Button variant="outline" onClick={() => navigate("/")}>
-                            <ArrowLeft className="mr-1 h-4 w-4" />
-                            Tiếp tục mua sắm
-                        </Button>
-                    </div>
-                </div>
-            </div>
-        )
-    }
+    const discountAmount = appliedCoupon ? Math.round(totalAmount * (appliedCoupon.discount / 100)) : 0
+    const finalAmount = totalAmount - discountAmount
 
     return (
         <div className="container bg-neutral-50 min-h-[60vh]">
@@ -132,11 +72,6 @@ export default function CheckoutPage() {
 
                 <h1 className="text-2xl font-bold mb-6">Thanh toán</h1>
 
-                {error && (
-                    <div className="mb-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-600">
-                        {error}
-                    </div>
-                )}
 
                 <div className="grid grid-cols-12 gap-5">
                     {/* Left: form */}
@@ -276,11 +211,75 @@ export default function CheckoutPage() {
 
                                 <Separator />
 
+                                {/* Coupon input section */}
+                                <div className="space-y-2">
+                                    <div className="flex items-center gap-1.5 text-sm font-medium">
+                                        <Tag className="h-4 w-4 text-orange-500" />
+                                        Mã giảm giá
+                                    </div>
+
+                                    {appliedCoupon ? (
+                                        <div className="flex items-center justify-between rounded-lg border border-green-200 bg-green-50 px-3 py-2">
+                                            <div className="flex items-center gap-2">
+                                                <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
+                                                <div>
+                                                    <span className="text-sm font-semibold text-green-700">{appliedCoupon.code}</span>
+                                                    <span className="ml-2 text-xs text-green-600">Giảm {appliedCoupon.discount}%</span>
+                                                </div>
+                                            </div>
+                                            <button
+                                                onClick={handleRemoveCoupon}
+                                                className="ml-2 rounded-full p-0.5 text-green-600 hover:bg-green-100 transition"
+                                            >
+                                                <X className="h-4 w-4" />
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="flex gap-2">
+                                            <input
+                                                type="text"
+                                                value={couponCode}
+                                                onChange={(e) => {
+                                                    setCouponCode(e.target.value.toUpperCase())
+                                                    setCouponError("")
+                                                }}
+                                                onKeyDown={(e) => e.key === "Enter" && handleApplyCoupon()}
+                                                placeholder="Nhập mã giảm giá"
+                                                className="flex-1 rounded-lg border border-neutral-200 px-3 py-2 text-sm outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-200 transition"
+                                            />
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={handleApplyCoupon}
+                                                disabled={getCoupon.isLoading || !couponCode.trim()}
+                                                className="shrink-0 border-orange-300 text-orange-600 hover:bg-orange-50 hover:text-orange-700"
+                                            >
+                                                {getCoupon.isLoading
+                                                    ? <Loader2 className="h-4 w-4 animate-spin" />
+                                                    : "Áp dụng"
+                                                }
+                                            </Button>
+                                        </div>
+                                    )}
+
+                                    {couponError && (
+                                        <p className="text-xs text-red-500">{couponError}</p>
+                                    )}
+                                </div>
+
+                                <Separator />
+
                                 <div className="space-y-2">
                                     <div className="flex justify-between text-sm">
                                         <span className="text-muted-foreground">Tạm tính ({totalItems} sản phẩm)</span>
                                         <span>{formatVND(totalAmount)}</span>
                                     </div>
+                                    {appliedCoupon && (
+                                        <div className="flex justify-between text-sm">
+                                            <span className="text-muted-foreground">Giảm giá ({appliedCoupon.discount}%)</span>
+                                            <span className="text-green-600">-{formatVND(discountAmount)}</span>
+                                        </div>
+                                    )}
                                     <div className="flex justify-between text-sm">
                                         <span className="text-muted-foreground">Phí vận chuyển</span>
                                         <span className="text-green-600">Miễn phí</span>
@@ -291,21 +290,21 @@ export default function CheckoutPage() {
 
                                 <div className="flex justify-between">
                                     <span className="font-semibold">Tổng cộng</span>
-                                    <span className="text-xl font-bold text-orange-600">
-                                        {formatVND(totalAmount)}
-                                    </span>
+                                    <div className="text-right">
+                                        {appliedCoupon && (
+                                            <div className="text-xs text-muted-foreground line-through">
+                                                {formatVND(totalAmount)}
+                                            </div>
+                                        )}
+                                        <span className="text-xl font-bold text-orange-600">
+                                            {formatVND(finalAmount)}
+                                        </span>
+                                    </div>
                                 </div>
 
                                 <Button
                                     className="h-12 w-full rounded-xl bg-orange-500 text-base font-semibold hover:bg-orange-600"
-                                    onClick={() => {
-                                        setError("")
-                                        if (!selectedAddress) {
-                                            setError("Vui lòng chọn địa chỉ giao hàng")
-                                            return
-                                        }
-                                        orderMutation.mutate()
-                                    }}
+
                                     disabled={orderMutation.isPending}
                                 >
                                     {orderMutation.isPending ? "Đang xử lý..." : "Đặt hàng"}

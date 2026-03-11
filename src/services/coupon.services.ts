@@ -21,4 +21,8 @@ export const couponService = {
         const response = await instance.delete(`/coupons/${id}`);
         return response.data;
     },
+    validateCouponByCode: async (code: string) => {
+        const response = await instance.get(`/coupons/validate/${encodeURIComponent(code)}`);
+        return response.data;
+    },
 };
