@@ -17,7 +17,9 @@ function MySwiperComponent({ data }: { data: BookType[] }) {
     <div>
       <Swiper modules={[Pagination]}
         slidesPerView={5}
+        spaceBetween={10}
         pagination={{ clickable: true }}
+        style={{ paddingBottom: '30px' }}
       >
         {data?.map((item: any) => (
           <SwiperSlide key={item.id}>

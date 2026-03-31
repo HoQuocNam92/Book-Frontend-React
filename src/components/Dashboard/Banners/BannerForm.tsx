@@ -18,6 +18,8 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Save } from "lucide-react";
+import { BannerInputSchema } from "@/schema/banner.schema";
+import { any } from "zod";
 
 export interface BannerFormData {
     id?: number;
@@ -63,7 +65,20 @@ const BannerForm = ({ open, setOpen, onSubmit, initialData, loading }: BannerFor
 
 
     const handleSubmit = (e: React.FormEvent) => {
+
         e.preventDefault();
+        const result = BannerInputSchema.safeParse({ image_url: imageUrl, link_url: linkUrl, type });
+        console.log("Validation result: ", result);
+        if (!result.success) {
+            const newErrors: Record<string, string> = {};
+            result.error.issues.forEach((issue) => {
+                console.log("Validation error: ", issue);
+                newErrors[issue.path[0] as string] = issue.message;
+            });
+            console.log(newErrors);
+            setErrors(newErrors);
+            return;
+        }
         const formData = new FormData();
         if (imageFile) {
             formData.append("image", imageFile);
@@ -72,7 +87,7 @@ const BannerForm = ({ open, setOpen, onSubmit, initialData, loading }: BannerFor
         formData.append("type", type);
         onSubmit(formData);
     };
-
+    console.log("Check newErrors: ", errors);
     const isEdit = !!initialData?.id;
 
     return (
@@ -137,7 +152,7 @@ const BannerForm = ({ open, setOpen, onSubmit, initialData, loading }: BannerFor
                         <Button type="button" variant="outline" onClick={() => setOpen(false)} className="cursor-pointer">
                             Hủy bỏ
                         </Button>
-                        <Button type="submit" className="gap-2 cursor-pointer" disabled={loading}>
+                        <Button type="submit" className="gap-2 cursor-pointer hover:bg-amber-400" disabled={loading}>
                             <Save className="h-4 w-4" />
                             {isEdit ? "Cập nhật" : "Tạo mới"}
                         </Button>
