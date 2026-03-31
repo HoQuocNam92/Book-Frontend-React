@@ -13,17 +13,15 @@ const HomeShelfBookCard = ({
     onClick?: () => void
 }) => {
     const displayPrice = book.sale_price && book.sale_price > 0 ? book.sale_price : book.price
-    const hasDiscount = book.discount_percent && book.discount_percent > 0
-
+    const hasDiscount = Number(book.discount_percent) > 0 ? true : false
     return (
         <div
             className={cn(
-                "group cursor-pointer relative bg-white rounded-2xl p-3 transition-all duration-200 hover:shadow-lg hover:-translate-y-1 border border-neutral-100",
+                "group cursor-pointer relative bg-white rounded-2xl p-3 transition-all duration-200 hover:shadow-lg hover:-translate-y-1 border border-neutral-100 h-[305px]",
                 className
             )}
             onClick={onClick}
         >
-            {/* Discount badge */}
             {hasDiscount && (
                 <div className="absolute top-2 right-2 z-10 rounded-full bg-gradient-to-br from-red-500 to-orange-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm">
                     -{book.discount_percent}%
@@ -40,7 +38,7 @@ const HomeShelfBookCard = ({
             </div>
 
             {/* Title */}
-            <div className="mt-3 line-clamp-2 min-h-[2.5rem] text-xs font-medium text-neutral-800 leading-snug">
+            <div className="mt-3 line-clamp-2 min-h-[32px] text-xs font-medium text-neutral-800 leading-snug">
                 {book.title}
             </div>
 

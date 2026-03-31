@@ -17,7 +17,7 @@ const SwiperBanner = ({ data }: { data: BookType[] }) => {
             >
                 {data?.map((item: any, index) => (
                     <SwiperSlide key={item.id}>
-                        <img key={index} src={item.image_url} alt={`Banner ${index}`} className="w-full h-48 object-cover rounded-lg" />
+                        <img key={index} src={item.image_url} alt={`Banner ${index}`} className="w-full h-96 object-cover rounded-lg " />
                     </SwiperSlide>
                 ))}
             </Swiper>
