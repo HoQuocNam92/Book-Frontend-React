@@ -34,12 +34,24 @@ export const useCategories = () => {
             queryClient.invalidateQueries({ queryKey: ["getCategories"] });
         },
     });
-
+    const getCateogryParents = useQuery({
+        queryKey: ["getCategoryParents"],
+        queryFn: () => categoryServices.getCategoryParents(),
+        refetchOnWindowFocus: false,
+    });
+    const getCategoryChildren = async (parentId: number) => {
+        return await queryClient.fetchQuery({
+            queryKey: ["getCategoryChildren"],
+            queryFn: () => categoryServices.getCategoryChildren(parentId),
+        });
+    }
     return {
         getCategories,
         createCategory,
         updateCategory,
         deleteCategory,
+        getCateogryParents,
+        getCategoryChildren,
         page,
         setPage,
     };

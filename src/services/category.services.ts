@@ -24,3 +24,15 @@ export const deleteCategory = async (id: number) => {
     const res = await instance.delete(`/categories/${id}`);
     return res.data;
 };
+
+
+export const getCategoryParents = async () => {
+    const res = await instance.get("/categories/parents");
+    return res.data;
+}
+
+
+export const getCategoryChildren = async (parentId: number) => {
+    const res = await instance.get(`/categories/children?parent_id=${parentId}`);
+    return res.data;
+}
