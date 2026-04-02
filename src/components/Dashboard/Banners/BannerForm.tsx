@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/select";
 import { Save } from "lucide-react";
 import { BannerInputSchema } from "@/schema/banner.schema";
-import { any } from "zod";
 
 export interface BannerFormData {
     id?: number;

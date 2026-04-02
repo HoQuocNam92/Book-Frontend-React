@@ -1,4 +1,4 @@
-import { useState, type SetStateAction } from "react"
+import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -50,9 +50,11 @@ export default function CheckoutPage() {
         try {
             console.log("Check appliedCoupon", appliedCoupon)
             const res = await createOrder.mutateAsync({ selectedAddress, paymentMethod, appliedCoupon, finalAmount })
-
+            if (res?.data) {
+                navigate("/dat-hang-thanh-cong", { state: { orderSuccess: res.data } })
+            }
         } catch (error) {
-
+            alert("Đặt hàng thất bại. Vui lòng thử lại.")
         }
     }
 

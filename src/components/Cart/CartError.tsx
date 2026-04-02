@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button'
-import React, { use } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 const CartError = () => {

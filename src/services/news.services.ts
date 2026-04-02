@@ -1,4 +1,3 @@
-import type { NewsInput } from "@/schema/new.schema";
 import { instance } from "@/utils/instance";
 
 

@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowRight, ChevronDown, ChevronRight, FolderOpen } from "lucide-react";
+import { ChevronDown, ChevronRight, FolderOpen } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 
 type Props = {
