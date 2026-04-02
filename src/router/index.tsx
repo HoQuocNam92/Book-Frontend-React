@@ -40,7 +40,6 @@ export const router = createBrowserRouter(
                     element: <HomeBookshelfSection />
                 }
                 ,
-
                 {
                     path: '/danh-muc/:category_slug?',
                     element: <BookByCategory />

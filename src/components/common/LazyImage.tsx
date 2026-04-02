@@ -1,24 +1,19 @@
 import { useInView } from "react-intersection-observer";
 import { useState } from "react";
 
-export function LazyImage({ src, alt }: { src: string, alt: string }) {
+export function LazyImage({ src, alt, className, style }: { src: string, alt: string, className?: string, style?: React.CSSProperties }) {
     const { ref, inView } = useInView({ triggerOnce: true });
     const [loaded, setLoaded] = useState(false);
 
     return (
-        <div ref={ref} style={{ width: 200, height: 200 }}>
+        <div ref={ref} className={className} style={style} >
             {inView && (
                 <img
                     src={src}
                     alt={alt}
                     onLoad={() => setLoaded(true)}
-                    style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "contain",
-                        opacity: loaded ? 1 : 0.3,
-                        transition: "0.3s",
-                    }}
+                    className="w-full h-full object-cover transition-opacity duration-300"
+                    style={{ opacity: loaded ? 1 : 0, transition: 'opacity 0.5s ease-in' }}
                 />
             )}
         </div>

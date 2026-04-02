@@ -6,11 +6,11 @@ import FormDeleteProduct from "@/components/Dashboard/Products/FormDeleteProduct
 import { useProducts } from "@/hooks/useProducts"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import type { FormProductInput, FormProductQuickActionsInput } from "@/schema/product.schema"
+import type { FormProductQuickActionsInput } from "@/schema/product.schema"
 
 export default function BooksDashboard() {
 
-    const { getProductByCategory, updateProductQuickActions, setPageNumber, pageNumber, deleteProduct, updateProduct } = useProducts()
+    const { getProductByCategory, updateProductQuickActions, setPageNumber, pageNumber, deleteProduct } = useProducts()
 
     const [openFormDelete, setOpenFormDelete] = useState(false)
     const [selected, setSelected] = useState<Record<number, boolean>>({})

@@ -11,7 +11,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import { BadgeCheck, BookOpen, Eye, Filter, Layers, Pencil, Plus, Trash2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import { statusBadge, type BookStatus } from '@/components/Dashboard/Products/statusBadge'
+import { statusBadge } from '@/components/Dashboard/Products/statusBadge'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import dayjs from 'dayjs';

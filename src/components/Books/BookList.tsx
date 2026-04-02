@@ -1,9 +1,9 @@
 import { LazyImage } from "@/components/common/LazyImage"
 import { Card, CardContent } from "@/components/ui/card"
-import type { Book } from "@/types/Book"
+import type { BookType } from "@/types/Book"
 import { formatVND } from "@/utils/formatVND"
 
-const BookList = ({ books }: { books: Book[] }) => {
+const BookList = ({ books }: { books: BookType[] }) => {
     return (
         <div>
             <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-5 cursor-pointer">

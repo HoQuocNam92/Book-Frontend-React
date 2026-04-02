@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { ArrowLeft, ShoppingBag } from 'lucide-react'
-import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const CartEmpty = () => {

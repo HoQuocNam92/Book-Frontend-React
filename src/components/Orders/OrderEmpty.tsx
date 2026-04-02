@@ -1,6 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Package } from 'lucide-react'
-import React from 'react'
 
 const OrderEmpty = () => {
     return (

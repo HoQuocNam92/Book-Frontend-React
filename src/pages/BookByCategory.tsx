@@ -3,11 +3,10 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import type { BookType } from "@/types/Book";
-import BookList from "@/components/Books/BookList";
 
 import { useProducts } from "@/hooks/useProducts";
 import { SpinnerCustom } from "@/components/ui/spinner";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Pagination from "@/components/common/Pagination";
 import BrandRow from "@/components/Books/BrandRow";
 import SliderPrice from "@/components/Books/SliderPrice";
@@ -16,13 +15,11 @@ import { FolderOpen } from "lucide-react";
 import MySwiperComponent from "@/components/Swiper/Swiper";
 import { useBrands } from "@/hooks/useBrands";
 import CategoryItem from "@/components/Dashboard/Categories/CategoryItem";
-import NotFound from "@/pages/NotFound";
 import EmptyState from "@/components/EmptyState/EmptyState";
 
 
 export default function BookByCategory() {
     const { getProductByCategory, pageNumber, setPageNumber } = useProducts();
-    const { category_slug } = useParams();
     const { getBrands } = useBrands()
     const navigate = useNavigate();
     const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
