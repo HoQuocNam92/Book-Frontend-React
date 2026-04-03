@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -12,13 +12,16 @@ import useCarts from "@/hooks/useCarts"
 import useAddress from "@/hooks/useAddress"
 import useCheckout from "@/hooks/useCheckout"
 import { useCoupons } from "@/hooks/useCoupons"
-
+import { CheckoutSchema } from "@/types/Checkout"
+import QrCode from "@/components/QrCode/QrCode"
+import dayjs from "dayjs"
+type PaymentMethod = "cod" | "bank_transfer"
 export default function CheckoutPage() {
     const navigate = useNavigate()
     const user = useAuthStore((s) => s.user)
-
+    const [timeLeft, setTimeLeft] = useState<number | null>(null)
     const [selectedAddress, setSelectedAddress] = useState<number | null>(null)
-    const [paymentMethod, setPaymentMethod] = useState("cod")
+    const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cod")
 
     const [couponCode, setCouponCode] = useState("")
     const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null)
@@ -46,18 +49,47 @@ export default function CheckoutPage() {
         setCouponCode("")
         setCouponError("")
     }
+    const [qrUrl, setQrUrl] = useState<string | null>(null)
     const handleCreateOrder = async () => {
         try {
-            console.log("Check appliedCoupon", appliedCoupon)
-            const res = await createOrder.mutateAsync({ selectedAddress, paymentMethod, appliedCoupon, finalAmount })
+
+            const result = CheckoutSchema.safeParse({ selectedAddress, paymentMethod, appliedCoupon })
+            if (!result.success) {
+                result.error.issues.forEach((issue) => {
+                    alert(issue.message)
+                });
+                return;
+            }
+            const res = await createOrder.mutateAsync({ selectedAddress: selectedAddress!, paymentMethod, appliedCoupon })
             if (res?.data) {
-                navigate("/dat-hang-thanh-cong", { state: { orderSuccess: res.data } })
+                if (paymentMethod === 'bank_transfer' && res.data?.vietQr) {
+                    setQrUrl(res.data.vietQr)
+                    setTimeLeft(dayjs(res.data.order.expires_at).diff(dayjs(), 'second'))
+                }
+                else {
+                    navigate("/dat-hang-thanh-cong", { state: { orderSuccess: res.data?.order } })
+                }
+
             }
         } catch (error) {
             alert("Đặt hàng thất bại. Vui lòng thử lại.")
         }
     }
-
+    console.log("Check time left: ", timeLeft)
+    useEffect(() => {
+        if (!qrUrl) return;
+        const timer = setInterval(() => {
+            setTimeLeft((prev) => {
+                if (prev! <= 1) {
+                    clearInterval(timer)
+                    setQrUrl(null)
+                    return 600
+                }
+                return prev! - 1
+            })
+        }, 1000)
+        return () => clearInterval(timer)
+    }, [qrUrl])
     if (!user) {
         navigate("/auth/sign-in")
         return null
@@ -84,11 +116,9 @@ export default function CheckoutPage() {
 
                 <h1 className="text-2xl font-bold mb-6">Thanh toán</h1>
 
-
+                {qrUrl && <QrCode qrUrl={qrUrl} setQrUrl={setQrUrl} timeLeft={timeLeft!} />}
                 <div className="grid grid-cols-12 gap-5">
-                    {/* Left: form */}
                     <div className="col-span-12 lg:col-span-8 space-y-5">
-                        {/* Address */}
                         <Card className="rounded-2xl">
                             <CardHeader className="pb-2">
                                 <CardTitle className="text-base flex items-center gap-2">
