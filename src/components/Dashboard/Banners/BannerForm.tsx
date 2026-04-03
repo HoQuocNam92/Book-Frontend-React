@@ -67,14 +67,11 @@ const BannerForm = ({ open, setOpen, onSubmit, initialData, loading }: BannerFor
 
         e.preventDefault();
         const result = BannerInputSchema.safeParse({ image_url: imageUrl, link_url: linkUrl, type });
-        console.log("Validation result: ", result);
         if (!result.success) {
             const newErrors: Record<string, string> = {};
             result.error.issues.forEach((issue) => {
-                console.log("Validation error: ", issue);
                 newErrors[issue.path[0] as string] = issue.message;
             });
-            console.log(newErrors);
             setErrors(newErrors);
             return;
         }

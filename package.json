@@ -36,6 +36,7 @@
     "react-router-dom": "^7.13.0",
     "react-swiper": "^0.1.5",
     "recharts": "^3.7.0",
+    "socket.io-client": "^4.8.3",
     "swiper": "^12.1.2",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.18",

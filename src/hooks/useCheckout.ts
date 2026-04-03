@@ -1,12 +1,15 @@
 import { placeOrder } from "@/services/checkout.services"
+import { useCartStore } from "@/stores/cart.stores"
+import type { CheckoutInput } from "@/types/Checkout"
 import { useMutation } from "@tanstack/react-query"
-import { useNavigate } from "react-router-dom"
 
 const useCheckout = () => {
-    const navigate = useNavigate()
+    const setItemCount = useCartStore((s) => s.setItemCount)
     const createOrder = useMutation({
-        mutationFn: async (data: any) => await placeOrder(data),
-        onSuccess: () => navigate('/')
+        mutationFn: async (data: CheckoutInput) => await placeOrder(data),
+        onSuccess: () => {
+            setItemCount(0);
+        }
     })
     return {
         createOrder
