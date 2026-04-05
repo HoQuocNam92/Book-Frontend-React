@@ -6,3 +6,6 @@ export const placeOrder = async (data: CheckoutInput) => {
     return res.data;
 };
 
+export const cancelOrder = async (orderId: number) => {
+    await instance.post("/payment/cancel", { orderId });
+}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { use, useEffect, useRef, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -15,6 +15,7 @@ import { useCoupons } from "@/hooks/useCoupons"
 import { CheckoutSchema } from "@/types/Checkout"
 import QrCode from "@/components/QrCode/QrCode"
 import dayjs from "dayjs"
+import socket from "@/utils/socket"
 type PaymentMethod = "cod" | "bank_transfer"
 export default function CheckoutPage() {
     const navigate = useNavigate()
@@ -22,15 +23,14 @@ export default function CheckoutPage() {
     const [timeLeft, setTimeLeft] = useState<number | null>(null)
     const [selectedAddress, setSelectedAddress] = useState<number | null>(null)
     const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cod")
-
     const [couponCode, setCouponCode] = useState("")
     const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null)
     const [couponError, setCouponError] = useState("")
-
     const { getCartByUserId } = useCarts()
     const { getAddress } = useAddress()
-    const { createOrder } = useCheckout();
+    const { createOrder, cancelOrder } = useCheckout();
     const { validateCoupon } = useCoupons();
+    const [orderId, setOrderId] = useState<number | null>(null)
     const handleApplyCoupon = async () => {
         if (!couponCode.trim()) return
         try {
@@ -64,6 +64,7 @@ export default function CheckoutPage() {
             if (res?.data) {
                 if (paymentMethod === 'bank_transfer' && res.data?.vietQr) {
                     setQrUrl(res.data.vietQr)
+                    console.log("Order created with bank transfer. QR URL:", res.data);
                     setTimeLeft(dayjs(res.data.order.expires_at).diff(dayjs(), 'second'))
                 }
                 else {
@@ -75,7 +76,23 @@ export default function CheckoutPage() {
             alert("Đặt hàng thất bại. Vui lòng thử lại.")
         }
     }
-    console.log("Check time left: ", timeLeft)
+
+    const handleCancelPayment = async () => {
+        const isOpen = window.confirm("Bạn có muốn hủy thanh toán không?");
+        if (!isOpen) return;
+
+        try {
+            await cancelOrder.mutateAsync(orderId!);
+            alert("Hủy thành công. Vui lòng chọn phương thức thanh toán khác.")
+            setQrUrl(null)
+            setOrderId(null)
+            setTimeLeft(null)
+
+
+        } catch (error) {
+            alert("Hủy thanh toán thất bại. Vui lòng thử lại.")
+        }
+    }
     useEffect(() => {
         if (!qrUrl) return;
         const timer = setInterval(() => {
@@ -90,6 +107,25 @@ export default function CheckoutPage() {
         }, 1000)
         return () => clearInterval(timer)
     }, [qrUrl])
+    useEffect(() => {
+        if (!user) return
+        if (!socket.connected) {
+            socket.connect()
+        }
+        socket.emit("join_user", user.id);
+        const handlePaymentSuccess = (data: any) => {
+            if (data.order.Users.id === user?.id) {
+                alert("Thanh toán thành công!")
+                setQrUrl(null)
+                setTimeLeft(null)
+                navigate("/dat-hang-thanh-cong", { state: { orderSuccess: data.order } })
+            }
+        }
+        socket.on("payment_success", handlePaymentSuccess);
+        return () => {
+            socket.off("payment_success")
+        }
+    }, [user, navigate])
     if (!user) {
         navigate("/auth/sign-in")
         return null
@@ -116,7 +152,7 @@ export default function CheckoutPage() {
 
                 <h1 className="text-2xl font-bold mb-6">Thanh toán</h1>
 
-                {qrUrl && <QrCode qrUrl={qrUrl} setQrUrl={setQrUrl} timeLeft={timeLeft!} />}
+                {qrUrl && <QrCode handleCancelPayment={handleCancelPayment} qrUrl={qrUrl} timeLeft={timeLeft!} />}
                 <div className="grid grid-cols-12 gap-5">
                     <div className="col-span-12 lg:col-span-8 space-y-5">
                         <Card className="rounded-2xl">
@@ -253,7 +289,6 @@ export default function CheckoutPage() {
 
                                 <Separator />
 
-                                {/* Coupon input section */}
                                 <div className="space-y-2">
                                     <div className="flex items-center gap-1.5 text-sm font-medium">
                                         <Tag className="h-4 w-4 text-orange-500" />
