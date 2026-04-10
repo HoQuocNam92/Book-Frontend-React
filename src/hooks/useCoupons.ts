@@ -1,25 +1,31 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { couponService } from "@/services/couponService";
+import * as couponService from "@/services/coupon.services";
+import { useAuthStore } from "@/stores/auth.stores";
 
 export const useCoupons = () => {
     const queryClient = useQueryClient();
-
+    const user = useAuthStore.getState().user
     const getCoupons = useQuery({
         queryKey: ["getCoupons"],
-        queryFn: () => couponService.getAllCoupons(),
+        queryFn: () => couponService.getAllCouponst(),
         refetchOnWindowFocus: false,
+        enabled: !!user.role_id?.includes(1)
+    });
+
+
+    const validateCoupon = useMutation({
+        mutationFn: async (data: any) => await couponService.validateCouponByCode(data),
     });
 
     const createCoupon = useMutation({
-        mutationFn: (data: { code: string; discount: number; expired_at: string }) =>
-            couponService.createCoupon(data),
+        mutationFn: (data: couponService.CouponPayload) => couponService.createCoupon(data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["getCoupons"] });
         },
     });
 
     const updateCoupon = useMutation({
-        mutationFn: (params: { id: number; data: { code?: string; discount?: number; expired_at?: string } }) =>
+        mutationFn: (params: { id: number; data: Partial<couponService.CouponPayload> }) =>
             couponService.updateCoupon(params.id, params.data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["getCoupons"] });
@@ -33,5 +39,5 @@ export const useCoupons = () => {
         },
     });
 
-    return { getCoupons, createCoupon, updateCoupon, deleteCoupon };
+    return { getCoupons, createCoupon, updateCoupon, deleteCoupon, validateCoupon };
 };

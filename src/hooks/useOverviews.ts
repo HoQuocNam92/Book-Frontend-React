@@ -1,5 +1,5 @@
 import { getRevenueByYear } from '@/services/overview.services'
-import { useQuery, useMutation } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 
 const useOverViews = () => {

@@ -1,73 +1,184 @@
-# React + TypeScript + Vite
+ # 📚 Book Frontend React
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🚀 Giới thiệu
 
-Currently, two official plugins are available:
+**Book Frontend React** là dự án frontend cho hệ thống bán sách online, được xây dựng bằng **React + TypeScript**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Dự án cung cấp các chức năng cơ bản của một website thương mại điện tử như:
 
-## React Compiler
+* Đăng ký / Đăng nhập
+* Xem danh sách sách
+* Chi tiết sản phẩm
+* Giỏ hàng
+* Áp dụng mã giảm giá (coupon)
+* Thanh toán
+* Trang quản lý (admin/dashboard)
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+---
 
-## Expanding the ESLint configuration
+## 🛠️ Công nghệ sử dụng
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+* ⚛️ ReactJS
+* 🟦 TypeScript
+* 🎨 Tailwind CSS
+* 🧩 MUI (Material UI)
+* 🔄 Axios
+* 📦 Vite
+* 🐳 Docker
 
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 📂 Cấu trúc thư mục
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```
+src/
+│── components/      # UI components (Button, Card, Modal...)
+│── pages/           # Các trang chính (Home, Login, Cart...)
+│── services/        # Gọi API (axios)
+│── hooks/           # Custom hooks
+│── store/           # State management (Redux/Zustand nếu có)
+│── utils/           # Helper functions
+│── layouts/         # Layout chung (MainLayout, AuthLayout...)
+│── routes/          # Routing
+│── assets/          # Hình ảnh, icon
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
+## ⚙️ Cài đặt
 
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+### 1. Clone project
+
+```bash
+git clone https://github.com/your-username/book-frontend-react.git
+cd book-frontend-react
 ```
+
+### 2. Cài dependencies
+
+```bash
+npm install
+# hoặc
+yarn
+```
+
+### 3. Cấu hình môi trường
+
+Tạo file `.env`:
+
+```env
+VITE_API_URL=http://localhost:8080/api
+```
+
+### 4. Chạy project
+
+```bash
+npm run dev
+```
+
+Project sẽ chạy tại:
+
+```
+http://localhost:5173
+```
+
+---
+
+## 🔑 Chức năng chính
+
+### 👤 Authentication
+
+* Đăng ký tài khoản
+* Đăng nhập / đăng xuất
+* Lưu token (JWT)
+
+### 🛍️ Sản phẩm
+
+* Hiển thị danh sách sách
+* Xem chi tiết sách
+* Tìm kiếm / lọc sản phẩm
+
+### 🛒 Giỏ hàng
+
+* Thêm / xoá sản phẩm
+* Cập nhật số lượng
+* Tính tổng tiền
+
+### 🎟️ Coupon
+
+* Áp dụng mã giảm giá
+* Validate coupon từ server
+
+### 💳 Thanh toán
+
+* Checkout
+* Hiển thị thông tin đơn hàng
+
+### 🛠️ Admin Dashboard
+
+* Quản lý sản phẩm
+* Quản lý đơn hàng
+* Quản lý coupon
+
+---
+
+## 🔌 API
+
+Project sử dụng API backend riêng.
+
+Ví dụ:
+
+```ts
+import axios from "axios";
+
+const instance = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+});
+```
+
+---
+
+## 🐳 Docker
+
+Build và chạy bằng Docker:
+
+```bash
+docker build -t book-frontend .
+docker run -p 3000:3000 book-frontend
+```
+
+---
+
+## 📸 Demo
+
+> (Thêm ảnh demo UI tại đây)
+
+---
+
+## 🤝 Đóng góp
+
+Mọi đóng góp đều được chào đón!
+
+```bash
+# Fork repo
+# Tạo branch mới
+git checkout -b feature/your-feature
+
+# Commit
+git commit -m "Add new feature"
+
+# Push
+git push origin feature/your-feature
+```
+
+---
+
+## 📄 License
+
+MIT License
+
+---
+
+## 👨‍💻 Tác giả
+
+**Ho Quoc Nam

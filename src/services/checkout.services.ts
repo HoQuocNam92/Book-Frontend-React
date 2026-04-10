@@ -1,11 +1,8 @@
+import type { CheckoutInput } from "@/types/Checkout";
 import { instance } from "@/utils/instance";
 
-export const placeOrder = async (address_id: number, payment_method: string) => {
-    const res = await instance.post("/checkout", { address_id, payment_method });
+export const placeOrder = async (data: CheckoutInput) => {
+    const res = await instance.post("/payment", data);
     return res.data;
 };
 
-export const getAddresses = async () => {
-    const res = await instance.get("/checkout/addresses");
-    return res.data;
-};

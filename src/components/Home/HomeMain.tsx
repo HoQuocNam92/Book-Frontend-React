@@ -6,7 +6,6 @@ import { Sparkles } from 'lucide-react'
 const HomeMain = ({ banners, newBooks }: { banners: any[], newBooks: BookType[] }) => {
     return (
         <div className="rounded-3xl bg-gradient-to-br from-sky-50 to-indigo-50 p-6 mb-6">
-            {/* Section header */}
             <div className="flex items-center justify-between mb-5">
                 <div className="flex items-center gap-3">
                     <div className="h-7 w-1.5 rounded-full bg-gradient-to-b from-blue-500 to-indigo-500" />

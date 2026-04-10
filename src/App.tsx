@@ -1,14 +1,14 @@
-import SignIn from "@/pages/SignIn";
-import SignUp from "@/pages/SignUp";
+// import SignIn from "@/pages/SignIn";
+// import SignUp from "@/pages/SignUp";
 
-function App() {
+// function App() {
 
-  return (
-    <>
-      {/* <SignIn /> */}
-      <SignUp />
-    </>
-  );
-}
+//   return (
+//     <>
+//       {/* <SignIn /> */}
+//       <SignUp />
+//     </>
+//   );
+// }
 
-export default App;
+// export default App;

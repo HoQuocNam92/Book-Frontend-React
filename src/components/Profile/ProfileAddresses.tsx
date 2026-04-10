@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { MapPin, Plus, Pencil, Trash2 } from "lucide-react"
@@ -79,7 +79,6 @@ export default function ProfileAddresses() {
         setError([])
 
         const result = AddressFormSchema.safeParse(form)
-        console.log("Validation result:", result) // Debug log for validation result
         if (!result.success) {
             setError(result.error.issues)
             return
@@ -93,7 +92,6 @@ export default function ProfileAddresses() {
         }
 
         try {
-            console.log("Submitting payload:", payload) // Debug log for payload
             const res = editingId
                 ? await updateMutation.mutateAsync({ id: editingId, ...payload })
                 : await createMutation.mutateAsync(payload)

@@ -30,7 +30,6 @@ export default function UsersDashboard() {
         }
     };
     const totalPages = getUsers.data?.totalPages
-    console.log("totalPages", totalPages)
     return (
         <div className="w-full space-y-4">
             {/* Header */}

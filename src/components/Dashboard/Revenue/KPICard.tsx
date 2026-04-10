@@ -1,4 +1,3 @@
-import React from 'react'
 import { Card, CardContent } from '@/components/ui/card';
 
 const KPICard = ({ kpiCards, stats, year, topProducts }: { kpiCards: (stats: any, year: number, topProducts: any[]) => any[], stats: any, year: number, topProducts: any[] }) => {

@@ -21,9 +21,9 @@ import type { BookStatus } from "@/components/Dashboard/Products/statusBadge"
 
 const FilterProductDashboard = () => {
     const [q, setQ] = useState("")
-    const [books, setBooks] = useState<Book[]>([])
+    const [books] = useState<Book[]>([])
     const [status, setStatus] = useState<BookStatus | "ALL">("ALL")
-    const [selected, setSelected] = useState<Record<number, boolean>>({})
+    const [selected] = useState<Record<number, boolean>>({})
     const selectedIds = useMemo(() => {
         return Object.entries(selected)
             .filter(([, v]) => v)
@@ -32,7 +32,7 @@ const FilterProductDashboard = () => {
     const [sort, setSort] = useState<
         "updated_desc" | "created_desc" | "price_asc" | "price_desc" | "stock_asc"
     >("updated_desc")
-    const [page, setPage] = useState(1)
+    const [page] = useState(1)
 
     const filtered = useMemo(() => {
         const query = q.trim().toLowerCase()

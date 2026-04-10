@@ -47,7 +47,6 @@ const OverviewsDashboard = () => {
     });
     const chartData = getChartData?.data || [];
     const stats = statsData?.data;
-    console.log(stats);
     const recentOrders = stats?.recentOrders || [];
 
 

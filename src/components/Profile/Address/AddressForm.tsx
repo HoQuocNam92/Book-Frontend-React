@@ -20,7 +20,6 @@ type AddressFormUIProps = {
 }
 
 const AddressFormUI = ({ form, setForm, error, isSubmitting, handleSubmit, resetForm, editingId, provinces, districts, wards, setDistrictId, setProvinceId }: AddressFormUIProps) => {
-    console.log("Rendering AddressFormUI with form data:", { provinces, districts, wards, })
     return (
 
         <div className="rounded-xl border-2 border-dashed border-orange-200 bg-orange-50/30 p-4 space-y-4">

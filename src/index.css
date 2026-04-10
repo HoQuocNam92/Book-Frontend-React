@@ -1,13 +1,18 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-
+@import 'swiper/css/grid';
 
 
 
 .container {
   max-width: 100%;
-  width: 1200px;
+  width: 1300px;
   margin: 0 auto;
+}
+
+.mySwiper {
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal {

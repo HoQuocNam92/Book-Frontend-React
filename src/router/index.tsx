@@ -25,6 +25,9 @@ import RevenueDashboard from '@/components/Dashboard/Revenue/RevenueDashboard';
 import NewsDashboard from '@/components/Dashboard/News/NewsDashboard';
 import NewsPage from '@/pages/NewsPage';
 import NewsDetail from '@/pages/NewsDetail';
+import OAuthSuccess from '@/pages/OAuthSuccess';
+import ProtectedRoute from '../pages/ProtectedRoute';
+import CheckoutSuccess from '@/components/Checkout/CheckoutSuccess';
 
 export const router = createBrowserRouter(
     [
@@ -37,7 +40,6 @@ export const router = createBrowserRouter(
                     element: <HomeBookshelfSection />
                 }
                 ,
-
                 {
                     path: '/danh-muc/:category_slug?',
                     element: <BookByCategory />
@@ -63,10 +65,17 @@ export const router = createBrowserRouter(
                     element: <Profile />
                 },
                 {
+                    path: '/dat-hang-thanh-cong',
+                    element: <CheckoutSuccess />
+                },
+                {
                     path: '/:slug',
                     element: <ProductDetail />
                 }
-
+                , {
+                    path: '/oauth-success',
+                    element: <OAuthSuccess />
+                }
             ]
         },
         {
@@ -90,7 +99,9 @@ export const router = createBrowserRouter(
         },
         {
             path: '/dashboard',
-            element: <DashboardLayout />,
+            element: <ProtectedRoute roles={[1, 3]}>
+                <DashboardLayout />
+            </ProtectedRoute>,
             children: [
                 {
                     path: 'overviews?',

@@ -11,7 +11,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import { BadgeCheck, BookOpen, Eye, Filter, Layers, Pencil, Plus, Trash2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import { statusBadge, type BookStatus } from '@/components/Dashboard/Products/statusBadge'
+import { statusBadge } from '@/components/Dashboard/Products/statusBadge'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import dayjs from 'dayjs';
@@ -24,7 +24,6 @@ import Pagination from '@/components/common/Pagination'
 const ProductListDashboard = ({ handleUpdateProductQuickActions, selected, setSelected, setOpen, products, loading, errors, setPageNumber, pageNumber }: { selected: any, setSelected: any, setOpen: any, products: any, loading: boolean, errors: any, setPageNumber: any, pageNumber: any, handleUpdateProductQuickActions: (id: string, data: any) => Promise<any> }) => {
     const [books, setBooks] = useState<Book[]>(products?.data)
 
-    console.log("Check bookssss", books)
 
     const allVisibleSelected = books?.length
         ? books.every((b: any) => selected[b.id])

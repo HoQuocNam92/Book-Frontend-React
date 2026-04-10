@@ -5,12 +5,10 @@ import { Trash2 } from 'lucide-react'
 const FormDeleteProduct = ({ deleteProduct, open, setOpen, selected }: { selected: Record<number, boolean>, open: boolean, setOpen: (open: boolean) => void, deleteProduct: any }) => {
 
     const onConfirmDelete = () => {
-        console.log("Selected IDs for deletion:", selected)
         Object.keys(selected).map(x => deleteProduct(Number(x)))
         setOpen(false)
 
     }
-    console.log("Selected books for deletion:", selected)
     return (
         <div>
             <Dialog open={open} onOpenChange={setOpen}>
