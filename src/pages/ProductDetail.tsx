@@ -15,6 +15,7 @@ import useRelated from "@/hooks/useRelated"
 import MySwiperComponent from "@/components/Swiper/Swiper"
 import Reviews from "@/components/Reviews/Reviews"
 import { Home, ChevronRight } from "lucide-react"
+import Breadcrumb from "@/components/Breadcrumb/Breadcrumb"
 
 const ProductDetail = () => {
     const navigate = useNavigate()
@@ -79,21 +80,9 @@ const ProductDetail = () => {
         <div className="min-h-screen bg-neutral-50">
             <div className="container px-4 py-6">
                 {/* Breadcrumb */}
-                <nav className="mb-5 flex items-center gap-1.5 text-sm text-neutral-400">
-                    <button
-                        onClick={() => navigate("/")}
-                        className="flex items-center gap-1 rounded-md px-1.5 py-0.5 hover:bg-neutral-200 hover:text-neutral-700 transition-colors"
-                    >
-                        <Home className="h-3.5 w-3.5" />
-                        <span>Trang chủ</span>
-                    </button>
-                    <ChevronRight className="h-3.5 w-3.5 shrink-0" />
-                    <button className="rounded-md px-1.5 py-0.5 hover:bg-neutral-200 hover:text-neutral-700 transition-colors">
-                        {category}
-                    </button>
-                    <ChevronRight className="h-3.5 w-3.5 shrink-0" />
-                    <span className="line-clamp-1 font-medium text-neutral-600">{product.title}</span>
-                </nav>
+
+                <Breadcrumb items={product.breadcrumb} title={product.title} />
+
 
                 {/* Main product grid */}
                 <div className="grid grid-cols-12 gap-4">
