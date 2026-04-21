@@ -2,15 +2,11 @@ import { instance } from "@/utils/instance"
 
 
 
-export const getAllBanners = async () => {
-    const response = await instance.get(`/banners`);
+export const getAllBanners = async (type?: string) => {
+    const response = await instance.get(`/banners?type=${type}`);
     return response.data;
 };
 
-export const getBannersTypes = async (type: string) => {
-    const response = await instance.get(`/banners/type?type=${type}`);
-    return response.data;
-}
 
 
 export const createBanner = async (data: FormData) => {

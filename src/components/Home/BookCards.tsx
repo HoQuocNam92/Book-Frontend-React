@@ -12,7 +12,7 @@ const HomeShelfBookCard = ({
     className?: string
     onClick?: () => void
 }) => {
-    const displayPrice = book.sale_price && book.sale_price > 0 ? book.sale_price : book.price
+    const displayPrice = Number(book.sale_price) && Number(book.sale_price) > 0 ? Number(book.sale_price) : Number(book.price)
     const hasDiscount = Number(book.discount_percent) > 0 ? true : false
     return (
         <div
@@ -32,24 +32,22 @@ const HomeShelfBookCard = ({
             <div className="mx-auto w-full max-w-[140px]">
                 <div className="aspect-[3/4] overflow-hidden rounded-xl bg-neutral-50 shadow-sm">
                     <div className="h-full w-full transition-transform duration-300 group-hover:scale-105">
-                        <LazyImage src={book.BookImages} alt={book.title} />
+                        <LazyImage src={book.thumbnail} alt={book.title} />
                     </div>
                 </div>
             </div>
 
-            {/* Title */}
             <div className="mt-3 line-clamp-2 min-h-[32px] text-xs font-medium text-neutral-800 leading-snug">
                 {book.title}
             </div>
 
-            {/* Price */}
             <div className="mt-2 flex flex-col gap-0.5">
                 <div className="text-sm font-bold text-orange-500">
-                    {formatVND(displayPrice!)}
+                    {formatVND(Number(displayPrice!))}
                 </div>
                 {hasDiscount && (
                     <div className="text-[11px] text-neutral-400 line-through">
-                        {formatVND(book.price!)}
+                        {formatVND(Number(book.price!))}
                     </div>
                 )}
             </div>

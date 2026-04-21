@@ -1,14 +1,17 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import *  as bannerService from "@/services/banner.services.js";
-import { useState } from "react";
 
-export const useBanners = () => {
+export const useBanners = (type: string) => {
     const queryClient = useQueryClient();
-    const [type, setType] = useState<string>("all");
+    // const [type, setType] = useState<string>("all");
     const getBanners = useQuery({
-        queryKey: ["getBanners"],
-        queryFn: () => bannerService.getAllBanners(),
+        queryKey: ["getBanners", type],
+        queryFn: async () => {
+            const res = await bannerService.getAllBanners(type)
+            return res.data
+        },
         refetchOnWindowFocus: false,
+        enabled: !!type,
     });
 
     const createBanner = useMutation({
@@ -32,21 +35,6 @@ export const useBanners = () => {
             queryClient.invalidateQueries({ queryKey: ["getBanners"] });
         },
     });
-    const salesBanners = useQuery({
-        queryKey: ["getBanners", "sales"],
-        queryFn: () => bannerService.getBannersTypes("sales"),
-        refetchOnWindowFocus: false,
-    });
 
-    const newBanners = useQuery({
-        queryKey: ["getBanners", "new"],
-        queryFn: () => bannerService.getBannersTypes("new"),
-        refetchOnWindowFocus: false,
-    });
-    const featuredBanners = useQuery({
-        queryKey: ["getBanners", "featured"],
-        queryFn: () => bannerService.getBannersTypes("featured"),
-        refetchOnWindowFocus: false,
-    });
-    return { getBanners, createBanner, updateBanner, deleteBanner, type, setType, salesBanners, newBanners, featuredBanners };
+    return { getBanners, createBanner, updateBanner, deleteBanner, };
 };

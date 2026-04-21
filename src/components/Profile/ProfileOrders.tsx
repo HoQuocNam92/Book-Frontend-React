@@ -27,7 +27,9 @@ export default function ProfileOrders() {
     if (orders.length === 0) {
         return <OrderEmpty />
     }
-
+    const handleChangePage = (newPage: number) => {
+        setPage(newPage);
+    }
     return (
         <div className="space-y-4">
 
@@ -136,7 +138,7 @@ export default function ProfileOrders() {
                 </CardContent>
 
             </Card>
-            <Pagination totalPages={getMyOrders?.data.totalPages || 1} page={page} onChange={() => setPage(page + 1)} />
+            <Pagination totalPages={getMyOrders?.data.totalPages || 1} page={page} onChange={handleChangePage} />
         </div>
     )
 }

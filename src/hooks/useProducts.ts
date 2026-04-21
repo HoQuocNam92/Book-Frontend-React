@@ -1,29 +1,24 @@
 import { useQuery, useMutation, keepPreviousData, useQueryClient } from "@tanstack/react-query"
 import * as productServices from '@/services/product.services'
-import { useParams, useSearchParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import type { FormProductQuickActionsInput } from "@/schema/product.schema"
-export const useProducts = () => {
-    const [searchParams, setSearchParams] = useSearchParams()
-    const pageParam = searchParams.get("page")
-    const pageNumber = pageParam ? Number(pageParam) : 1
+export const useProducts = (type: string, pageNumber = 1) => {
     const category = useParams().category_slug || "all"
-    const setPage = (page: number) => {
-        setSearchParams({ page: String(page) })
-    }
+    console.log("Check pageNumber in useProducts: ", pageNumber);
     const queryClient = useQueryClient()
 
     const getProducts = useQuery({
         queryKey: ['getProducts'],
         queryFn: async () => await productServices.getProducts(),
         staleTime: 5 * 60 * 1000,
-
+        enabled: type === "all"
     })
 
 
     const getProductByCategory = useQuery({
         queryKey: ['getProductByCategory', category, pageNumber],
         queryFn: async () => await productServices.getProductByCategory(category, pageNumber),
-        enabled: !!category,
+        enabled: !!category && type === "category",
         staleTime: 5 * 60 * 1000,
         placeholderData: keepPreviousData
     })
@@ -69,8 +64,7 @@ export const useProducts = () => {
         updateProduct,
         updateProductQuickActions,
         deleteProduct: deleteProduct.mutate,
-        setPageNumber: setPage,
-        pageNumber
+
     }
 }
 

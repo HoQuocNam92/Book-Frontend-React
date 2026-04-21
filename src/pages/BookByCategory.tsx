@@ -6,7 +6,7 @@ import type { BookType } from "@/types/Book";
 
 import { useProducts } from "@/hooks/useProducts";
 import { SpinnerCustom } from "@/components/ui/spinner";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import Pagination from "@/components/common/Pagination";
 import BrandRow from "@/components/Books/BrandRow";
 import SliderPrice from "@/components/Books/SliderPrice";
@@ -16,33 +16,31 @@ import MySwiperComponent from "@/components/Swiper/Swiper";
 import { useBrands } from "@/hooks/useBrands";
 import CategoryItem from "@/components/Dashboard/Categories/CategoryItem";
 import EmptyState from "@/components/EmptyState/EmptyState";
+import { useSearch } from "@/hooks/useSearch";
 
 
 export default function BookByCategory() {
-    const { getProductByCategory, pageNumber, setPageNumber } = useProducts();
+    const [searchParams] = useSearchParams();
+    const query = searchParams.get("q");
+    const [pageNumber, setPageNumber] = useState(1);
+    const { getProductByCategory, } = useProducts(query || "category", pageNumber);
     const { getBrands } = useBrands()
     const navigate = useNavigate();
-    const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
-    const min = 0;
-    const max = 1_000_000;
-    const [priceRange, setPriceRange] = useState<[number, number]>([0, 1_000_000]);
+    const { books, isLoading, error } = useSearch({ inputValue: query || "", pageNumber });
     const { getCateogryParents, getCategoryChildren } = useCategories();
 
     const [expanded, setExpanded] = useState<Record<number, boolean>>({});
     const [childrenMap, setChildrenMap] = useState<Record<number, any[]>>({});
+
     const allCategories: any[] = getCateogryParents.data?.data || getCateogryParents.data || [];
-    if (getProductByCategory.isLoading) { return <SpinnerCustom />; }
-    if (getProductByCategory.error) { navigate('/oops'); }
 
-    const filtered: BookType[] = getProductByCategory?.data?.data?.filter((b: BookType) => {
-        const okBrand = selectedBrand ? true : true;
-        const okPrice = b.price! >= priceRange[0] && b.price! <= priceRange[1];
-        return okBrand && okPrice;
-    });
-    const loading = getProductByCategory.isLoading || getCateogryParents.isLoading || getBrands.isLoading;
+    const loading = getProductByCategory.isLoading || getCateogryParents.isLoading || getBrands.isLoading || isLoading;
+
     if (loading) { return <SpinnerCustom />; }
-    if (getProductByCategory.error || getCateogryParents.error || getBrands.error) { navigate('/oops'); }
+    if (getProductByCategory.error || getCateogryParents.error || getBrands.error || error) { navigate('/oops'); }
 
+    const bookMain = query ? books?.data?.data || [] : getProductByCategory?.data?.data || [];
+    const pagination = query ? books?.data?.pagination : getProductByCategory?.data?.pagination || {};
 
     const toggleCategory = async (id: number) => {
         if (childrenMap[id]) {
@@ -62,7 +60,8 @@ export default function BookByCategory() {
             [id]: true
         }));
     };
-    console.log("Check childrenMap: ", childrenMap);
+
+
 
     const brands = getBrands.data?.data?.map((b: any) => b.name) || [];
     return (
@@ -74,9 +73,9 @@ export default function BookByCategory() {
                             <div className="md:col-span-2 text-sm text-muted-foreground">
                                 Khoảng giá
                             </div>
-                            <SliderPrice priceRange={priceRange} min={min} max={max} setPriceRange={setPriceRange} />
+                            {/* <SliderPrice priceRange={priceRange} min={min} max={max} setPriceRange={setPriceRange} /> */}
                             <Separator className="md:col-span-12" />
-                            <BrandRow brands={brands} selectedBrand={selectedBrand} setSelectedBrand={setSelectedBrand} />
+                            {/* <BrandRow brands={brands} selectedBrand={selectedBrand} setSelectedBrand={setSelectedBrand} /> */}
                         </div>
                     </CardContent>
                 </Card>
@@ -116,21 +115,22 @@ export default function BookByCategory() {
 
                     <div className="flex-1 min-w-0">
                         <div className="rounded-xl bg-white px-4 py-3 mb-4">
+
                             <h2 className="text-lg font-semibold">
-                                {getProductByCategory?.data?.category?.name || "Danh mục sản phẩm"}
+                                {bookMain?.category?.name}
                             </h2>
                         </div>
                         <div className="mt-4">
-                            {getProductByCategory?.data?.data.length > 0 ? (
-                                <MySwiperComponent data={filtered} options={false} />
+                            {bookMain.length > 0 ? (
+                                <MySwiperComponent data={bookMain} options={false} />
                             ) : (
                                 <EmptyState message="Không tìm thấy sản phẩm nào trong danh mục này" />
                             )}
                         </div>
                         <Pagination
                             page={pageNumber}
-                            totalPages={getProductByCategory?.data?.pagination?.totalPages || 1}
-                            onChange={setPageNumber}
+                            totalPages={pagination?.totalPages || 1}
+                            onChange={(page) => setPageNumber(page)}
                         />
                     </div>
                 </div>

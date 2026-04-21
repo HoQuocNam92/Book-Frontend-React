@@ -1,18 +1,18 @@
 
 import { SpinnerCustom } from "@/components/ui/spinner"
 import { useProducts } from "@/hooks/useProducts"
-import HomeSales from "@/components/Home/HomeSales"
 import HomeMain from "@/components/Home/HomeMain"
 import { useBanners } from "@/hooks/useBanners"
-import HomeFeatured from "@/components/Home/HomeFeatured"
 
 
 
 
 export default function HomeBookshelfSection() {
-    const { getProducts } = useProducts()
-    const { salesBanners, newBanners, featuredBanners } = useBanners()
+    const { getProducts } = useProducts("all")
 
+    const { getBanners: salesBanners } = useBanners("sales")
+    const { getBanners: newBanners } = useBanners("new")
+    const { getBanners: featuredBanners } = useBanners("featured")
     if (
         getProducts?.isLoading ||
         salesBanners?.isLoading ||
@@ -26,21 +26,25 @@ export default function HomeBookshelfSection() {
         newBanners?.error ||
         featuredBanners?.error
     ) return null
+    console.log("salesBanners", featuredBanners?.data)
 
     return (
         <section className="py-6">
             <div className="mx-auto w-full container px-4 space-y-2">
-                <HomeSales
-                    discountBooks={getProducts?.data?.data?.discountBooks}
+                <HomeMain
+                    books={getProducts?.data?.data?.discountBooks}
                     banners={salesBanners?.data}
+                    title="Sách khuyến mãi"
                 />
                 <HomeMain
-                    newBooks={getProducts?.data?.data?.newBooks}
+                    books={getProducts?.data?.data?.newBooks}
                     banners={newBanners?.data}
+                    title="Sách mới"
                 />
-                <HomeFeatured
-                    featuredBooks={getProducts?.data?.data?.featuredBooks}
+                <HomeMain
+                    books={getProducts?.data?.data?.featuredBooks}
                     banners={featuredBanners?.data}
+                    title="Sách nổi bật"
                 />
             </div>
         </section>

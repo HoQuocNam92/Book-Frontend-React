@@ -71,9 +71,13 @@ export const router = createBrowserRouter(
                 {
                     path: '/:slug',
                     element: <ProductDetail />
+                },
+                {
+                    path: '/tim-kiem',
+                    element: <BookByCategory />
                 }
                 , {
-                    path: '/oauth-success',
+                    path: '/dang-nhap-thanh-cong',
                     element: <OAuthSuccess />
                 }
             ]

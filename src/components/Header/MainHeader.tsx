@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Phone, Search, ShoppingCart, User, X, Loader2, BookOpen, Tag, User2 } from 'lucide-react';
@@ -7,6 +7,7 @@ import { useAuthStore } from '@/stores/auth.stores';
 import { useCartStore } from '@/stores/cart.stores';
 import { getCartItemCount } from '@/services/cart.services';
 import useAuth from '@/hooks/useAuth';
+import { useSuggestion } from '@/hooks/useSuggestion';
 import { useSearch } from '@/hooks/useSearch';
 
 const MainHeader = () => {
@@ -15,21 +16,11 @@ const MainHeader = () => {
     const setItemCount = useCartStore((s) => s.setItemCount);
     const { signOutMutation } = useAuth();
     const navigate = useNavigate();
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [inputValue, setInputValue] = useState('');
+    const [isOpen, setIsOpen] = useState(false);
 
-    const {
-        inputValue,
-        setInputValue,
-        isOpen,
-        setIsOpen,
-        isLoading,
-        books,
-        categories,
-        authors,
-        hasResults,
-        containerRef,
-        clearSearch,
-    } = useSearch();
-
+    const { suggestions, isLoading, isError } = useSuggestion(inputValue);
     const handleSignOut = async () => {
         try {
             const res = await signOutMutation.mutateAsync();
@@ -38,7 +29,15 @@ const MainHeader = () => {
             alert('Đăng xuất thất bại');
         }
     };
-
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
     useEffect(() => {
         if (user) {
             getCartItemCount()
@@ -46,17 +45,23 @@ const MainHeader = () => {
                 .catch(() => { });
         }
     }, [user]);
+    const clearSearch = () => {
+        setInputValue('');
+        setIsOpen(false);
+    };
 
     const handleBookClick = (slug: string) => {
         navigate(`/${slug}`);
         clearSearch();
     };
 
-    const handleCategoryClick = (slug: string) => {
-        navigate(`/danh-muc/${slug}`);
-        clearSearch();
+    const handleSearch = () => {
+        console.log('handleSearch', inputValue);
+        if (inputValue.trim().length >= 2) {
+            navigate(`/tim-kiem?q=${encodeURIComponent(inputValue.trim())}`);
+            clearSearch();
+        }
     };
-
     return (
         <div className="bg-white border-b">
             <div className="container mx-auto px-4 py-4 flex items-center gap-6">
@@ -73,7 +78,7 @@ const MainHeader = () => {
                         placeholder="Tìm kiếm sách, tác giả, thể loại..."
                         className="pr-12 border-orange-400 focus-visible:ring-orange-400"
                         value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value)}
+                        onChange={(e) => { setInputValue(e.target.value), setIsOpen(e.target.value.trim().length >= 2) }}
                         onFocus={() => inputValue.trim().length >= 2 && setIsOpen(true)}
                     />
                     {inputValue ? (
@@ -89,6 +94,7 @@ const MainHeader = () => {
                     <Button
                         size="icon"
                         className="absolute right-0 top-1/2 cursor-pointer -translate-y-1/2 bg-orange-500 hover:bg-orange-600"
+                        onClick={handleSearch}
                     >
                         {isLoading ? (
                             <Loader2 className="h-4 w-4 animate-spin" />
@@ -97,7 +103,6 @@ const MainHeader = () => {
                         )}
                     </Button>
 
-                    {/* Search Dropdown */}
                     {isOpen && (
                         <div className="absolute top-full left-0 right-0 mt-1 z-50 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden max-h-[480px] overflow-y-auto">
                             {isLoading && (
@@ -107,20 +112,24 @@ const MainHeader = () => {
                                 </div>
                             )}
 
-                            {!isLoading && !hasResults && (
+                            {!isLoading && !suggestions.length && (
                                 <div className="py-8 text-center text-sm text-muted-foreground">
                                     Không tìm thấy kết quả nào
                                 </div>
                             )}
+                            {isError && (
+                                <div className="py-8 text-center text-sm text-red-500">
+                                    Có lỗi xảy ra khi tìm kiếm
+                                </div>
+                            )}
 
-                            {/* Books */}
-                            {books.length > 0 && (
+                            {suggestions.length > 0 && (
                                 <div>
                                     <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                                         <BookOpen className="h-3.5 w-3.5" />
-                                        Sách ({books.length})
+                                        Sách ({suggestions.length})
                                     </div>
-                                    {books.map((book: any) => (
+                                    {suggestions.map((book: any) => (
                                         <button
                                             key={book.id}
                                             onClick={() => handleBookClick(book.slug)}
@@ -133,44 +142,7 @@ const MainHeader = () => {
                                 </div>
                             )}
 
-                            {/* Categories */}
-                            {categories.length > 0 && (
-                                <div>
-                                    <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 text-xs font-semibold text-muted-foreground uppercase tracking-wider border-t">
-                                        <Tag className="h-3.5 w-3.5" />
-                                        Danh mục ({categories.length})
-                                    </div>
-                                    {categories.map((cat: any) => (
-                                        <button
-                                            key={cat.id}
-                                            onClick={() => handleCategoryClick(cat.slug)}
-                                            className="w-full text-left px-4 py-2.5 hover:bg-orange-50 transition flex items-center gap-3"
-                                        >
-                                            <Tag className="h-4 w-4 text-orange-400 flex-shrink-0" />
-                                            <span className="text-sm">{cat.name}</span>
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
 
-                            {/* Authors */}
-                            {authors.length > 0 && (
-                                <div>
-                                    <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 text-xs font-semibold text-muted-foreground uppercase tracking-wider border-t">
-                                        <User2 className="h-3.5 w-3.5" />
-                                        Tác giả ({authors.length})
-                                    </div>
-                                    {authors.map((author: any) => (
-                                        <div
-                                            key={author.id}
-                                            className="px-4 py-2.5 flex items-center gap-3"
-                                        >
-                                            <User2 className="h-4 w-4 text-orange-400 flex-shrink-0" />
-                                            <span className="text-sm">{author.name}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
                         </div>
                     )}
                 </div>
