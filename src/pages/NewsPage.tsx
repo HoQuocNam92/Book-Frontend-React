@@ -13,8 +13,8 @@ export default function NewsPage() {
     const totalPages: number = data?.totalPages || 1;
 
     return (
-        <div className="min-h-screen bg-[#f2f2f2]">
-            <main className="mx-auto max-w-5xl px-4 py-8">
+        <div className="container bg-[#f2f2f2]">
+            <main className="  px-4 py-8">
                 {/* Breadcrumb */}
                 <div className="mb-6 text-sm text-muted-foreground">
                     <Link to="/" className="hover:text-orange-500">Trang chủ</Link>
