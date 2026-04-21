@@ -7,7 +7,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
-import HomeShelfBookCard from "@/components/Home/HomeShelfBookCard";
+import HomeShelfBookCard from "@/components/Home/BookCards";
 import { useNavigate } from 'react-router-dom';
 import type { BookType } from '@/types/Book';
 

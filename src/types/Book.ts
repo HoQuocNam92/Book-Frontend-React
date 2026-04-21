@@ -1,7 +1,7 @@
 export type BookType = {
     id: number
     title: string
-    BookImages: string
+    thumbnail: string
     sale_price?: number
     slug: string
     price?: number
