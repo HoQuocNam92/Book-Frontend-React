@@ -9,8 +9,9 @@ import { useNavigate } from "react-router-dom"
 import type { FormProductQuickActionsInput } from "@/schema/product.schema"
 
 export default function BooksDashboard() {
+    const [pageNumber, setPageNumber] = useState(1)
 
-    const { getProductByCategory, updateProductQuickActions, setPageNumber, pageNumber, deleteProduct } = useProducts()
+    const { getProductsALl, updateProductQuickActions, deleteProduct } = useProducts("all", pageNumber)
 
     const [openFormDelete, setOpenFormDelete] = useState(false)
     const [selected, setSelected] = useState<Record<number, boolean>>({})
@@ -36,7 +37,7 @@ export default function BooksDashboard() {
 
             <FilterProductDashboard />
 
-            <ProductListDashboard handleUpdateProductQuickActions={handleUpdateProductQuickActions} setOpen={setOpenFormDelete} products={getProductByCategory?.data} pageNumber={pageNumber} setPageNumber={setPageNumber} loading={getProductByCategory?.isLoading} errors={getProductByCategory?.error} selected={selected} setSelected={setSelected} />
+            <ProductListDashboard handleUpdateProductQuickActions={handleUpdateProductQuickActions} setOpen={setOpenFormDelete} products={getProductsALl?.data} pageNumber={pageNumber} setPageNumber={setPageNumber} loading={getProductsALl?.isLoading} errors={getProductsALl?.error} selected={selected} setSelected={setSelected} />
 
             <FormDeleteProduct open={openFormDelete} setOpen={setOpenFormDelete} selected={selected} deleteProduct={deleteProduct} />
         </div>

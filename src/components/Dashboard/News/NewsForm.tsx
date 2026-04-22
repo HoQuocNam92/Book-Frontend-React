@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { newsSchema, type NewsInput } from "@/schema/new.schema";
+import MyEditor from "@/components/Dashboard/Products/QuilEditor";
 
 
 
@@ -28,7 +29,7 @@ interface NewsFormProps {
 
 
 const NewsForm = ({ open, setOpen, onSubmit, initialData, loading }: NewsFormProps) => {
-    const { register, handleSubmit, reset, setValue, watch } = useForm({
+    const { register, handleSubmit, reset, control, setValue, watch } = useForm({
         resolver: zodResolver(newsSchema),
     });
 
@@ -38,8 +39,11 @@ const NewsForm = ({ open, setOpen, onSubmit, initialData, loading }: NewsFormPro
     useEffect(() => {
         if (initialData) {
             reset(initialData);
+            if (typeof initialData.thumbnail === "string") {
+                setImage(initialData.thumbnail as string);
+            }
         } else {
-            reset({ title: "", type: "", thumbnail: null, content: "", is_published: true });
+            reset({ title: "", type: "", thumbnail: null, description: "", is_published: true });
         }
     }, [initialData, open]);
 
@@ -60,7 +64,7 @@ const NewsForm = ({ open, setOpen, onSubmit, initialData, loading }: NewsFormPro
                     </DialogTitle>
                 </DialogHeader>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data" className="space-y-4">
                     <div className="grid grid-cols-1 gap-4">
                         <div className="space-y-1">
                             <Label htmlFor="title">Tiêu đề *</Label>
@@ -87,14 +91,10 @@ const NewsForm = ({ open, setOpen, onSubmit, initialData, loading }: NewsFormPro
                         </div>
 
                         <div className="space-y-1">
-                            <Label htmlFor="content">Nội dung</Label>
-                            <Textarea
-                                id="content"
-                                {...register("content")}
-                                placeholder="Nội dung bài viết..."
-                                rows={8}
-                                className="resize-none"
-                            />
+                            <Label htmlFor="description">Nội dung</Label>
+
+                            <MyEditor control={control} />
+
                         </div>
 
                         <div className="flex items-center gap-3">

@@ -133,9 +133,9 @@ const ProductListDashboard = ({ handleUpdateProductQuickActions, selected, setSe
                                             <TableCell>
                                                 <div className="flex items-center gap-3">
                                                     <div className="h-12 w-10 overflow-hidden rounded-xl border bg-muted">
-                                                        {b.BookImages ? (
+                                                        {b.thumbnail ? (
                                                             <img
-                                                                src={b.BookImages}
+                                                                src={b.thumbnail}
                                                                 alt={b.title}
                                                                 className="h-full w-full object-cover"
                                                             />
@@ -176,24 +176,7 @@ const ProductListDashboard = ({ handleUpdateProductQuickActions, selected, setSe
                                                 </div>
                                             </TableCell>
 
-                                            {/* <TableCell>
-                                                <div className="flex flex-wrap gap-1">
-                                                    {b.categories.length ? (
-                                                        b.categories.slice(0, 3).map((c: string) => (
-                                                            <Badge key={c} variant="secondary" className="rounded-xl">
-                                                                {c}
-                                                            </Badge>
-                                                        ))
-                                                    ) : (
-                                                        <span className="text-sm text-muted-foreground">—</span>
-                                                    )}
-                                                    {b.categories.length > 3 && (
-                                                        <Badge variant="outline" className="rounded-xl">
-                                                            +{b.categories.length - 3}
-                                                        </Badge>
-                                                    )}
-                                                </div>
-                                            </TableCell> */}
+
 
                                             <TableCell>{statusBadge(b.status)}</TableCell>
 
@@ -253,7 +236,7 @@ const ProductListDashboard = ({ handleUpdateProductQuickActions, selected, setSe
                         </Table>
                     </div>
 
-                    <Pagination totalPages={products.pagination?.totalPages || 1} page={pageNumber} onChange={setPageNumber} />
+                    <Pagination totalPages={products?.pagination?.totalPages || 1} page={pageNumber} onChange={setPageNumber} />
                 </CardContent>
             </Card>
         </div>

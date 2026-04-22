@@ -28,7 +28,7 @@ import Oops from "@/pages/Oops"
 import { useProductDetail } from "@/hooks/useProductDetail"
 const ProductForm = () => {
     const navigate = useNavigate()
-    const { createProduct, updateProduct } = useProducts()
+    const { createProduct, updateProduct } = useProducts("all", 1)
 
     const { getProductBySlug } = useProductDetail();
     const { getBrands } = useBrands()

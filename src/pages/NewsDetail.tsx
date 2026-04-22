@@ -10,9 +10,8 @@ export default function NewsDetail() {
     const news = data?.data;
 
     return (
-        <div className="min-h-screen bg-[#f2f2f2]">
-            <main className="mx-auto max-w-3xl px-4 py-8">
-                {/* Breadcrumb */}
+        <div className=" container bg-[#f2f2f2]">
+            <main className=" px-4 py-8">
                 <div className="mb-6 text-sm text-muted-foreground flex items-center gap-2">
                     <Link to="/" className="hover:text-orange-500">Trang chủ</Link>
                     <span>/</span>
@@ -47,7 +46,6 @@ export default function NewsDetail() {
                             <img
                                 src={news.thumbnail}
                                 alt={news.title}
-                                className="w-full object-cover max-h-64"
                             />
                         )}
                         {!news.thumbnail && (
@@ -66,9 +64,12 @@ export default function NewsDetail() {
                                 <Calendar className="h-3.5 w-3.5" />
                                 {news.created_at ? format(new Date(news.created_at), "dd/MM/yyyy HH:mm") : ""}
                             </div>
+                            <div>
+
+                            </div>
                             <div
-                                className="prose prose-sm max-w-none text-foreground"
-                                dangerouslySetInnerHTML={{ __html: news.content || "" }}
+                                className="prose prose-sm sm:prose-base lg:prose-lg max-w-none"
+                                dangerouslySetInnerHTML={{ __html: news.description || "" }}
                             />
                         </div>
                     </article>

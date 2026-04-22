@@ -71,9 +71,9 @@ export default function NewsPage() {
                                         <h2 className="text-base font-semibold line-clamp-2 group-hover:text-orange-600 transition">
                                             {news.title}
                                         </h2>
-                                        {news.content && (
-                                            <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
-                                                {news.content.replace(/<[^>]+>/g, '')}
+                                        {news.description && (
+                                            <p className="mt-1 text-sm text-muted-foreground line-clamp-3">
+                                                <div dangerouslySetInnerHTML={{ __html: news.description }} />
                                             </p>
                                         )}
                                     </div>

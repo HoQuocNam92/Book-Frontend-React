@@ -13,6 +13,11 @@ export const getProducts = async () => {
     return res.data;
 }
 
+export const getProductsALl = async (pageNumber = 1) => {
+    const res = await instance.get(`/products/all?page=${pageNumber}`);
+    return res.data;
+}
+
 export const getProductBySlug = async (slug: string) => {
     const res = await instance.get(`/products/detail/${slug}`);
     return res.data;
