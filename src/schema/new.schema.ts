@@ -7,9 +7,9 @@ export const newsSchema = z.object({
 
     type: z.string().optional(),
 
-    thumbnail: z.instanceof(File).optional().nullable(),
+    thumbnail: z.union([z.string(), z.instanceof(File)]).optional().nullable(),
 
-    content: z.string().optional(),
+    description: z.string().optional(),
 
     is_published: z.boolean().default(true),
 });

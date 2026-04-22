@@ -2,9 +2,8 @@ import { useQuery, useMutation, keepPreviousData, useQueryClient } from "@tansta
 import * as productServices from '@/services/product.services'
 import { useParams } from "react-router-dom"
 import type { FormProductQuickActionsInput } from "@/schema/product.schema"
-export const useProducts = (type: string, pageNumber = 1) => {
+export const useProducts = (type?: string, pageNumber = 1) => {
     const category = useParams().category_slug || "all"
-    console.log("Check pageNumber in useProducts: ", pageNumber);
     const queryClient = useQueryClient()
 
     const getProducts = useQuery({
@@ -13,6 +12,14 @@ export const useProducts = (type: string, pageNumber = 1) => {
         staleTime: 5 * 60 * 1000,
         enabled: type === "all"
     })
+
+    const getProductsALl = useQuery({
+        queryKey: ['getProductsALl', pageNumber],
+        queryFn: async () => await productServices.getProductsALl(pageNumber),
+        staleTime: 5 * 60 * 1000,
+        enabled: type === "all"
+    })
+
 
 
     const getProductByCategory = useQuery({
@@ -64,7 +71,7 @@ export const useProducts = (type: string, pageNumber = 1) => {
         updateProduct,
         updateProductQuickActions,
         deleteProduct: deleteProduct.mutate,
-
+        getProductsALl
     }
 }
 

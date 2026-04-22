@@ -29,9 +29,9 @@ export default function NewsDashboard() {
             id: news.id,
             title: news.title,
             type: news.type,
-            content: news.content,
+            description: news.description,
             is_published: news.is_published,
-            thumbnail: null
+            thumbnail: news.thumbnail,
         });
 
         setFormOpen(true);
@@ -47,7 +47,7 @@ export default function NewsDashboard() {
         try {
             const formData = new FormData();
             formData.append("title", data.title);
-            formData.append("content", data.content || "");
+            formData.append("description", data.description || "");
             formData.append("is_published", String(data.is_published));
             formData.append("type", data.type || "");
             if (data.thumbnail) {

@@ -15,6 +15,15 @@
   padding-right: 16px;
 }
 
+ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+li {
+  display: list-item;
+}
+
 .swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal {
   bottom: -5px;
 }

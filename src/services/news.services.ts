@@ -18,10 +18,11 @@ export const getNewsBySlug = async (slug: string) => {
 };
 
 export const createNews = async (data: FormData) => {
+    console.log("Creating news with data:", data); // Debug log
     const res = await instance.post(`/news`, data, {
         headers: {
-            "Content-Type": "multipart/form-data",
-        },
+            'Content-Type': 'multipart/form-data',
+        }
     });
     return res.data;
 };
