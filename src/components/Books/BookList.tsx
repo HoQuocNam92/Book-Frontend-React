@@ -22,7 +22,7 @@ const BookList = ({ books }: { books: BookType[] }) => {
                                     ) : null}
 
                                     <div className="flex aspect-3/4 items-center justify-center p-3">
-                                        <LazyImage src={b.BookImages}
+                                        <LazyImage src={(b as any).BookImages}
                                             alt={b.title} />
 
                                     </div>

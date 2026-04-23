@@ -8,7 +8,7 @@ import type { BannerFormData } from "./BannerForm";
 import BannerDeleteDialog from "./BannerDeleteDialog";
 
 export default function BannersDashboard() {
-    const { getBanners, createBanner, updateBanner, deleteBanner } = useBanners();
+    const { getBanners, createBanner, updateBanner, deleteBanner } = useBanners("all");
 
     const [formOpen, setFormOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);

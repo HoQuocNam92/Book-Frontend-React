@@ -15,5 +15,21 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "src")
     }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-query': ['@tanstack/react-query'],
+          'vendor-swiper': ['swiper'],
+          'vendor-recharts': ['recharts'],
+          'vendor-quill': ['quill', 'react-quill-new'],
+          'vendor-dnd': ['@dnd-kit/core', '@dnd-kit/sortable', '@dnd-kit/utilities'],
+          'vendor-form': ['react-hook-form', '@hookform/resolvers', 'zod'],
+          'vendor-date': ['date-fns', 'dayjs'],
+        }
+      }
+    }
   }
 });

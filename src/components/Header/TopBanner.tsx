@@ -9,6 +9,8 @@ const TopBanner = () => {
                         src="/images/banner-books.png"
                         alt="Books"
                         className="h-8 hidden md:block"
+                        width={32}
+                        height={32}
                     />
                     <span className="font-semibold text-sm md:text-base">
                         SÁCH MỚI XUẤT BẢN – FLASH SALE TỚI 50%

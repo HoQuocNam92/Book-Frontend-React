@@ -2,14 +2,13 @@ import { useState } from "react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import type { BookType } from "@/types/Book";
+
 
 import { useProducts } from "@/hooks/useProducts";
 import { SpinnerCustom } from "@/components/ui/spinner";
-import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Pagination from "@/components/common/Pagination";
-import BrandRow from "@/components/Books/BrandRow";
-import SliderPrice from "@/components/Books/SliderPrice";
+
 import { useCategories } from "@/hooks/useCategories";
 import { FolderOpen } from "lucide-react";
 import MySwiperComponent from "@/components/Swiper/Swiper";
@@ -62,8 +61,6 @@ export default function BookByCategory() {
     };
 
 
-
-    const brands = getBrands.data?.data?.map((b: any) => b.name) || [];
     return (
         <div className="container bg-[#f2f2f2]">
             <main className=" px-4 py-6">

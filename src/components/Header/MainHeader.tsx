@@ -1,14 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Phone, Search, ShoppingCart, User, X, Loader2, BookOpen, Tag, User2 } from 'lucide-react';
+import { Phone, Search, ShoppingCart, User, X, Loader2, BookOpen } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/auth.stores';
 import { useCartStore } from '@/stores/cart.stores';
 import { getCartItemCount } from '@/services/cart.services';
 import useAuth from '@/hooks/useAuth';
 import { useSuggestion } from '@/hooks/useSuggestion';
-import { useSearch } from '@/hooks/useSearch';
 
 const MainHeader = () => {
     const user = useAuthStore((s) => s.user);
@@ -68,7 +67,7 @@ const MainHeader = () => {
                 {/* Logo */}
                 <div className="flex items-center gap-2 min-w-[180px]">
                     <Link to="/">
-                        <img src="/images/logo.png" alt="AlphaBooks" className="h-10" />
+                        <img src="/images/logo.png" alt="AlphaBooks" className="h-10" width={120} height={40} />
                     </Link>
                 </div>
 
