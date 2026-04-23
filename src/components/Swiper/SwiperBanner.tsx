@@ -18,9 +18,12 @@ const SwiperBanner = ({ data }: { data: BookType[] }) => {
             >
                 {data?.map((item: any, index) => (
                     <SwiperSlide key={item.id}>
-                        <LazyImage src={item.image_url} alt={`Banner ${index}`} className="w-full h-96 object-cover rounded-lg " />
+                        <LazyImage
+                            src={item.image_url}
+                            alt={`Banner ${index}`}
+                            className="w-full h-96 object-cover rounded-lg"
+                        />
                     </SwiperSlide>
-
                 ))}
             </Swiper>
         </div>

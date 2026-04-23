@@ -26,8 +26,6 @@ export default function HomeBookshelfSection() {
         newBanners?.error ||
         featuredBanners?.error
     ) return null
-    console.log("salesBanners", featuredBanners?.data)
-
     return (
         <section className="py-6">
             <div className="mx-auto w-full container px-4 space-y-2">

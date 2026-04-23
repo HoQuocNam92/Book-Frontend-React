@@ -14,7 +14,7 @@ import ProductBrandAttrRealated from "@/components/Detail/ProductBrandAttrRealat
 import useRelated from "@/hooks/useRelated"
 import MySwiperComponent from "@/components/Swiper/Swiper"
 import Reviews from "@/components/Reviews/Reviews"
-import { Home, ChevronRight } from "lucide-react"
+
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb"
 
 const ProductDetail = () => {
@@ -40,9 +40,8 @@ const ProductDetail = () => {
     const discount = product?.discount_percent || 0
     const [qty, setQty] = useState<number>(1)
 
-    const category = product?.Categories?.name || "—"
     const brand = product?.Brands?.name || "—"
-    const related = getProductRelated(product?.Categories?.id || 0).data?.data || []
+    const related = getProductRelated(product?.Categories?.id || 0, product?.id || 0).data?.data || []
 
     const goPrev = () => {
         if (images.length === 0) return

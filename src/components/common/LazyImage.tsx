@@ -11,6 +11,8 @@ export function LazyImage({ src, alt, className, style }: { src: string, alt: st
                 <img
                     src={src}
                     alt={alt}
+                    loading="lazy"
+                    decoding="async"
                     onLoad={() => setLoaded(true)}
                     className="w-full h-full object-cover transition-opacity duration-300"
                     style={{ opacity: loaded ? 1 : 0, transition: 'opacity 0.5s ease-in' }}

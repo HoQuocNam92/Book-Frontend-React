@@ -9,6 +9,8 @@ const MainFooter = () => {
                     src="/logo-alphabooks.png"
                     alt="Alpha Books"
                     className="h-10"
+                    width={120}
+                    height={40}
                 />
                 <ul className="space-y-2">
                     <li>› Bán hàng Online</li>

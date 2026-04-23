@@ -1,33 +1,44 @@
 import { createBrowserRouter } from 'react-router-dom'
-import SignIn from '@/pages/SignIn';
+import { lazy, Suspense } from 'react'
 import MainLayout from '../layouts/MainLayou';
-import SignUp from '@/pages/SignUp';
-import FormReset from '@/components/ResetPassoword/FormReset';
-import BookByCategory from '@/pages/BookByCategory';
-import Oops from '@/pages/Oops';
-import NotFound from '@/pages/NotFound';
-import DashboardLayout from '@/layouts/DashboardLayout';
-import ProductsDashboard from '@/components/Dashboard/Products/ProductsDashboard';
-import OverviewsDashboard from '@/components/Dashboard/Overviews/OverviewsDashboard';
-import HomeBookshelfSection from '@/components/Home/HomeBookshelfSection';
-import ProductForm from '@/components/Dashboard/Products/ProductForm';
-import BrandsDashboard from '@/components/Dashboard/Brands/BrandsDashboard';
-import CategoriesDashboard from '@/components/Dashboard/Categories/CategoriesDashboard';
-import UsersDashboard from '@/components/Dashboard/Users/UsersDashboard';
-import OrdersDashboard from '@/components/Dashboard/Orders/OrdersDashboard';
-import Cart from '@/pages/Cart';
-import CheckoutPage from '@/components/Checkout/CheckoutPage';
-import Profile from '@/pages/Profile';
-import ProductDetail from '@/pages/ProductDetail';
-import BannersDashboard from '@/components/Dashboard/Banners/BannersDashboard';
-import CouponsDashboard from '@/components/Dashboard/Coupons/CouponsDashboard';
-import RevenueDashboard from '@/components/Dashboard/Revenue/RevenueDashboard';
-import NewsDashboard from '@/components/Dashboard/News/NewsDashboard';
-import NewsPage from '@/pages/NewsPage';
-import NewsDetail from '@/pages/NewsDetail';
-import OAuthSuccess from '@/pages/OAuthSuccess';
 import ProtectedRoute from '../pages/ProtectedRoute';
-import CheckoutSuccess from '@/components/Checkout/CheckoutSuccess';
+import { SpinnerCustom } from '@/components/ui/spinner';
+
+// Lazy-loaded pages (code splitting)
+const SignIn = lazy(() => import('@/pages/SignIn'));
+const SignUp = lazy(() => import('@/pages/SignUp'));
+const FormReset = lazy(() => import('@/components/ResetPassoword/FormReset'));
+const BookByCategory = lazy(() => import('@/pages/BookByCategory'));
+const Oops = lazy(() => import('@/pages/Oops'));
+const NotFound = lazy(() => import('@/pages/NotFound'));
+const HomeBookshelfSection = lazy(() => import('@/components/Home/HomeBookshelfSection'));
+const Cart = lazy(() => import('@/pages/Cart'));
+const Profile = lazy(() => import('@/pages/Profile'));
+const ProductDetail = lazy(() => import('@/pages/ProductDetail'));
+const NewsPage = lazy(() => import('@/pages/NewsPage'));
+const NewsDetail = lazy(() => import('@/pages/NewsDetail'));
+const OAuthSuccess = lazy(() => import('@/pages/OAuthSuccess'));
+const CheckoutPage = lazy(() => import('@/components/Checkout/CheckoutPage'));
+const CheckoutSuccess = lazy(() => import('@/components/Checkout/CheckoutSuccess'));
+
+// Dashboard (heavy: Recharts, Quill, DndKit) — only loaded when admin navigates here
+const DashboardLayout = lazy(() => import('@/layouts/DashboardLayout'));
+const ProductsDashboard = lazy(() => import('@/components/Dashboard/Products/ProductsDashboard'));
+const OverviewsDashboard = lazy(() => import('@/components/Dashboard/Overviews/OverviewsDashboard'));
+const ProductForm = lazy(() => import('@/components/Dashboard/Products/ProductForm'));
+const BrandsDashboard = lazy(() => import('@/components/Dashboard/Brands/BrandsDashboard'));
+const CategoriesDashboard = lazy(() => import('@/components/Dashboard/Categories/CategoriesDashboard'));
+const UsersDashboard = lazy(() => import('@/components/Dashboard/Users/UsersDashboard'));
+const OrdersDashboard = lazy(() => import('@/components/Dashboard/Orders/OrdersDashboard'));
+const BannersDashboard = lazy(() => import('@/components/Dashboard/Banners/BannersDashboard'));
+const CouponsDashboard = lazy(() => import('@/components/Dashboard/Coupons/CouponsDashboard'));
+const RevenueDashboard = lazy(() => import('@/components/Dashboard/Revenue/RevenueDashboard'));
+const NewsDashboard = lazy(() => import('@/components/Dashboard/News/NewsDashboard'));
+
+// Helper to wrap lazy components with Suspense
+const S = ({ children }: { children: React.ReactNode }) => (
+    <Suspense fallback={<SpinnerCustom />}>{children}</Suspense>
+);
 
 export const router = createBrowserRouter(
     [
@@ -37,48 +48,47 @@ export const router = createBrowserRouter(
             children: [
                 {
                     index: true,
-                    element: <HomeBookshelfSection />
-                }
-                ,
+                    element: <S><HomeBookshelfSection /></S>
+                },
                 {
                     path: '/danh-muc/:category_slug?',
-                    element: <BookByCategory />
+                    element: <S><BookByCategory /></S>
                 },
                 {
                     path: '/tin-tuc',
-                    element: <NewsPage />
+                    element: <S><NewsPage /></S>
                 },
                 {
                     path: '/tin-tuc/:slug',
-                    element: <NewsDetail />
+                    element: <S><NewsDetail /></S>
                 },
                 {
                     path: '/gio-hang',
-                    element: <Cart />
+                    element: <S><Cart /></S>
                 },
                 {
                     path: '/thanh-toan',
-                    element: <CheckoutPage />
+                    element: <S><CheckoutPage /></S>
                 },
                 {
                     path: '/ho-so',
-                    element: <Profile />
+                    element: <S><Profile /></S>
                 },
                 {
                     path: '/dat-hang-thanh-cong',
-                    element: <CheckoutSuccess />
+                    element: <S><CheckoutSuccess /></S>
                 },
                 {
                     path: '/:slug',
-                    element: <ProductDetail />
+                    element: <S><ProductDetail /></S>
                 },
                 {
                     path: '/tim-kiem',
-                    element: <BookByCategory />
-                }
-                , {
+                    element: <S><BookByCategory /></S>
+                },
+                {
                     path: '/dang-nhap-thanh-cong',
-                    element: <OAuthSuccess />
+                    element: <S><OAuthSuccess /></S>
                 }
             ]
         },
@@ -88,84 +98,81 @@ export const router = createBrowserRouter(
             children: [
                 {
                     path: 'sign-in',
-                    element: <SignIn />
+                    element: <S><SignIn /></S>
                 },
                 {
                     path: 'sign-up',
-                    element: <SignUp />
-                }
-                ,
+                    element: <S><SignUp /></S>
+                },
                 {
                     path: 'getpassword',
-                    element: <FormReset />
+                    element: <S><FormReset /></S>
                 },
             ]
         },
         {
             path: '/dashboard',
             element: <ProtectedRoute roles={[1, 3]}>
-                <DashboardLayout />
+                <S><DashboardLayout /></S>
             </ProtectedRoute>,
             children: [
                 {
                     path: 'overviews?',
-                    element: <OverviewsDashboard />
+                    element: <S><OverviewsDashboard /></S>
                 },
                 {
                     path: 'orders',
-                    element: <OrdersDashboard />
+                    element: <S><OrdersDashboard /></S>
                 },
                 {
                     path: 'products',
-                    element: <ProductsDashboard />,
-
+                    element: <S><ProductsDashboard /></S>,
                 },
                 {
                     path: 'products/create',
-                    element: <ProductForm />,
-
+                    element: <S><ProductForm /></S>,
                 },
                 {
                     path: 'products/edit/:slug',
-                    element: <ProductForm />,
+                    element: <S><ProductForm /></S>,
                 },
                 {
                     path: 'brands',
-                    element: <BrandsDashboard />,
+                    element: <S><BrandsDashboard /></S>,
                 },
                 {
                     path: 'categories',
-                    element: <CategoriesDashboard />,
+                    element: <S><CategoriesDashboard /></S>,
                 },
                 {
                     path: 'users',
-                    element: <UsersDashboard />,
+                    element: <S><UsersDashboard /></S>,
                 },
                 {
                     path: 'banners',
-                    element: <BannersDashboard />
+                    element: <S><BannersDashboard /></S>
                 },
                 {
                     path: 'coupons',
-                    element: <CouponsDashboard />
+                    element: <S><CouponsDashboard /></S>
                 },
                 {
                     path: 'revenue',
-                    element: <RevenueDashboard />
+                    element: <S><RevenueDashboard /></S>
                 },
                 {
                     path: 'news',
-                    element: <NewsDashboard />
+                    element: <S><NewsDashboard /></S>
                 }
             ]
         },
         {
             path: '/oops',
-            element: <Oops />
+            element: <S><Oops /></S>
         },
         {
             path: '*',
-            element: <NotFound />
+            element: <S><NotFound /></S>
         }
     ]
 )
