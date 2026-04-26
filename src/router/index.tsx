@@ -34,6 +34,7 @@ const BannersDashboard = lazy(() => import('@/components/Dashboard/Banners/Banne
 const CouponsDashboard = lazy(() => import('@/components/Dashboard/Coupons/CouponsDashboard'));
 const RevenueDashboard = lazy(() => import('@/components/Dashboard/Revenue/RevenueDashboard'));
 const NewsDashboard = lazy(() => import('@/components/Dashboard/News/NewsDashboard'));
+const ServicesDashboard = lazy(() => import('@/components/Dashboard/Services/ServicesDashboard'));
 
 // Helper to wrap lazy components with Suspense
 const S = ({ children }: { children: React.ReactNode }) => (
@@ -163,6 +164,10 @@ export const router = createBrowserRouter(
                 {
                     path: 'news',
                     element: <S><NewsDashboard /></S>
+                },
+                {
+                    path: 'services',
+                    element: <S><ServicesDashboard /></S>
                 }
             ]
         },
