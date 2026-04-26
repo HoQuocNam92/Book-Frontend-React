@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Boxes, ClipboardList, FolderTree, LayoutDashboard, LogOut, Newspaper, Package, Settings, Tag, Truck, Users, Image as ImageIcon, Ticket, TrendingUp } from 'lucide-react';
+import { Boxes, Briefcase, ClipboardList, FolderTree, LayoutDashboard, LogOut, Newspaper, Package, Settings, Tag, Truck, Users, Image as ImageIcon, Ticket, TrendingUp } from 'lucide-react';
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 
@@ -109,6 +109,12 @@ const Sidebar = () => {
                             icon={Newspaper}
                             label="Tin tức"
                             onClick={() => onNavigate("news")}
+                        />
+
+                        <SideItem
+                            icon={Briefcase}
+                            label="Dịch vụ"
+                            onClick={() => onNavigate("services")}
                         />
 
                         <Separator className="my-3" />

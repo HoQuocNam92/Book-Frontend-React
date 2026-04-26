@@ -52,7 +52,6 @@ const HomeServicesSection = () => {
                     </a>
                 </div>
 
-                {/* Right - Service Cards Swiper */}
                 <div className="lg:col-span-8 relative">
                     <Swiper
                         modules={[Navigation, Pagination]}

@@ -3,7 +3,7 @@ import { SpinnerCustom } from "@/components/ui/spinner"
 import { useProducts } from "@/hooks/useProducts"
 import HomeMain from "@/components/Home/HomeMain"
 import { useBanners } from "@/hooks/useBanners"
-
+import HomeServicesSection from "@/components/Home/HomeServicesSection"
 
 
 
@@ -29,6 +29,7 @@ export default function HomeBookshelfSection() {
     return (
         <section className="py-6">
             <div className="mx-auto w-full container px-4 space-y-2">
+                <HomeServicesSection />
                 <HomeMain
                     books={getProducts?.data?.data?.discountBooks}
                     banners={salesBanners?.data}
