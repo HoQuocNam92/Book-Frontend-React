@@ -20,6 +20,7 @@ type AddressFormUIProps = {
 }
 
 const AddressFormUI = ({ form, setForm, error, isSubmitting, handleSubmit, resetForm, editingId, provinces, districts, wards, setDistrictId, setProvinceId }: AddressFormUIProps) => {
+    console.log("Check form data in UI:", form)
     return (
 
         <div className="rounded-xl border-2 border-dashed border-orange-200 bg-orange-50/30 p-4 space-y-4">
@@ -63,11 +64,11 @@ const AddressFormUI = ({ form, setForm, error, isSubmitting, handleSubmit, reset
                     <Label>Tỉnh/Thành</Label>
                     <select
                         className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm"
-                        value={form.province_code}
+                        value={form.province_id}
                         onChange={(e) => {
                             setForm({
                                 ...form,
-                                province_code: Number(e.target.value),
+                                province_id: Number(e.target.value),
                             })
                             setProvinceId?.(Number(e.target.value))
                         }
@@ -76,7 +77,7 @@ const AddressFormUI = ({ form, setForm, error, isSubmitting, handleSubmit, reset
                     >
                         <option value="">-- Chọn tỉnh/thành --</option>
                         {provinces?.map((p: any) => (
-                            <option key={p.id} value={p.code}>
+                            <option key={p.province_id} value={p.province_id}>
                                 {p.name}
                             </option>
                         ))}
@@ -86,12 +87,12 @@ const AddressFormUI = ({ form, setForm, error, isSubmitting, handleSubmit, reset
                     <Label>Quận/Huyện</Label>
                     <select
                         className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm"
-                        value={form.district_code}
-                        disabled={!form.province_code}
+                        value={form.district_id}
+                        disabled={!form.province_id}
                         onChange={(e) => {
                             setForm({
                                 ...form,
-                                district_code: Number(e.target.value),
+                                district_id: Number(e.target.value),
                             })
                                 ,
                                 setDistrictId?.(Number(e.target.value))
@@ -100,7 +101,7 @@ const AddressFormUI = ({ form, setForm, error, isSubmitting, handleSubmit, reset
                     >
                         <option value="">-- Chọn quận/huyện --</option>
                         {districts?.map((d: any) => (
-                            <option key={d.id} value={d.code}>
+                            <option key={d.district_id} value={d.district_id}>
                                 {d.name}
                             </option>
                         ))}
@@ -111,17 +112,17 @@ const AddressFormUI = ({ form, setForm, error, isSubmitting, handleSubmit, reset
                     <select
                         className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm"
                         value={form.ward_code}
-                        disabled={!form.district_code}
+                        disabled={!form.district_id}
                         onChange={(e) =>
                             setForm({
                                 ...form,
-                                ward_code: Number(e.target.value)
+                                ward_code: String(e.target.value),
                             })
                         }
                     >
                         <option value="">-- Chọn phường/xã --</option>
                         {wards?.map((w: any) => (
-                            <option key={w.id} value={w.code}>
+                            <option key={w.ward_code} value={w.ward_code}>
                                 {w.name}
                             </option>
                         ))}

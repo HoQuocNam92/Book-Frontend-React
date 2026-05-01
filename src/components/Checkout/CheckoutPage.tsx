@@ -49,7 +49,7 @@ export default function CheckoutPage() {
 
     // Gọi API tính phí ship + leadtime
     const { shippingFee, leadtime, isLoadingShipping, isShippingError } = useShipping({
-        districtId: selectedAddr?.district_code || null,
+        districtId: selectedAddr?.district_id || null,
         wardCode: selectedAddr?.ward_code ? String(selectedAddr.ward_code) : null,
         weight: totalWeight,
         enabled: !!selectedAddr,
