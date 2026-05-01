@@ -13,9 +13,9 @@ import { AddressFormSchema, type AddressFormInput } from "@/types/AddressForm"
 const emptyForm: AddressFormInput = {
     address: "",
     phone: "",
-    province_code: 0,
-    district_code: 0,
-    ward_code: 0,
+    province_id: 0,
+    district_id: 0,
+    ward_code: "",
 }
 export default function ProfileAddresses() {
     const [showForm, setShowForm] = useState(false)
@@ -61,23 +61,21 @@ export default function ProfileAddresses() {
 
     const startEdit = (addr: any) => {
         setEditingId(addr.id)
-        setProvinceId(addr.province_code)
-        setDistrictId(addr.district_code)
+        setProvinceId(addr.province_id)
+        setDistrictId(addr.district_id)
         setForm({
             address: addr.address || "",
             phone: addr.phone || "",
-            province_code: 49,
-            district_code: addr.district_code || 0,
+            province_id: addr.province_id || 0,
+            district_id: addr.district_id || 0,
             ward_code: addr.ward_code || 0,
         })
     }
 
-    const mapCodeToId = (list: any[], code: number) =>
-        list.find(i => i.code === code)?.code
 
     const handleSubmit = async () => {
+        console.log("Submitting form with data:", form)
         setError([])
-
         const result = AddressFormSchema.safeParse(form)
         if (!result.success) {
             setError(result.error.issues)
@@ -86,9 +84,10 @@ export default function ProfileAddresses() {
 
         const payload = {
             ...result.data,
-            province_code: mapCodeToId(provinces, form.province_code),
-            district_code: mapCodeToId(districts, form.district_code),
-            ward_code: mapCodeToId(wards, form.ward_code),
+            province_id: form.province_id,
+            district_id: form.district_id,
+            ward_code: String(form.ward_code
+            ),
         }
 
         try {
