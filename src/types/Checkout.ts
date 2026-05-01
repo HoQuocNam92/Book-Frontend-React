@@ -9,6 +9,7 @@ export const CheckoutSchema = z.object({
         code: z.string(),
         discount: z.number()
     }).nullable(),
+    shipping_fee: z.number().default(0),
 })
 
 

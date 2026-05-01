@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { CheckCircle, MapPin, CreditCard, Truck, Tag, X, Loader2 } from "lucide-react"
+import { CheckCircle, MapPin, CreditCard, Truck, Tag, X, Loader2, Clock, Package } from "lucide-react"
 import { useNavigate, Link } from "react-router-dom"
 import { useAuthStore } from "@/stores/auth.stores"
 import { formatVND } from "@/utils/formatVND"
@@ -12,6 +12,7 @@ import useCarts from "@/hooks/useCarts"
 import useAddress from "@/hooks/useAddress"
 import useCheckout from "@/hooks/useCheckout"
 import { useCoupons } from "@/hooks/useCoupons"
+import useShipping from "@/hooks/useShipping"
 import { CheckoutSchema } from "@/types/Checkout"
 import QrCode from "@/components/QrCode/QrCode"
 import dayjs from "dayjs"
@@ -31,6 +32,29 @@ export default function CheckoutPage() {
     const { getAddress } = useAddress()
     const { createOrder } = useCheckout();
     const { validateCoupon } = useCoupons();
+
+    // Tìm address đang chọn để lấy district_code và ward_code
+    const addresses = getAddress?.data?.data || []
+    const selectedAddr = useMemo(() => {
+        if (!selectedAddress) return null
+        return addresses.find((a: any) => a.id === selectedAddress) || null
+    }, [selectedAddress, addresses])
+
+    // Tính tổng cân nặng (300g/cuốn mặc định)
+    const cart = getCartByUserId?.data
+    const items = cart?.items || []
+    const totalWeight = useMemo(() => {
+        return items.reduce((sum: number, item: any) => sum + item.quantity * 300, 0)
+    }, [items])
+
+    // Gọi API tính phí ship + leadtime
+    const { shippingFee, leadtime, isLoadingShipping, isShippingError } = useShipping({
+        districtId: selectedAddr?.district_code || null,
+        wardCode: selectedAddr?.ward_code ? String(selectedAddr.ward_code) : null,
+        weight: totalWeight,
+        enabled: !!selectedAddr,
+    })
+
     const handleApplyCoupon = async () => {
         if (!couponCode.trim()) return
         try {
@@ -53,14 +77,19 @@ export default function CheckoutPage() {
     const handleCreateOrder = async () => {
         try {
 
-            const result = CheckoutSchema.safeParse({ selectedAddress, paymentMethod, appliedCoupon })
+            const result = CheckoutSchema.safeParse({ selectedAddress, paymentMethod, appliedCoupon, shipping_fee: shippingFee })
             if (!result.success) {
                 result.error.issues.forEach((issue) => {
                     alert(issue.message)
                 });
                 return;
             }
-            const res = await createOrder.mutateAsync({ selectedAddress: selectedAddress!, paymentMethod, appliedCoupon })
+            const res = await createOrder.mutateAsync({
+                selectedAddress: selectedAddress!,
+                paymentMethod,
+                appliedCoupon,
+                shipping_fee: shippingFee
+            })
             if (res?.data) {
                 if (paymentMethod === 'bank_transfer' && res.data?.vietQr) {
                     setQrUrl(res.data.vietQr)
@@ -95,13 +124,10 @@ export default function CheckoutPage() {
         return null
     }
     if (getCartByUserId.isLoading || getAddress.isLoading) return <SpinnerCustom />
-    const cart = getCartByUserId?.data
-    const items = cart?.items || []
-    const addresses = getAddress?.data?.data || []
     const totalAmount = items.reduce((sum: number, item: any) => sum + item.subtotal, 0)
     const totalItems = items.reduce((sum: number, item: any) => sum + item.quantity, 0)
     const discountAmount = appliedCoupon ? appliedCoupon?.discount : 0
-    const finalAmount = totalAmount - discountAmount
+    const finalAmount = totalAmount - discountAmount + shippingFee
 
     return (
         <div className="container bg-neutral-50 min-h-[60vh]">
@@ -170,6 +196,70 @@ export default function CheckoutPage() {
                                 )}
                             </CardContent>
                         </Card>
+
+                        {/* Shipping info card - hiển thị khi đã chọn địa chỉ */}
+                        {selectedAddress && (
+                            <Card className="rounded-2xl overflow-hidden">
+                                <CardHeader className="pb-2">
+                                    <CardTitle className="text-base flex items-center gap-2">
+                                        <Package className="h-5 w-5 text-orange-500" />
+                                        Thông tin vận chuyển
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    {isLoadingShipping ? (
+                                        <div className="flex items-center gap-3 py-4">
+                                            <Loader2 className="h-5 w-5 animate-spin text-orange-500" />
+                                            <span className="text-sm text-muted-foreground">Đang tính phí vận chuyển...</span>
+                                        </div>
+                                    ) : isShippingError ? (
+                                        <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-600">
+                                            Không thể tính phí vận chuyển. Vui lòng thử lại hoặc chọn địa chỉ khác.
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-3">
+                                            {/* Phí ship */}
+                                            <div className="flex items-center justify-between rounded-xl bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-100 p-4">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100">
+                                                        <Truck className="h-5 w-5 text-orange-600" />
+                                                    </div>
+                                                    <div>
+                                                        <div className="text-sm font-semibold text-neutral-800">Phí vận chuyển</div>
+                                                        <div className="text-xs text-muted-foreground">Giao Hàng Nhanh (GHN)</div>
+                                                    </div>
+                                                </div>
+                                                <div className="text-right">
+                                                    <span className="text-base font-bold text-orange-600">
+                                                        {formatVND(shippingFee)}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            {/* Thời gian giao dự kiến */}
+                                            {leadtime && (
+                                                <div className="flex items-center justify-between rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 p-4">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100">
+                                                            <Clock className="h-5 w-5 text-emerald-600" />
+                                                        </div>
+                                                        <div>
+                                                            <div className="text-sm font-semibold text-neutral-800">Thời gian giao dự kiến</div>
+                                                            <div className="text-xs text-muted-foreground">Dự kiến nhận hàng</div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <span className="text-base font-bold text-emerald-600">
+                                                            {dayjs(leadtime * 1000).format("DD/MM/YYYY")}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </CardContent>
+                            </Card>
+                        )}
 
                         {/* Payment method */}
                         <Card className="rounded-2xl">
@@ -324,7 +414,15 @@ export default function CheckoutPage() {
                                     )}
                                     <div className="flex justify-between text-sm">
                                         <span className="text-muted-foreground">Phí vận chuyển</span>
-                                        <span className="text-green-600">Miễn phí</span>
+                                        {!selectedAddress ? (
+                                            <span className="text-xs text-muted-foreground italic">Chọn địa chỉ để tính</span>
+                                        ) : isLoadingShipping ? (
+                                            <Loader2 className="h-4 w-4 animate-spin text-orange-500" />
+                                        ) : shippingFee > 0 ? (
+                                            <span className="text-orange-600 font-medium">{formatVND(shippingFee)}</span>
+                                        ) : (
+                                            <span className="text-green-600">Miễn phí</span>
+                                        )}
                                     </div>
                                 </div>
 
@@ -333,7 +431,7 @@ export default function CheckoutPage() {
                                 <div className="flex justify-between">
                                     <span className="font-semibold">Tổng cộng</span>
                                     <div className="text-right">
-                                        {appliedCoupon && (
+                                        {(appliedCoupon || shippingFee > 0) && (
                                             <div className="text-xs text-muted-foreground line-through">
                                                 {formatVND(totalAmount)}
                                             </div>
@@ -347,7 +445,7 @@ export default function CheckoutPage() {
                                 <Button
                                     className="h-12 w-full rounded-xl bg-orange-500 text-base font-semibold hover:bg-orange-600"
                                     onClick={handleCreateOrder}
-                                    disabled={createOrder.isPending}
+                                    disabled={createOrder.isPending || isLoadingShipping}
                                 >
                                     {createOrder.isPending ? "Đang xử lý..." : "Đặt hàng"}
                                 </Button>
