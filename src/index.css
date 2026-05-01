@@ -11,6 +11,14 @@
   margin: 0 auto;
 }
 
+.shipper-marker {
+  width: 40px;
+  height: 40px;
+  background-image: url("...");
+  background-size: cover;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
 .mySwiper {
   padding-left: 16px;
   padding-right: 16px;
@@ -171,38 +179,90 @@ li {
 }
 
 @keyframes fab-entrance {
-  0% { transform: scale(0) rotate(-180deg); opacity: 0; }
-  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  0% {
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
 }
 
 @keyframes ripple {
-  0% { transform: scale(1); opacity: 0.6; }
-  100% { transform: scale(1.8); opacity: 0; }
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
 }
 
 @keyframes badge-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.25); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.25);
+  }
 }
 
 @keyframes msg-in {
-  0% { opacity: 0; transform: translateY(12px) scale(0.95); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.95);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @keyframes typing-bounce {
-  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-  30% { transform: translateY(-6px); opacity: 1; }
+
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+
+  30% {
+    transform: translateY(-6px);
+    opacity: 1;
+  }
 }
 
 @keyframes window-in {
-  0% { transform: scale(0.5) translateY(40px); opacity: 0; }
-  100% { transform: scale(1) translateY(0); opacity: 1; }
+  0% {
+    transform: scale(0.5) translateY(40px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes status-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5); }
-  50% { box-shadow: 0 0 0 4px rgba(52, 211, 153, 0); }
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5);
+  }
+
+  50% {
+    box-shadow: 0 0 0 4px rgba(52, 211, 153, 0);
+  }
 }
 
 /* ── ChatBot Markdown Prose ── */
@@ -210,39 +270,52 @@ li {
   .chatbot-prose {
     @apply text-[13.5px] leading-relaxed;
   }
+
   .chatbot-prose p {
     @apply mb-2 last:mb-0;
   }
-  .chatbot-prose ul, .chatbot-prose ol {
+
+  .chatbot-prose ul,
+  .chatbot-prose ol {
     @apply my-1 pl-5;
   }
+
   .chatbot-prose li {
     @apply my-0.5;
   }
+
   .chatbot-prose code {
     @apply text-xs px-1.5 py-0.5 rounded bg-indigo-500/8 text-indigo-500 font-medium;
   }
+
   .chatbot-prose pre {
     @apply my-2 p-3 rounded-lg bg-[#1e1b4b] text-indigo-100 overflow-x-auto text-xs;
   }
+
   .chatbot-prose pre code {
     @apply bg-transparent text-inherit p-0 font-normal;
   }
+
   .chatbot-prose strong {
     @apply font-bold text-indigo-500;
   }
+
   .chatbot-prose a {
     @apply text-indigo-500 underline underline-offset-2 hover:text-indigo-600;
   }
+
   .chatbot-prose blockquote {
     @apply border-l-[3px] border-purple-400 pl-3 my-2 text-muted-foreground italic;
   }
+
   .chatbot-prose-user strong {
     @apply text-indigo-100;
   }
+
   .chatbot-prose-user code {
     @apply bg-white/15 text-indigo-100;
   }
+
   .chatbot-prose-user a {
     @apply text-indigo-200;
   }
