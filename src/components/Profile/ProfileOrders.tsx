@@ -6,6 +6,7 @@ import { SpinnerCustom } from "@/components/ui/spinner"
 import OrderEmpty from "@/components/Orders/OrderEmpty"
 import { useOrders } from "@/hooks/useOrders"
 import Pagination from "@/components/common/Pagination"
+import OrderDeliveryMap from "@/components/Orders/OrderDeliveryMap"
 
 const statusConfig: Record<string, { label: string; color: string }> = {
     pending: { label: "Chờ xác nhận", color: "bg-yellow-100 text-yellow-700" },
@@ -23,13 +24,24 @@ export default function ProfileOrders() {
     if (getMyOrders?.isLoading) return <SpinnerCustom />
 
     const orders = getMyOrders?.data?.data || []
-    console.log("My Orders:", orders)
     if (orders.length === 0) {
         return <OrderEmpty />
     }
     const handleChangePage = (newPage: number) => {
         setPage(newPage);
     }
+
+    const composeDeliveryAddress = (order: any) => {
+        const addressParts = [
+            order?.Addresses?.address,
+            order?.Addresses?.Wards?.name,
+            order?.Addresses?.Districts?.name,
+            order?.Addresses?.Provinces?.name,
+        ].filter(Boolean);
+
+        return addressParts.join(", ");
+    }
+
     return (
         <div className="space-y-4">
 
@@ -121,6 +133,10 @@ export default function ProfileOrders() {
                                                 {order.Addresses.Provinces?.name && `, ${order.Addresses.Provinces.name}`}
                                                 {order.Addresses.phone && ` · SĐT: ${order.Addresses.phone}`}
                                             </div>
+                                        )}
+
+                                        {order.Addresses && (
+                                            <OrderDeliveryMap destinationAddress={composeDeliveryAddress(order)} />
                                         )}
 
                                         {/* Payment */}
