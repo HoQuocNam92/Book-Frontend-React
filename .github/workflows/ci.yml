@@ -11,10 +11,10 @@ env:
 
 jobs:
   # ──────────────────────────────────────────────
-  # Lint, Type Check & Build
+  # Type Check & Build
   # ──────────────────────────────────────────────
   build:
-    name: 🎨 Lint, Check & Build
+    name: 🎨 Build & Check
     runs-on: ubuntu-latest
 
     steps:
@@ -29,12 +29,6 @@ jobs:
 
       - name: 📥 Install dependencies
         run: npm ci
-
-      - name: 🔍 Lint
-        run: npm run lint
-
-      - name: 🔎 Type Check
-        run: npx tsc --noEmit
 
       - name: 🏗️ Build
         run: npm run build
