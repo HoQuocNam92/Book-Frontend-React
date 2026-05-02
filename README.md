@@ -52,26 +52,13 @@ Giao diện web cho hệ thống thương mại điện tử **AlphaBooks** — 
 
 ---
 
-## 🛠️ Tech Stack
-
-| Layer | Công nghệ |
-|-------|-----------|
-| **Framework** | React 19 + React Compiler |
-| **Language** | TypeScript 5.9 |
-| **Build** | Vite 7 |
-| **Styling** | TailwindCSS 4 + ShadCN UI + Radix UI |
-| **State** | Zustand 5 |
-| **Data Fetching** | TanStack React Query 5 |
-| **Routing** | React Router 7 |
-| **Forms** | React Hook Form + Zod validation |
-| **HTTP** | Axios |
-| **Charts** | Recharts 3 |
-| **Drag & Drop** | DnD Kit |
-| **Rich Editor** | React Quill |
-| **Carousel** | Swiper 12 |
-| **Maps** | Goong Maps JS |
-| **Markdown** | React Markdown + Remark GFM |
-| **Realtime** | Socket.IO Client |
+* ⚛️ ReactJS
+* 🟦 TypeScript
+* 🎨 Tailwind CSS
+* 🧩 Shadcn/ui
+* 🔄 Axios
+* 📦 Vite
+* 🐳 Docker
 
 ---
 
