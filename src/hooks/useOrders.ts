@@ -3,7 +3,8 @@ import {
     getOrders,
     updateOrderStatus,
     deleteOrder,
-    getMyOrders
+    getMyOrders,
+    cancelMyOrder,
 } from "@/services/order.services";
 import { useState } from "react";
 
@@ -30,6 +31,14 @@ export const useOrders = () => {
             queryClient.invalidateQueries({ queryKey: ["orders", page] });
         },
     });
+
+    const cancelMyOrderMutation = useMutation({
+        mutationFn: (id: number) => cancelMyOrder(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["my-orders", page] });
+            queryClient.invalidateQueries({ queryKey: ["my-order-detail"] });
+        },
+    });
     const getMyOrderQuery = useQuery({
         queryKey: ["my-orders", page],
         queryFn: async () => await getMyOrders(page),
@@ -40,6 +49,7 @@ export const useOrders = () => {
         getMyOrders: getMyOrderQuery,
         updateOrderStatus: updateOrderStatusMutation,
         deleteOrder: deleteOrderMutation,
+        cancelMyOrder: cancelMyOrderMutation,
         page,
         setPage,
     };

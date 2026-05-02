@@ -20,6 +20,7 @@ const NewsDetail = lazy(() => import('@/pages/NewsDetail'));
 const OAuthSuccess = lazy(() => import('@/pages/OAuthSuccess'));
 const CheckoutPage = lazy(() => import('@/components/Checkout/CheckoutPage'));
 const CheckoutSuccess = lazy(() => import('@/components/Checkout/CheckoutSuccess'));
+const OrderDetailPage = lazy(() => import('@/pages/OrderDetailPage'));
 
 // Dashboard (heavy: Recharts, Quill, DndKit) — only loaded when admin navigates here
 const DashboardLayout = lazy(() => import('@/layouts/DashboardLayout'));
@@ -74,6 +75,10 @@ export const router = createBrowserRouter(
                 {
                     path: '/ho-so',
                     element: <S><Profile /></S>
+                },
+                {
+                    path: '/don-hang/:orderId',
+                    element: <S><OrderDetailPage /></S>
                 },
                 {
                     path: '/dat-hang-thanh-cong',

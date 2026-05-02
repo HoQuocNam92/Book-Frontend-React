@@ -1,49 +1,38 @@
-
-import { SpinnerCustom } from "@/components/ui/spinner"
-import { useProducts } from "@/hooks/useProducts"
 import HomeMain from "@/components/Home/HomeMain"
-import { useBanners } from "@/hooks/useBanners"
 import HomeServicesSection from "@/components/Home/HomeServicesSection"
-
-
+import { useProducts } from "@/hooks/useProducts"
+import { useBanners } from "@/hooks/useBanners"
 
 export default function HomeBookshelfSection() {
     const { getProducts } = useProducts("all")
-
     const { getBanners: salesBanners } = useBanners("sales")
     const { getBanners: newBanners } = useBanners("new")
     const { getBanners: featuredBanners } = useBanners("featured")
-    if (
-        getProducts?.isLoading ||
-        salesBanners?.isLoading ||
-        newBanners?.isLoading ||
-        featuredBanners?.isLoading
-    ) return <SpinnerCustom />
 
-    if (
-        getProducts?.error ||
-        salesBanners?.error ||
-        newBanners?.error ||
-        featuredBanners?.error
-    ) return null
     return (
         <section className="py-6">
-            <div className="mx-auto w-full container px-4 space-y-2">
+            <div className="mx-auto w-full container space-y-2 px-4">
                 <HomeServicesSection />
                 <HomeMain
-                    books={getProducts?.data?.data?.discountBooks}
-                    banners={salesBanners?.data}
+                    books={getProducts?.data?.data?.discountBooks ?? []}
+                    banners={salesBanners?.data ?? []}
                     title="Sách khuyến mãi"
+                    isLoading={!!getProducts?.isLoading || !!salesBanners?.isLoading}
+                    isError={!!getProducts?.error || !!salesBanners?.error}
                 />
                 <HomeMain
-                    books={getProducts?.data?.data?.newBooks}
-                    banners={newBanners?.data}
+                    books={getProducts?.data?.data?.newBooks ?? []}
+                    banners={newBanners?.data ?? []}
                     title="Sách mới"
+                    isLoading={!!getProducts?.isLoading || !!newBanners?.isLoading}
+                    isError={!!getProducts?.error || !!newBanners?.error}
                 />
                 <HomeMain
-                    books={getProducts?.data?.data?.featuredBooks}
-                    banners={featuredBanners?.data}
+                    books={getProducts?.data?.data?.featuredBooks ?? []}
+                    banners={featuredBanners?.data ?? []}
                     title="Sách nổi bật"
+                    isLoading={!!getProducts?.isLoading || !!featuredBanners?.isLoading}
+                    isError={!!getProducts?.error || !!featuredBanners?.error}
                 />
             </div>
         </section>

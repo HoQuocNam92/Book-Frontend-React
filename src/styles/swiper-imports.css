@@ -1,0 +1,5 @@
+/* Gom import Swiper một lần — tránh lặp trong nhiều component */
+@import "swiper/css";
+@import "swiper/css/navigation";
+@import "swiper/css/pagination";
+@import "swiper/css/grid";

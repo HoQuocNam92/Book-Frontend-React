@@ -67,7 +67,15 @@ const MainHeader = () => {
                 {/* Logo */}
                 <div className="flex items-center gap-2 min-w-[180px]">
                     <Link to="/">
-                        <img src="/images/logo.png" alt="AlphaBooks" className="h-10" width={120} height={40} />
+                        <img
+                            src="/images/logo.png"
+                            alt="AlphaBooks"
+                            className="h-10 w-auto max-w-[120px]"
+                            width={120}
+                            height={40}
+                            decoding="async"
+                            fetchPriority="high"
+                        />
                     </Link>
                 </div>
 

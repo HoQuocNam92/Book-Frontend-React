@@ -32,7 +32,14 @@ const HomeShelfBookCard = ({
             <div className="mx-auto w-full max-w-[140px]">
                 <div className="aspect-[3/4] overflow-hidden rounded-xl bg-neutral-50 shadow-sm">
                     <div className="h-full w-full transition-transform duration-300 group-hover:scale-105">
-                        <LazyImage src={book.thumbnail} alt={book.title} />
+                        <LazyImage
+                            src={book.thumbnail}
+                            alt={book.title}
+                            cdnMaxWidth={360}
+                            sizes="(max-width: 640px) 33vw, 140px"
+                            width={140}
+                            height={187}
+                        />
                     </div>
                 </div>
             </div>

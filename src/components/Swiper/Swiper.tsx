@@ -1,13 +1,7 @@
+import { Swiper, SwiperSlide } from "swiper/react"
+import { Pagination, Grid } from "swiper/modules"
 
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Grid } from 'swiper/modules';
-// Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/scrollbar';
-
-import HomeShelfBookCard from "@/components/Home/BookCards";
+import HomeShelfBookCard from "@/components/Home/BookCards"
 import { useNavigate } from 'react-router-dom';
 import type { BookType } from '@/types/Book';
 
@@ -16,8 +10,13 @@ function MySwiperComponent({ data, options = true }: { data: BookType[], options
   return (
     <div>
       <Swiper modules={[Pagination, Grid]}
-        slidesPerView={5}
+        slidesPerView={2}
         spaceBetween={10}
+        breakpoints={{
+            480: { slidesPerView: 3, spaceBetween: 10 },
+            768: { slidesPerView: 4, spaceBetween: 10 },
+            1024: { slidesPerView: 5, spaceBetween: 10 },
+        }}
         grid={!options ? {
           rows: 5,
           fill: 'row'

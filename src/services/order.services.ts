@@ -24,3 +24,13 @@ export const deleteOrder = async (id: number) => {
     const res = await instance.delete(`/orders/${id}`);
     return res.data;
 };
+
+export const getMyOrderDetail = async (id: number) => {
+    const res = await instance.get(`/orders/my/${id}`);
+    return res.data;
+};
+
+export const cancelMyOrder = async (id: number) => {
+    const res = await instance.post(`/orders/my/${id}/cancel`);
+    return res.data;
+};
