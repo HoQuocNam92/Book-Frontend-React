@@ -7,9 +7,9 @@ const ChatBot = lazy(() => import("@/components/ChatBot/ChatBot"))
 
 const MainLayout = () => {
     return (
-        <div>
+        <div className="min-w-0">
             <Header />
-            <main>
+            <main className="min-w-0">
                 <Outlet />
             </main>
             <Footer />

@@ -104,7 +104,6 @@ export default function CheckoutPage() {
             alert("Đặt hàng thất bại. Vui lòng thử lại.")
         }
     }
-    console.log("Check time left: ", timeLeft)
     useEffect(() => {
         if (!qrUrl) return;
         const timer = setInterval(() => {
@@ -167,8 +166,8 @@ export default function CheckoutPage() {
                                                 : "border-neutral-200 hover:border-neutral-300"
                                                 }`}
                                         >
-                                            <div className="flex items-start justify-between">
-                                                <div>
+                                            <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                                                <div className="min-w-0">
                                                     <div className="text-sm font-medium">
                                                         {addr.address}
                                                     </div>
@@ -219,8 +218,8 @@ export default function CheckoutPage() {
                                     ) : (
                                         <div className="space-y-3">
                                             {/* Phí ship */}
-                                            <div className="flex items-center justify-between rounded-xl bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-100 p-4">
-                                                <div className="flex items-center gap-3">
+                                            <div className="flex flex-col gap-3 rounded-xl border border-orange-100 bg-gradient-to-r from-orange-50 to-amber-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+                                                <div className="flex min-w-0 items-center gap-3">
                                                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100">
                                                         <Truck className="h-5 w-5 text-orange-600" />
                                                     </div>
@@ -229,7 +228,7 @@ export default function CheckoutPage() {
                                                         <div className="text-xs text-muted-foreground">Giao Hàng Nhanh (GHN)</div>
                                                     </div>
                                                 </div>
-                                                <div className="text-right">
+                                                <div className="text-left sm:text-right">
                                                     <span className="text-base font-bold text-orange-600">
                                                         {formatVND(shippingFee)}
                                                     </span>
@@ -238,8 +237,8 @@ export default function CheckoutPage() {
 
                                             {/* Thời gian giao dự kiến */}
                                             {leadtime && (
-                                                <div className="flex items-center justify-between rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 p-4">
-                                                    <div className="flex items-center gap-3">
+                                                <div className="flex flex-col gap-3 rounded-xl border border-emerald-100 bg-gradient-to-r from-emerald-50 to-teal-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+                                                    <div className="flex min-w-0 items-center gap-3">
                                                         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100">
                                                             <Clock className="h-5 w-5 text-emerald-600" />
                                                         </div>
@@ -248,7 +247,7 @@ export default function CheckoutPage() {
                                                             <div className="text-xs text-muted-foreground">Dự kiến nhận hàng</div>
                                                         </div>
                                                     </div>
-                                                    <div className="text-right">
+                                                    <div className="text-left sm:text-right">
                                                         <span className="text-base font-bold text-emerald-600">
                                                             {dayjs(leadtime * 1000).format("DD/MM/YYYY")}
                                                         </span>

@@ -18,8 +18,8 @@ export default function ResetPassword() {
         }
     }
     return (
-        <div className=" flex items-center justify-center bg-gray-100">
-            <div className="my-7 w-full max-w-md bg-white rounded-md shadow-sm border">
+        <div className="flex min-h-[60vh] items-center justify-center bg-gray-100 px-4 py-8">
+            <div className="my-7 w-full max-w-md rounded-md border bg-white shadow-sm">
 
                 {/* Header */}
                 <div className="border-b px-6 py-3">

@@ -10,9 +10,9 @@ export default function NewsDetail() {
     const news = data?.data;
 
     return (
-        <div className=" container bg-[#f2f2f2]">
-            <main className=" px-4 py-8">
-                <div className="mb-6 text-sm text-muted-foreground flex items-center gap-2">
+        <div className="container min-w-0 bg-[#f2f2f2]">
+            <main className="px-3 py-6 sm:px-4 sm:py-8">
+                <div className="mb-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
                     <Link to="/" className="hover:text-orange-500">Trang chủ</Link>
                     <span>/</span>
                     <Link to="/tin-tuc" className="hover:text-orange-500">Tin tức</Link>
@@ -46,6 +46,7 @@ export default function NewsDetail() {
                             <img
                                 src={news.thumbnail}
                                 alt={news.title}
+                                className="max-h-72 w-full object-cover sm:max-h-96"
                             />
                         )}
                         {!news.thumbnail && (
@@ -59,7 +60,7 @@ export default function NewsDetail() {
                                     {news.type}
                                 </span>
                             )}
-                            <h1 className="text-2xl font-bold leading-snug mb-3">{news.title}</h1>
+                            <h1 className="mb-3 text-xl font-bold leading-snug sm:text-2xl">{news.title}</h1>
                             <div className="flex items-center gap-2 text-xs text-muted-foreground mb-6">
                                 <Calendar className="h-3.5 w-3.5" />
                                 {news.created_at ? format(new Date(news.created_at), "dd/MM/yyyy HH:mm") : ""}

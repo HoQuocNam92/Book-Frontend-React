@@ -19,14 +19,14 @@ const ProductInfo = ({ product, finalPrice, salePrice, discount, setQty, qty, ha
         <Card className="col-span-12 lg:col-span-4 rounded-2xl border-0 shadow-sm">
             <CardContent className="p-5">
                 {/* Title */}
-                <h1 className="text-xl font-bold leading-snug text-neutral-900">{product.title}</h1>
+                <h1 className="text-lg font-bold leading-snug text-neutral-900 sm:text-xl">{product.title}</h1>
 
                 <Separator className="my-4" />
 
                 {/* Price section */}
                 <div className="space-y-1.5">
                     <div className="flex items-end gap-3 flex-wrap">
-                        <div className="text-3xl font-extrabold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
+                        <div className="text-2xl font-extrabold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent sm:text-3xl">
                             {formatVND(finalPrice)}
                         </div>
 

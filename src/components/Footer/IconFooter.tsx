@@ -5,9 +5,9 @@ const IconFooter = ({ icon, text }: {
   text: string
 }) => {
   return (
-    <div className="flex items-center gap-3">
-      {icon}
-      <span className="font-medium">{text}</span>
+    <div className="flex min-w-0 items-start gap-3 sm:items-center">
+      <span className="shrink-0 pt-0.5 sm:pt-0">{icon}</span>
+      <span className="min-w-0 text-balance font-medium leading-snug">{text}</span>
     </div>
   )
 }

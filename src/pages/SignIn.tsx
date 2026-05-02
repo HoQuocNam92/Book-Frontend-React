@@ -8,8 +8,8 @@ import { Link } from "react-router-dom"
 const SignIn = () => {
     return (
         <div>
-            <div className="flex items-center justify-center bg-gray-100">
-                <Card className="w-105 rounded-sm shadow-md my-7">
+            <div className="flex min-h-[70vh] items-center justify-center bg-gray-100 px-4 py-8">
+                <Card className="my-7 w-full max-w-md rounded-sm shadow-md">
                     <Header />
                     <CardContent  >
                         <p className="text-sm font-medium my-3">

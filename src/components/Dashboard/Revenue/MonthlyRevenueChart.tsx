@@ -75,7 +75,7 @@ const MonthlyRevenueChart = ({ data, isLoading, period, year, month, week }: Mon
                         Không có dữ liệu doanh thu cho khoảng thời gian này.
                     </div>
                 ) : (
-                    <div className="h-64">
+                    <div className="h-56 min-w-0 w-full sm:h-64">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart
                                 data={chartData}

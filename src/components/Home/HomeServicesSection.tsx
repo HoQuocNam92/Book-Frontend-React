@@ -25,12 +25,12 @@ const HomeServicesSection = () => {
     if (services.length === 0) return null
 
     return (
-        <div className="rounded-3xl bg-gradient-to-br from-slate-50 to-gray-100 p-6 mb-6">
-            <div className="flex items-center justify-between mb-5">
-                <div className="flex items-center gap-3">
-                    <div className="h-7 w-1.5 rounded-full bg-gradient-to-b from-orange-500 to-amber-400" />
-                    <h2 className="text-xl font-bold text-neutral-800">Dịch vụ tại Alpha Books</h2>
-                    <span className="flex items-center gap-1 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-2.5 py-0.5 text-xs font-bold text-white shadow-sm">
+        <div className="mb-6 rounded-3xl bg-gradient-to-br from-slate-50 to-gray-100 p-4 sm:p-6">
+            <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3">
+                    <div className="h-7 w-1.5 shrink-0 rounded-full bg-gradient-to-b from-orange-500 to-amber-400" />
+                    <h2 className="text-lg font-bold text-neutral-800 sm:text-xl">Dịch vụ tại Alpha Books</h2>
+                    <span className="flex shrink-0 items-center gap-1 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-2.5 py-0.5 text-xs font-bold text-white shadow-sm">
                         <Sparkles className="h-3 w-3" />
                         BIZONE
                     </span>
@@ -74,7 +74,7 @@ const HomeServicesSection = () => {
                             <SwiperSlide key={service.Id}>
                                 <a
                                     href={service.LinkUrl || '#'}
-                                    className="group block rounded-2xl overflow-hidden bg-white border border-neutral-100 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 h-[320px]"
+                                    className="group flex h-[300px] flex-col overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-[320px]"
                                 >
                                     {/* Service Icon/Image */}
                                     <div className="h-[180px] overflow-hidden bg-neutral-50">
@@ -94,8 +94,8 @@ const HomeServicesSection = () => {
                                     </div>
 
                                     {/* Service Info */}
-                                    <div className="p-4">
-                                        <h3 className="text-sm font-bold text-neutral-800 uppercase tracking-wide mb-2 line-clamp-1">
+                                    <div className="flex min-h-0 flex-1 flex-col p-4">
+                                        <h3 className="mb-2 line-clamp-2 text-sm font-bold uppercase tracking-wide text-neutral-800 sm:line-clamp-1">
                                             {service.ServiceName}
                                         </h3>
                                         {service.Description && (
