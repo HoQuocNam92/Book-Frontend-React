@@ -7,6 +7,8 @@ type Props = {
     expanded: Record<number, boolean>;
     childrenMap: Record<number, any[]>;
     toggleCategory: (id: number) => void;
+    /** Gọi khi chọn link danh mục (vd. đóng dialog trên mobile) */
+    onNavigate?: () => void;
 };
 
 export default function CategoryItem({
@@ -14,7 +16,8 @@ export default function CategoryItem({
     level = 0,
     expanded,
     childrenMap,
-    toggleCategory
+    toggleCategory,
+    onNavigate,
 }: Props) {
     const { category_slug } = useParams();
     const isOpen = expanded[category.id];
@@ -27,6 +30,7 @@ export default function CategoryItem({
             >
                 <Link
                     to={`/danh-muc/${category.slug}`}
+                    onClick={() => onNavigate?.()}
                     className={`flex items-center gap-2 flex-1 text-sm
                     ${category.slug === category_slug
                             ? "text-orange-600 font-semibold"
@@ -55,6 +59,7 @@ export default function CategoryItem({
                             expanded={expanded}
                             childrenMap={childrenMap}
                             toggleCategory={toggleCategory}
+                            onNavigate={onNavigate}
                         />
                     ))}
                 </ul>

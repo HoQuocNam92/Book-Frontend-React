@@ -13,7 +13,7 @@ const ProductDescription = ({ product }: { product: any }) => {
                         THÔNG TIN SẢN PHẨM
                     </CardTitle>
                 </CardHeader>
-                <CardContent className="prose prose-neutral prose-sm max-w-none p-6">
+                <CardContent className="prose prose-neutral prose-sm max-w-full min-w-0 overflow-x-auto p-4 sm:p-6">
                     <div dangerouslySetInnerHTML={{ __html: product.description || "" }} />
                 </CardContent>
             </Card>

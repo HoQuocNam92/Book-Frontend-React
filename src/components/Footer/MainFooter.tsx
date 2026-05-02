@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input'
 
 const MainFooter = () => {
     return (
-        <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-4 gap-10 text-sm text-gray-700">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 py-8 text-sm text-gray-700 sm:gap-10 sm:px-6 sm:py-10 md:grid-cols-2 md:gap-10 lg:grid-cols-4">
             <div className="space-y-4">
                 <img
                     src="/logo-alphabooks.png"
@@ -21,12 +21,12 @@ const MainFooter = () => {
                     <p className="font-semibold mb-2">
                         Đăng ký nhận khuyến mãi
                     </p>
-                    <div className="flex">
+                    <div className="flex min-w-0 flex-col gap-2 sm:flex-row">
                         <Input
                             placeholder="Địa chỉ email"
-                            className="rounded-r-none"
+                            className="min-w-0 rounded-md sm:rounded-r-none"
                         />
-                        <Button className="bg-orange-500 hover:bg-orange-600 rounded-l-none">
+                        <Button className="shrink-0 bg-orange-500 hover:bg-orange-600 sm:rounded-l-none">
                             Gửi
                         </Button>
                     </div>

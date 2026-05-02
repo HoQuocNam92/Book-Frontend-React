@@ -56,7 +56,7 @@ export default function Pagination({
     const isNextDisabled = safePage >= totalPages;
 
     return (
-        <div className="flex items-center justify-center gap-2 py-6">
+        <div className="flex flex-wrap items-center justify-center gap-2 py-6">
             {/* Prev */}
             <button
                 disabled={isPrevDisabled}

@@ -170,7 +170,7 @@ export default function OrderDetailPage() {
         )
 
     return (
-        <div className="mx-auto max-w-5xl px-4 py-8 pb-16">
+        <div className="mx-auto min-w-0 max-w-5xl px-4 py-8 pb-16">
             <div className="mb-6 flex flex-wrap items-center gap-3">
                 <Button variant="ghost" size="sm" asChild className="gap-2 text-muted-foreground">
                     <Link to="/ho-so?tab=orders">
@@ -185,9 +185,9 @@ export default function OrderDetailPage() {
                 <CardHeader className="border-b bg-gradient-to-r from-orange-50/80 to-transparent pb-4">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                         <div className="space-y-1">
-                            <CardTitle className="flex items-center gap-2 text-xl font-semibold tracking-tight">
-                                <Package className="h-6 w-6 text-orange-500" />
-                                Đơn hàng #{String(order.id)}
+                            <CardTitle className="flex min-w-0 flex-wrap items-center gap-2 text-lg font-semibold tracking-tight sm:text-xl">
+                                <Package className="h-6 w-6 shrink-0 text-orange-500" />
+                                <span className="min-w-0">Đơn hàng #{String(order.id)}</span>
                             </CardTitle>
                             <p className="text-sm text-muted-foreground">
                                 Đặt lúc{" "}
@@ -235,9 +235,9 @@ export default function OrderDetailPage() {
                 <div className="space-y-6 lg:col-span-7">
                     <Card className="rounded-2xl">
                         <CardHeader className="pb-2">
-                            <CardTitle className="flex items-center gap-2 text-base">
-                                <Truck className="h-5 w-5 text-orange-500" />
-                                Vận chuyển Giao Hàng Nhanh (GHN)
+                            <CardTitle className="flex min-w-0 flex-wrap items-center gap-2 text-base">
+                                <Truck className="h-5 w-5 shrink-0 text-orange-500" />
+                                <span className="min-w-0">Vận chuyển Giao Hàng Nhanh (GHN)</span>
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-3">
@@ -331,9 +331,9 @@ export default function OrderDetailPage() {
                     {hasShopInfo && sender && (
                         <Card className="rounded-2xl border-orange-100 bg-orange-50/30">
                             <CardHeader className="pb-2">
-                                <CardTitle className="flex items-center gap-2 text-base">
-                                    <Store className="h-5 w-5 text-orange-600" />
-                                    Điểm gửi / cửa hàng
+                                <CardTitle className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-base">
+                                    <Store className="h-5 w-5 shrink-0 text-orange-600" />
+                                    <span className="min-w-0">Điểm gửi / cửa hàng</span>
                                     <span className="text-xs font-normal text-muted-foreground">
                                         ({sender.source === "ghn" ? "theo GHN" : "theo cấu hình shop"})
                                     </span>
@@ -389,9 +389,9 @@ export default function OrderDetailPage() {
                     {timeline.length > 0 && (
                         <Card className="rounded-2xl">
                             <CardHeader className="pb-2">
-                                <CardTitle className="flex items-center gap-2 text-base">
-                                    <Clock className="h-5 w-5 text-orange-500" />
-                                    Lịch sử trạng thái vận chuyển
+                                <CardTitle className="flex min-w-0 flex-wrap items-center gap-2 text-base">
+                                    <Clock className="h-5 w-5 shrink-0 text-orange-500" />
+                                    <span className="min-w-0">Lịch sử trạng thái vận chuyển</span>
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
@@ -476,9 +476,9 @@ export default function OrderDetailPage() {
 
                     <Card className="rounded-2xl">
                         <CardHeader className="pb-2">
-                            <CardTitle className="flex items-center gap-2 text-base">
-                                <MapPin className="h-5 w-5 text-orange-500" />
-                                Địa chỉ nhận hàng
+                            <CardTitle className="flex min-w-0 flex-wrap items-center gap-2 text-base">
+                                <MapPin className="h-5 w-5 shrink-0 text-orange-500" />
+                                <span className="min-w-0">Địa chỉ nhận hàng</span>
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-3 text-sm">

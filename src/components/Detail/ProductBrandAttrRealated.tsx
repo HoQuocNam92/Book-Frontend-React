@@ -48,7 +48,7 @@ const ProductBrandAttrRealated = ({ product, brand }: any) => {
                   key={attr.id ?? i}
                   className={`flex gap-2 px-3 py-2 ${i % 2 === 0 ? 'bg-white' : 'bg-neutral-50'}`}
                 >
-                  <span className="w-28 shrink-0 text-xs text-neutral-400">{attr.attr_key}</span>
+                  <span className="w-24 shrink-0 text-xs text-neutral-400 sm:w-28">{attr.attr_key}</span>
                   <span className="flex-1 text-xs font-medium text-neutral-700">{attr.attr_value}</span>
                 </div>
               ))}

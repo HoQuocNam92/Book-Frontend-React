@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -10,7 +10,15 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Pagination from "@/components/common/Pagination";
 
 import { useCategories } from "@/hooks/useCategories";
-import { FolderOpen } from "lucide-react";
+import { FolderOpen, ListFilter } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
 import MySwiperComponent from "@/components/Swiper/Swiper";
 import { useBrands } from "@/hooks/useBrands";
 import CategoryItem from "@/components/Dashboard/Categories/CategoryItem";
@@ -30,6 +38,11 @@ export default function BookByCategory() {
 
     const [expanded, setExpanded] = useState<Record<number, boolean>>({});
     const [childrenMap, setChildrenMap] = useState<Record<number, any[]>>({});
+    const [categoryDialogOpen, setCategoryDialogOpen] = useState(false);
+
+    useEffect(() => {
+        setCategoryDialogOpen(false);
+    }, [query]);
 
     const allCategories: any[] = getCateogryParents.data?.data || getCateogryParents.data || [];
 
@@ -103,6 +116,9 @@ export default function BookByCategory() {
                                             expanded={expanded}
                                             childrenMap={childrenMap}
                                             toggleCategory={toggleCategory}
+                                            onNavigate={() =>
+                                                setCategoryDialogOpen(false)
+                                            }
                                         />
                                     ))}
                                 </ul>
@@ -111,11 +127,52 @@ export default function BookByCategory() {
                     </aside>
 
                     <div className="flex-1 min-w-0">
-                        <div className="rounded-xl bg-white px-4 py-3 mb-4">
-
+                        <div className="mb-4 flex flex-col gap-3 rounded-xl bg-white px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
                             <h2 className="text-lg font-semibold">
                                 {bookMain?.category?.name}
                             </h2>
+                            <div className="md:hidden">
+                                <Dialog
+                                    open={categoryDialogOpen}
+                                    onOpenChange={setCategoryDialogOpen}
+                                >
+                                    <DialogTrigger asChild>
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            size="sm"
+                                            className="w-full shrink-0 sm:w-auto"
+                                        >
+                                            <ListFilter className="mr-2 h-4 w-4" />
+                                            Danh mục
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-md">
+                                        <DialogHeader>
+                                            <DialogTitle>Chọn danh mục</DialogTitle>
+                                        </DialogHeader>
+                                        <nav className="mt-2 space-y-1 border-t pt-3">
+                                            <Link
+                                                to="/danh-muc"
+                                                className="flex items-center gap-2 rounded px-2 py-2 text-sm hover:bg-orange-50"
+                                                onClick={() => setCategoryDialogOpen(false)}
+                                            >
+                                                <FolderOpen className="h-4 w-4 text-orange-400" />
+                                                <span>Tất cả danh mục</span>
+                                            </Link>
+                                            {allCategories.map((cat: any) => (
+                                                <CategoryItem
+                                                    key={cat.id}
+                                                    category={cat}
+                                                    expanded={expanded}
+                                                    childrenMap={childrenMap}
+                                                    toggleCategory={toggleCategory}
+                                                />
+                                            ))}
+                                        </nav>
+                                    </DialogContent>
+                                </Dialog>
+                            </div>
                         </div>
                         <div className="mt-4">
                             {bookMain.length > 0 ? (

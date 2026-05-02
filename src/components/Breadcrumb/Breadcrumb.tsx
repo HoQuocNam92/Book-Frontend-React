@@ -7,7 +7,10 @@ const Breadcrumb = ({ items, title }: {
     title: string;
 }) => {
     return (
-        <div className="mb-5 flex items-center gap-1.5 text-sm text-neutral-400">
+        <nav
+            className="mb-5 flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-1 overflow-x-auto text-sm text-neutral-400 [-webkit-overflow-scrolling:touch]"
+            aria-label="Breadcrumb"
+        >
             <Link to="/">Home</Link>
             {items.map((item) => (
                 <React.Fragment key={item.slug}>
@@ -21,8 +24,10 @@ const Breadcrumb = ({ items, title }: {
                 </React.Fragment>
             ))}
             <ChevronRight className="h-3.5 w-3.5 shrink-0" />
-            <span className="line-clamp-1 font-medium text-neutral-600">{title}</span>
-        </div>
+            <span className="line-clamp-2 min-w-0 max-w-full font-medium text-neutral-600 sm:line-clamp-1">
+                {title}
+            </span>
+        </nav>
     );
 };
 

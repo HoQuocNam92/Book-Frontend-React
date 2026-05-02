@@ -33,19 +33,19 @@ const HomeMain = ({
     }
 
     return (
-        <div className="mb-6 rounded-3xl bg-gradient-to-br from-sky-50 to-indigo-50 p-6">
-            <div className="mb-5 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                    <div className="h-7 w-1.5 rounded-full bg-gradient-to-b from-blue-500 to-indigo-500" />
-                    <h2 className="text-xl font-bold text-neutral-800">{title}</h2>
-                    <span className="flex items-center gap-1 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 px-2.5 py-0.5 text-xs font-bold text-white shadow-sm">
+        <div className="mb-6 rounded-3xl bg-gradient-to-br from-sky-50 to-indigo-50 p-4 sm:p-6">
+            <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3">
+                    <div className="h-7 w-1.5 shrink-0 rounded-full bg-gradient-to-b from-blue-500 to-indigo-500" />
+                    <h2 className="text-lg font-bold text-neutral-800 sm:text-xl">{title}</h2>
+                    <span className="flex shrink-0 items-center gap-1 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 px-2.5 py-0.5 text-xs font-bold text-white shadow-sm">
                         <Sparkles className="h-3 w-3" />
                         {type}
                     </span>
                 </div>
                 <button
                     type="button"
-                    className="text-sm font-medium text-indigo-500 transition-colors hover:text-indigo-600"
+                    className="shrink-0 self-start text-sm font-medium text-indigo-500 transition-colors hover:text-indigo-600 sm:self-auto"
                 >
                     Xem tất cả →
                 </button>

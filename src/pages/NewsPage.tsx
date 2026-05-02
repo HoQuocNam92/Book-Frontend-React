@@ -13,8 +13,8 @@ export default function NewsPage() {
     const totalPages: number = data?.totalPages || 1;
 
     return (
-        <div className="container bg-[#f2f2f2]">
-            <main className="  px-4 py-8">
+        <div className="container min-w-0 bg-[#f2f2f2]">
+            <main className="px-3 py-6 sm:px-4 sm:py-8">
                 {/* Breadcrumb */}
                 <div className="mb-6 text-sm text-muted-foreground">
                     <Link to="/" className="hover:text-orange-500">Trang chủ</Link>
@@ -22,12 +22,12 @@ export default function NewsPage() {
                     <span className="text-foreground font-medium">Tin tức</span>
                 </div>
 
-                <div className="mb-6 flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-500 text-white">
+                <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-orange-500 text-white">
                         <Newspaper className="h-5 w-5" />
                     </div>
-                    <div>
-                        <h1 className="text-2xl font-bold">Tin tức & Sự kiện</h1>
+                    <div className="min-w-0">
+                        <h1 className="text-xl font-bold sm:text-2xl">Tin tức & Sự kiện</h1>
                         <p className="text-sm text-muted-foreground">Cập nhật những tin tức sách mới nhất</p>
                     </div>
                 </div>
@@ -53,20 +53,20 @@ export default function NewsPage() {
                             <Link
                                 key={news.id}
                                 to={`/tin-tuc/${news.slug}`}
-                                className="group flex gap-5 rounded-2xl bg-white p-5 shadow-sm hover:shadow-md transition"
+                                className="group flex flex-col gap-4 rounded-2xl bg-white p-4 shadow-sm transition hover:shadow-md sm:flex-row sm:gap-5 sm:p-5"
                             >
                                 {news.thumbnail ? (
                                     <img
                                         src={news.thumbnail}
                                         alt={news.title}
-                                        className="h-28 w-44 rounded-xl object-cover flex-shrink-0 border"
+                                        className="aspect-video w-full rounded-xl border object-cover sm:h-28 sm:w-44 sm:aspect-auto sm:shrink-0"
                                     />
                                 ) : (
-                                    <div className="h-28 w-44 flex-shrink-0 rounded-xl bg-orange-50 flex items-center justify-center border">
+                                    <div className="flex aspect-video w-full shrink-0 items-center justify-center rounded-xl border bg-orange-50 sm:aspect-auto sm:h-28 sm:w-44">
                                         <Newspaper className="h-8 w-8 text-orange-300" />
                                     </div>
                                 )}
-                                <div className="flex flex-col justify-between flex-1 min-w-0">
+                                <div className="flex min-w-0 flex-1 flex-col justify-between">
                                     <div>
                                         <h2 className="text-base font-semibold line-clamp-2 group-hover:text-orange-600 transition">
                                             {news.title}

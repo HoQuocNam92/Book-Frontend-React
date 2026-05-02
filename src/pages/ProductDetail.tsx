@@ -84,7 +84,7 @@ const ProductDetail = () => {
 
 
                 {/* Main product grid */}
-                <div className="grid grid-cols-12 gap-4">
+                <div className="grid min-w-0 grid-cols-12 gap-4">
                     <ProductImage
                         images={images}
                         activeImage={activeImage}

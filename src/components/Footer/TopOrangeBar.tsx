@@ -4,7 +4,7 @@ import { BadgeCheck, Gift, RotateCcw, Truck } from "lucide-react"
 const TopOrangeBar = () => {
     return (
         <div className="bg-orange-500 text-white">
-            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6 px-6 py-4 text-sm">
+            <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 px-4 py-3 text-sm sm:gap-6 sm:px-6 sm:py-4 md:grid-cols-2 lg:grid-cols-4">
                 <IconFooter
                     icon={<RotateCcw className="w-6 h-6" />}
                     text="MIỄN PHÍ ĐỔI TRẢ NHANH CHÓNG"
