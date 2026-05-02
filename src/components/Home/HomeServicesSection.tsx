@@ -1,11 +1,9 @@
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import { useServices } from '@/hooks/useServices';
+import { Swiper, SwiperSlide } from "swiper/react"
+import { Navigation, Pagination } from "swiper/modules"
+import { useServices } from "@/hooks/useServices"
 import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
-import { LazyImage } from '@/components/common/LazyImage';
+import { LazyImage } from "@/components/common/LazyImage"
+import HomeServicesSkeleton from "@/components/Home/HomeServicesSkeleton"
 
 interface ServiceType {
     Id: number;
@@ -20,7 +18,11 @@ const HomeServicesSection = () => {
     const { getServices } = useServices();
     const services: ServiceType[] = getServices.data || [];
 
-    if (getServices.isLoading || services.length === 0) return null;
+    if (getServices.isLoading) {
+        return <HomeServicesSkeleton />
+    }
+
+    if (services.length === 0) return null
 
     return (
         <div className="rounded-3xl bg-gradient-to-br from-slate-50 to-gray-100 p-6 mb-6">
@@ -80,7 +82,9 @@ const HomeServicesSection = () => {
                                             <LazyImage
                                                 src={service.IconUrl}
                                                 alt={service.ServiceName}
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                cdnMaxWidth={640}
+                                                sizes="(max-width: 1024px) 50vw, 33vw"
+                                                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                                             />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-orange-100 to-amber-50">

@@ -10,6 +10,7 @@ export const useBanners = (type: string) => {
             const res = await bannerService.getAllBanners(type)
             return res.data
         },
+        staleTime: 5 * 60 * 1000,
         refetchOnWindowFocus: false,
         enabled: !!type,
     });

@@ -9,15 +9,6 @@ type GoongGeocodeResult = {
   geometry?: { location?: { lat?: number; lng?: number } };
 };
 
-type GoongDirectionResponse = {
-  routes?: Array<{
-    geometry?: { coordinates?: [number, number][] };
-    legs?: Array<{
-      distance?: { value?: number };
-      duration?: { value?: number };
-    }>;
-  }>;
-};
 function decodePolyline(str: string, precision = 5): [number, number][] {
   let index = 0, lat = 0, lng = 0, coordinates: [number, number][] = [];
   const factor = Math.pow(10, precision);
@@ -50,6 +41,8 @@ function decodePolyline(str: string, precision = 5): [number, number][] {
 }
 interface OrderDeliveryMapProps {
   destinationAddress: string;
+  /** Chiều cao vùng bản đồ, ví dụ "h-72" hoặc "min-h-[420px] h-[55vh]" cho trang chi tiết */
+  mapHeightClass?: string;
 }
 
 const parseEnvNumber = (value: string | undefined, fallback: number) => {
@@ -135,7 +128,10 @@ const formatDistance = (meters: number) => {
   return `${(meters / 1000).toFixed(1)} km`;
 };
 
-export default function OrderDeliveryMap({ destinationAddress }: OrderDeliveryMapProps) {
+export default function OrderDeliveryMap({
+  destinationAddress,
+  mapHeightClass = "h-72",
+}: OrderDeliveryMapProps) {
   const apiKey = import.meta.env.VITE_GOONG_API_KEY as string | undefined;
   const mapKey = (import.meta.env.VITE_GOONG_MAP_KEY as string | undefined) || apiKey;
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -351,8 +347,10 @@ export default function OrderDeliveryMap({ destinationAddress }: OrderDeliveryMa
       {error ? (
         <div className="rounded-md bg-red-50 px-3 py-2 text-xs text-red-600">{error}</div>
       ) : (
-        <div className="relative h-72 w-full overflow-hidden rounded-md border">
-          <div ref={mapContainerRef} className="h-full w-full" />
+        <div
+          className={`relative w-full overflow-hidden rounded-md border ${mapHeightClass}`}
+        >
+          <div ref={mapContainerRef} className="h-full w-full min-h-[inherit]" />
           {loading && (
             <div className="absolute inset-0 flex items-center justify-center bg-white/70 text-sm">
               Đang tải bản đồ vận chuyển...

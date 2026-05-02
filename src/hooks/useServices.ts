@@ -10,6 +10,7 @@ export const useServices = () => {
             const res = await serviceService.getAllServices();
             return res.data;
         },
+        staleTime: 5 * 60 * 1000,
         refetchOnWindowFocus: false,
     });
 
