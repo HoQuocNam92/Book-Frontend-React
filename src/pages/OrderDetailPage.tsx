@@ -156,10 +156,10 @@ export default function OrderDetailPage() {
     const timeline =
         ghnObj?.log && Array.isArray(ghnObj.log)
             ? [...(ghnObj.log as { status?: string; updated_date?: string }[])].sort(
-                  (a, b) =>
-                      new Date(a.updated_date || 0).getTime() -
-                      new Date(b.updated_date || 0).getTime(),
-              )
+                (a, b) =>
+                    new Date(a.updated_date || 0).getTime() -
+                    new Date(b.updated_date || 0).getTime(),
+            )
             : []
 
     const sender = shopSender
@@ -170,7 +170,7 @@ export default function OrderDetailPage() {
         )
 
     return (
-        <div className="mx-auto min-w-0 max-w-5xl px-4 py-8 pb-16">
+        <div className="container px-4 py-8 pb-16">
             <div className="mb-6 flex flex-wrap items-center gap-3">
                 <Button variant="ghost" size="sm" asChild className="gap-2 text-muted-foreground">
                     <Link to="/ho-so?tab=orders">
@@ -211,7 +211,7 @@ export default function OrderDetailPage() {
                 <CardContent className="grid gap-3 pt-4 sm:grid-cols-2 lg:grid-cols-4">
                     <DetailRow icon={CreditCard} label="Phương thức thanh toán">
                         {(order.Payments as { method?: string }[] | undefined)?.[0]?.method ===
-                        "cod"
+                            "cod"
                             ? "Thanh toán khi nhận hàng (COD)"
                             : "Chuyển khoản ngân hàng"}
                     </DetailRow>
@@ -425,10 +425,10 @@ export default function OrderDetailPage() {
                                 (item) => {
                                     const book = item.Books as
                                         | {
-                                              title?: string
-                                              slug?: string
-                                              BookImages?: { url?: string }[]
-                                          }
+                                            title?: string
+                                            slug?: string
+                                            BookImages?: { url?: string }[]
+                                        }
                                         | undefined
                                     return (
                                         <div
@@ -516,14 +516,14 @@ export default function OrderDetailPage() {
                                                     ?.name || "—"}
                                                 {(addr.Districts as { district_id?: number } | undefined)
                                                     ?.district_id != null && (
-                                                    <span className="ml-1 text-xs font-normal text-muted-foreground">
-                                                        (id{" "}
-                                                        {
-                                                            (addr.Districts as { district_id?: number }).district_id
-                                                        }
-                                                        )
-                                                    </span>
-                                                )}
+                                                        <span className="ml-1 text-xs font-normal text-muted-foreground">
+                                                            (id{" "}
+                                                            {
+                                                                (addr.Districts as { district_id?: number }).district_id
+                                                            }
+                                                            )
+                                                        </span>
+                                                    )}
                                             </dd>
                                         </div>
                                         <div className="flex flex-wrap justify-between gap-2">
@@ -533,14 +533,14 @@ export default function OrderDetailPage() {
                                                     ?.name || "—"}
                                                 {(addr.Provinces as { province_id?: number } | undefined)
                                                     ?.province_id != null && (
-                                                    <span className="ml-1 text-xs font-normal text-muted-foreground">
-                                                        (id{" "}
-                                                        {
-                                                            (addr.Provinces as { province_id?: number }).province_id
-                                                        }
-                                                        )
-                                                    </span>
-                                                )}
+                                                        <span className="ml-1 text-xs font-normal text-muted-foreground">
+                                                            (id{" "}
+                                                            {
+                                                                (addr.Provinces as { province_id?: number }).province_id
+                                                            }
+                                                            )
+                                                        </span>
+                                                    )}
                                             </dd>
                                         </div>
                                     </dl>
