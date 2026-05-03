@@ -12,7 +12,7 @@ const MainFooter = () => {
                     width={120}
                     height={40}
                 />
-                <ul className="space-y-2">
+                <ul className="space-y-2 ">
                     <li>› Bán hàng Online</li>
                     <li>› Chăm sóc Khách Hàng</li>
                 </ul>

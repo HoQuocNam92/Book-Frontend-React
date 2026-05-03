@@ -1,9 +1,8 @@
-const URL_BASE = "http://localhost:8080/api/";
 import axios from "axios";
 import { refreshToken, signOutInstance } from "@/services/auth.services";
 
 export const instance = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL || URL_BASE,
+    baseURL: import.meta.env.VITE_API_BASE_URL,
     timeout: 10000,
     withCredentials: true,
     headers: {
